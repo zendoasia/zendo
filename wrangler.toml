@@ -1,19 +1,6 @@
 name = "zendo"
 compatibility_date = "2024-04-25" 
 
-[build]
-command = "npx next-on-pages@latest build"
-cwd = "."
-watch_dir = "."
-
-[[build.upload]]
-format = "directory"
-path = ".vercel/output/static"
-
-[[build.upload]]
-format = "service-worker"
-path = ".vercel/output/functions"
-
 [env.production]
 compatibility_flags = ["nodejs_compat"]
 

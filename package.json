@@ -6,8 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "postbuild": "npx @cloudflare/next-on-pages build"
+    "lint": "next lint"
   },
   "dependencies": {
     "next": "15.3.1",

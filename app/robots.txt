@@ -1,0 +1,8 @@
+# Robots file for Zendo.
+# Maybe it will help robots to do something, I don't know.
+
+User-agent: *
+Disallow:
+
+Host: https://zendo.pages.dev
+sitemap: https://zendo.pages.dev/sitemap.xml

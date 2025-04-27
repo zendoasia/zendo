@@ -8,7 +8,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/components/ui/tooltip";
 import Link from "next/link";
 
 export default function Footer() {
@@ -44,7 +44,7 @@ export default function Footer() {
         aria-hidden="true"
       />
 
-      <Link href="/" className="z-10 text-left">
+      <Link href="/ownership" className="z-10 text-left">
         <span className="inline-flex items-center gap-1 text-[color:var(--slate-700)] dark:text-[color:var(--slate-300)]">
           <Copyright className="w-4 h-4" />
           2025 Zendo. All rights reserved.
@@ -65,7 +65,6 @@ export default function Footer() {
             </Link>
           </TooltipTrigger>
           <TooltipContent
-            stroke-width="2"
             aria-hidden="true"
             className="border-none fill-[var(--tooltip-color)] font-[family-name:var(--font-geist-sans)] font-medium text-xs "
           >

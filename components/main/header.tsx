@@ -54,7 +54,7 @@ export default function Header() {
       </Link>
 
       <div className="hidden md:flex items-center gap-3 ml-6">
-        {["Introduction", "Portfolio", "Projects", "Contact"].map((label) => (
+        {["About", "Portfolio", "Projects", "Contact"].map((label) => (
           <Link
             key={label}
             href={`/${label.toLowerCase()}`}
@@ -135,7 +135,7 @@ export default function Header() {
             </DialogTitle>
 
             <div className="flex flex-col items-start space-y-4 font-[family-name:var(--font-geist-sans)] mt-2">
-              {["Introduction", "Portfolio", "Projects", "Contact"].map(
+              {["About", "Portfolio", "Projects", "Contact"].map(
                 (label) => (
                   <p
                     key={label}

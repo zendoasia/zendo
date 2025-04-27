@@ -4,14 +4,13 @@ import { toast } from "sonner";
 import { X, Info } from "lucide-react";
 import React from "react";
 
-// Define the specific type for the toastStyles
 interface ToastStyle {
   border: string;
   backgroundColor: string;
   color: string;
   hoverAndFocusBg: string;
   textColor: string;
-  icon?: React.JSX.Element; // icon is optional
+  icon?: React.JSX.Element; 
   toastFunction: typeof toast.success | typeof toast.error | typeof toast.warning | typeof toast;
 }
 
@@ -26,7 +25,6 @@ export default function sendToast(type: string, message: string): void {
     return;
   }
 
-  // Remove @ts-expect-error and use correct type inference
   const toastStyles: Record<string, ToastStyle> = {
     error: {
       border: "1px solid var(--danger)", 

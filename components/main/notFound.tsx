@@ -7,6 +7,7 @@ import { useTheme } from "next-themes";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { ShieldQuestion } from "lucide-react";
+import Link from "next/link";
 
 export default function NotFound() {
   const { theme, systemTheme } = useTheme();
@@ -52,12 +53,12 @@ export default function NotFound() {
         does not exist or has been moved.
       </p>
 
-      <a
+      <Link
         href="/"
         className="mt-8 font-[family-name:var(--font-geist-mono)] px-6 py-3 text-lg rounded-lg text-[color:var(--text-dark)] dark:text-[color:var(--text-light)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] hover:text-[color:var(--text-light)] transition-colors duration-200 border border-[color:var(--jet)] shadow-lg"
       >
         Go back home
-      </a>
+      </Link>
     </div>
   );
 }

@@ -8,7 +8,8 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/components/ui/tooltip"
+import Link from "next/link";
 
 export default function Footer() {
   const { theme, systemTheme } = useTheme();
@@ -43,7 +44,7 @@ export default function Footer() {
         aria-hidden="true"
       />
 
-      <a href="/" className="z-10 text-left">
+      <Link href="/" className="z-10 text-left">
         <span className="inline-flex items-center gap-1 text-[color:var(--slate-700)] dark:text-[color:var(--slate-300)]">
           <Copyright className="w-4 h-4" />
           2025 Zendo. All rights reserved.
@@ -52,16 +53,16 @@ export default function Footer() {
         <span className="inline-block text-[color:var(--slate-500)] dark:text-[color:var(--slate-500)] text-sm mt-1">
           Built by Aarush Master.
         </span>
-      </a>
+      </Link>
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <a
+            <Link
               href="#top"
               className="ml-auto z-10 font-[family-name:var(--font-geist-mono)] px-4 py-2 text-sm rounded-md border border-[color:var(--jet)] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] hover:text-[color:var(--text-light)] transition-colors duration-200"
             >
               <ArrowUp className="w-4 h-4" />
-            </a>
+            </Link>
           </TooltipTrigger>
           <TooltipContent
             stroke-width="2"

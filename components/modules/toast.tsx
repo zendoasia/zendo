@@ -13,7 +13,8 @@ export default function sendToast(type: string, message: string): void {
     );
     return;
   }
-
+  
+  //@ts-ignore
   const toastStyles: Record<string, any> = {
 	error: {
 	  border: "1px solid var(--danger)", 

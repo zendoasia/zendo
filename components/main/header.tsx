@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import LogoDark from "@/public/LogoDark.svg";
 import LogoWhite from "@/public/LogoWhite.svg";
+import Link from "next/link";
 
 export default function Header() {
   const { theme, systemTheme } = useTheme();
@@ -40,7 +41,7 @@ export default function Header() {
     <div
       className={`sticky top-0 z-50 flex items-center px-4 py-3 backdrop-blur-lg ${headerBg} shadow-lg ${borderColor} rounded-b-2xl font-[family-name:var(--font-geist-sans)]`}
     >
-      <a href="/" className="flex items-center">
+      <Link href="/" className="flex items-center">
         <Image
           src={isDark ? LogoWhite : LogoDark}
           alt="Zendo Logo"
@@ -50,17 +51,17 @@ export default function Header() {
           quality="1080"
           loading="eager"
         />
-      </a>
+      </Link>
 
       <div className="hidden md:flex items-center gap-3 ml-6">
         {["Introduction", "Portfolio", "Projects", "Contact"].map((label) => (
-          <a
+          <Link
             key={label}
             href={`/${label.toLowerCase()}`}
             className="font-[family-name:var(--font-geist-sans)] px-4 py-2 text-sm rounded-md border border-[color:var(--jet)] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] hover:text-[color:var(--text-light)] transition-colors duration-200"
           >
             {label}
-          </a>
+          </Link>
         ))}
       </div>
 
@@ -146,7 +147,7 @@ export default function Header() {
                       }
                     `}
                   >
-                    <a
+                    <Link
                       href={`/${label.toLowerCase()}`}
                       onClick={(e) => {
                         e.preventDefault();
@@ -155,7 +156,7 @@ export default function Header() {
                       }}
                     >
                       {label}
-                    </a>
+                    </Link>
                   </p>
                 )
               )}

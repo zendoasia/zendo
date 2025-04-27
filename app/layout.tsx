@@ -63,7 +63,7 @@ export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
   robots: "/robots.txt",
   verification: {
-    google: "-q79a7PlxvBy3gr5cMmDHsT3av2Axtzrq1Vb6dcmSW",
+    google: "-q79a7PlxvBy3gr5cMmDHsT3av2Axtzrq1Vb6dcmSWA",
     other: {
       "msvalidate.01": "969F0E11BC415787B2C7464A98FBDF02",
     },

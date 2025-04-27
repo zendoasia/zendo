@@ -191,6 +191,24 @@ export default function Header() {
                   Theme
                 </span>
                 <ModeToggle />
+                <span
+                  className={`${
+                    isDark
+                      ? "text-[color:var(--silver)]"
+                      : "text-[color:var(--eerie-black)]"
+                  }`}
+                >
+                  Github
+                </span>
+                <Link
+                  href="https://github.com/aarush0101"
+                  target="_blank"
+                  className="w-10 h-10 rounded-2xl border border-dashed hover:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)] focus:ring-0 focus:outline-none transition-colors duration-200"
+                >
+                  <div className="flex items-center justify-center w-10 h-10">
+                    <SiGithub className="w-6 h-6" />
+                  </div>
+                </Link>
               </div>
             </div>
           </DialogContent>

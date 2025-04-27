@@ -35,6 +35,7 @@ export const metadata: Metadata = {
   classification: "Portfolio",
   appleWebApp: true,
   applicationName: "Zendo",
+  metadataBase: new URL("https://zendo.pages.dev/"),
   icons: {
     apple: "/icons/apple-touch-icon.png",
     icon: "/icons/web-app-manifest-512x512.png",

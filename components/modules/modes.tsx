@@ -57,14 +57,14 @@ export function ModeToggle() {
         <Button
           variant="outline"
           size="icon"
-          className="w-10 h-10 rounded-2xl hover:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)] transition-colors duration-200"
+          className="w-8 h-8 rounded-2xl hover:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)] transition-colors duration-200"
         >
           {theme === "system" ? (
-            <MonitorCogIcon className="h-[1.2rem] w-[1.2rem]" />
+            <MonitorCogIcon className="h-5 w-5" />
           ) : resolvedTheme === "light" ? (
-            <Sun className="h-[1.2rem] w-[1.2rem]" />
+            <Sun className="h-5 w-5" />
           ) : (
-            <Moon className="h-[1.2rem] w-[1.2rem]" />
+            <Moon className="h-5 w-5" />
           )}
           <span className="sr-only">Toggle theme</span>
         </Button>

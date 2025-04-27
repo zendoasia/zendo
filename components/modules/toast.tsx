@@ -26,7 +26,7 @@ export default function sendToast(type: string, message: string): void {
     return;
   }
 
-  //@ts-expect-error: TypeScript can't infer the correct type for toastStyles dynamically, so we are overriding it here.
+  // Remove @ts-expect-error and use correct type inference
   const toastStyles: Record<string, ToastStyle> = {
     error: {
       border: "1px solid var(--danger)", 
@@ -89,6 +89,7 @@ export default function sendToast(type: string, message: string): void {
           onClick={() => toast.dismiss(toastId)}
           className={`absolute top-1 right-1 rounded-md p-1 transition-colors ${hoverAndFocusBg}`}
         >
+
           <X className={`h-4 w-4 ${textColor}`} />
         </button>
       ),

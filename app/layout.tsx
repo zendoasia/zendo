@@ -18,23 +18,54 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Zendo - Intuition",
-  description: "Official website for all of Aarush Master's work.",
-  keywords: ["portfolio", "aarush master", "personal website"],
+  description: "The ultimate app for all of Aarush Master's work.",
+  keywords: ["portfolio", "productivity", "technology", "aarush", "master"],
   authors: [
     {
       name: "Aarush Master",
       url: "https://github.com/aarush0101",
     },
+    {
+      name: "Aarush Master",
+      url: "mailto:aarush01111@gmail.com",
+    },
   ],
   category: "Programming and Technology",
-  abstract: "Official website for all of Aarush Master's work.",
+  abstract: "The ultimate app for all of Aarush Master's work.",
   classification: "Portfolio",
+  appleWebApp: true,
+  applicationName: "Zendo",
+  icons: {
+    apple: "/icons/apple-touch-icon.png",
+    icon: "/icons/web-app-manifest-512x512.png",
+  },
+  referrer: "origin-when-cross-origin",
+  other: {
+    "apple-mobile-web-app-status-bar-style": "black-translucent",
+  },
+  openGraph: {
+    title: "Zendo - Intuition",
+    description: "The ultimate app for all of Aarush Master's work.",
+    url: "https://zendo.pages.dev/",
+    siteName: "Zendo",
+    images: [
+      {
+        url: "/icons/web-app-manifest-512x512.png",
+        width: 512,
+        height: 512,
+        alt: "Zendo - Intuition",
+        type: "image/png",
+      },
+    ],
+  },
   generator: "Next.js",
-  // manifest: "/manifest.json",
-  // robots: "/robots.txt",
+  manifest: "/manifest.webmanifest",
+  robots: "/robots.txt",
   verification: {
-    google: "", // Verification
-    yahoo: "",
+    google: "sCNAeUd-znC_4Q-2E_M-8chZMuQMLKqwy6fYGgblAuo",
+    other: {
+      "msvalidate.01": "969F0E11BC415787B2C7464A98FBDF02",
+    },
   },
 };
 
@@ -55,7 +86,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <header>
-          <Header />
+            <Header />
           </header>
           <main>{children}</main>
           <aside>

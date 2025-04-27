@@ -37,7 +37,7 @@ export default function Footer() {
 
   return (
     <div
-      className={`top-0 z-50 flex items-center px-4 py-3 backdrop-blur-lg overflow-hidden relative ${headerBg} shadow-lg ${borderColor} rounded-b-2xl font-[family-name:var(--font-geist-sans)]`}
+      className={`top-0 z-50 flex items-center px-4 py-3 backdrop-blur-lg overflow-hidden relative ${headerBg} shadow-lg ${borderColor} rounded-t-2xl font-[family-name:var(--font-geist-sans)]`}
     >
       <div
         className={`absolute bottom-0 w-48 h-48 rounded-full ${glowColor} blur-[100px] opacity-100 pointer-events-none`}

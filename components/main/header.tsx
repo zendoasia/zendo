@@ -8,7 +8,7 @@ import {
   DialogTrigger,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { AlignCenter, ArrowRightLeft } from "lucide-react";
+import { AlignCenter, ArrowRightLeft, ArrowUp } from "lucide-react";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
@@ -17,8 +17,16 @@ import LogoDark from "@/public/LogoDark.svg";
 import LogoWhite from "@/public/LogoWhite.svg";
 import Link from "next/link";
 import { SiGithub } from "@icons-pack/react-simple-icons";
+import { useRouter } from "next/navigation";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function Header() {
+  const router = useRouter();
   const { theme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
@@ -72,15 +80,16 @@ export default function Header() {
         <Link
           href="https://github.com/aarush0101"
           target="_blank"
-          className="w-10 h-10 rounded-2xl border border-dashed hover:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)] focus:ring-0 focus:outline-none transition-colors duration-200"
+          className="group w-10 h-10 rounded-2xl border border-dashed overflow-hidden 
+         transition-colors duration-200 focus:ring-0 focus:outline-none"
         >
-          <div className="flex items-center justify-center w-10 h-10">
+          <div className="flex items-center justify-center w-full h-full group-hover:bg-[color:var(--primary-hover)] group-focus:bg-[color:var(--primary-hover)] dark:group-hover:bg-[color:var(--primary-hover)] dark:group-focus:bg-[color:var(--primary-hover)]">
             <SiGithub className="w-6 h-6" />
           </div>
         </Link>
+
         <ModeToggle />
       </div>
-
       {/* Mobile Menu */}
       <div className="flex md:hidden items-center">
         <Dialog open={open} onOpenChange={setOpen}>
@@ -116,99 +125,100 @@ export default function Header() {
             </Button>
           </DialogTrigger>
           <DialogContent
-            className={`backdrop-blur-xs rounded-2xl p-6 shadow-2xl font-[family-name:var(--font-geist-sans)] 
-              ${
-                isDark
-                  ? "bg-[color:var(--night)]/80 border-[color:var(--silver-2)]"
-                  : "bg-[color:var(--white-smoke)]/60 border-[color:var(--jet)]"
-              }
-            `}
+            className={`p-0 overflow-hidden rounded-2xl shadow-xl font-[family-name:var(--font-geist-sans)] 
+      ${
+        isDark
+          ? "bg-[color:var(--night)] border-[color:var(--silver-2)]"
+          : "bg-[color:var(--white-smoke)] border-[color:var(--jet)]"
+      }`}
           >
-            <DialogTitle
-              className={`text-[20px] font-extrabold 
-                ${
-                  isDark
-                    ? "text-[color:var(--text-light)]"
-                    : "text-[color:var(--text-dark)]"
-                }
-              `}
-            >
-              Settings
-            </DialogTitle>
-
-            <DialogTitle
-              className={`text-[16px] font-semibold font-[family-name:var(--font-geist-mono)] 
-                text-[color:var(--text-dark)] dark:text-[color:var(--text-light)]
-              `}
-            >
-              Links
-            </DialogTitle>
-
-            <div className="flex flex-col items-start space-y-4 font-[family-name:var(--font-geist-sans)] mt-2">
-              {["About", "Portfolio", "Projects", "Contact"].map((label) => (
-                <p
-                  key={label}
-                  className={`text-md cursor-pointer transition-colors duration-200
-                      ${
-                        isDark
-                          ? "text-[color:var(--text-light)]"
-                          : "text-[color:var(--text-dark)]"
-                      }
-                    `}
-                >
-                  <Link
-                    href={`/${label.toLowerCase()}`}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setOpen(false);
-                      window.location.href = `/${label.toLowerCase()}`;
-                    }}
-                  >
-                    {label}
-                  </Link>
-                </p>
-              ))}
+            <div className="px-4 pt-4">
+              <DialogTitle
+                className="text-xl font-bold 
+      text-[color:var(--text-dark)] dark:text-[color:var(--text-light)]"
+              >
+                Settings
+              </DialogTitle>
             </div>
 
-            <hr className={borderColor} />
+            <div className="flex flex-col divide-y divide-[color:var(--border)] mt-4">
+              <div className="p-4 flex flex-col space-y-3">
+                <h3 className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+                  Links
+                </h3>
+                <div className="flex flex-col space-y-2">
+                  {["About", "Portfolio", "Projects", "Contact"].map(
+                    (label) => (
+                      <button
+                        key={label}
+                        onClick={() => {
+                          setOpen(false);
+                          setTimeout(() => {
+                            router.push(`/${label.toLowerCase()}`);
+                          }, 950);
+                        }}
+                        className="text-left text-sm font-medium text-[color:var(--text-dark)] dark:text-[color:var(--text-light)] hover:text-[color:var(--accent)] transition-colors"
+                      >
+                        {label}
+                      </button>
+                    )
+                  )}
+                </div>
+              </div>
 
-            <DialogTitle
-              className={`font-semibold mt-4 text-[16px] font-[family-name:var(--font-geist-mono)]
-                text-[color:var(--light-dark)] dark:text-[color:var(--text-light)]
-              `}
-            >
-              Help
-            </DialogTitle>
-            <div className="text-sm font-[family-name:var(--font-geist-sans)]">
-              <div className="flex justify-between items-center mt-2">
-                <span
-                  className={`${
-                    isDark
-                      ? "text-[color:var(--silver)]"
-                      : "text-[color:var(--eerie-black)]"
-                  }`}
-                >
-                  Theme
-                </span>
-                <ModeToggle />
-                <span
-                  className={`${
-                    isDark
-                      ? "text-[color:var(--silver)]"
-                      : "text-[color:var(--eerie-black)]"
-                  }`}
-                >
-                  Github
-                </span>
-                <Link
-                  href="https://github.com/aarush0101"
-                  target="_blank"
-                  className="w-10 h-10 rounded-2xl border border-dashed hover:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)] focus:ring-0 focus:outline-none transition-colors duration-200"
-                >
-                  <div className="flex items-center justify-center w-10 h-10">
-                    <SiGithub className="w-6 h-6" />
-                  </div>
-                </Link>
+              <div className="flex justify-center space-x-4 p-4">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="group">
+                        <ModeToggle />
+                        <TooltipContent className="font-[family-name:var(--font-geist-sans)] text-xs">
+                          Toggle Theme
+                        </TooltipContent>
+                      </div>
+                    </TooltipTrigger>
+                  </Tooltip>
+                </TooltipProvider>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        onClick={() => {
+                          setOpen(false);
+                          setTimeout(() => {
+                            router.push("https://github.com/aarush0101/zendo");
+                          }, 950);
+                        }}
+                        className="group w-8 h-8 rounded-xl border border-dashed overflow-hidden flex items-center justify-center transition-colors hover:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)]"
+                      >
+                        <SiGithub className="w-5 h-5" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent className="font-[family-name:var(--font-geist-sans)] text-xs">
+                      Visit Github Repo
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        onClick={() => {
+                          setOpen(false);
+                          setTimeout(() => {
+                            router.push("/");
+                          }, 950);
+                        }}
+                        className="group w-8 h-8 rounded-xl flex items-center justify-center transition-colors hover:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)]"
+                      >
+                        <ArrowUp className="w-5 h-5" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent className="font-[family-name:var(--font-geist-sans)] text-xs">
+                      Go Back Home
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
             </div>
           </DialogContent>

@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import LogoDark from "@/public/LogoDark.svg";
 import LogoWhite from "@/public/LogoWhite.svg";
 
-export default function Home() {
+export default function Contact() {
   const { theme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
@@ -26,6 +26,9 @@ export default function Home() {
         height={38}
         priority
       />
+      <h1 className="font-[family-name:var(--font-geist-mono)] justify-center">
+        Contact
+      </h1>
       <p className="text-lg font-[family-name:var(--font-geist-sans)] justify-center">
         Coming soon.
       </p>

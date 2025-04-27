@@ -25,8 +25,7 @@ export default function sendToast(type: string, message: string): void {
     return;
   }
 
- 
-  //@ts-expect-error
+  //@ts-expect-error: TypeScript can't infer the correct type for toastStyles dynamically, so we are overriding it here.
   const toastStyles: Record<string, ToastStyle> = {
     error: {
       border: "1px solid var(--danger)", 

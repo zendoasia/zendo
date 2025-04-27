@@ -2,6 +2,7 @@
 
 import { toast } from "sonner";
 import { X, Info } from "lucide-react";
+import React from "react";
 
 // Define the specific type for the toastStyles
 interface ToastStyle {
@@ -10,7 +11,7 @@ interface ToastStyle {
   color: string;
   hoverAndFocusBg: string;
   textColor: string;
-  icon?: JSX.Element; // icon is optional
+  icon?: React.JSX.Element; // icon is optional
   toastFunction: typeof toast.success | typeof toast.error | typeof toast.warning | typeof toast;
 }
 

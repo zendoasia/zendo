@@ -56,61 +56,63 @@ html {
 }
 
 :root {
+  --font-sans: "Geist", "Geist Fallback", Arial, sans-serif;
+  --font-mono: "Geist Mono", "Geist Mono Fallback", Menlo, Monaco, Consolas, "Courier New", monospace;
   /* Neutrals */
-  --white: hsla(0, 0%, 100%, 1);
-  --white-smoke: hsla(0, 0%, 96%, 1);
-  --silver: hsla(0, 0%, 75%, 1);
-  --silver-2: hsla(0, 0%, 66%, 1);
-  --jet: hsla(0, 0%, 16%, 1);
-  --eerie-black: hsla(0, 0%, 10%, 1);
-  --night: hsla(0, 0%, 7%, 1);
-  --black: hsla(0, 0%, 0%, 1);
+  --white: hsl(0, 0%, 100%);
+  --white-smoke: hsl(0, 0%, 96%);
+  --silver: hsl(0, 0%, 75%);
+  --silver-2: hsl(0, 0%, 66%);
+  --jet: hsl(0, 0%, 16%);
+  --eerie-black: hsl(0, 0%, 10%);
+  --night: hsl(0, 0%, 7%);
+  --black: hsl(0, 0%, 0%);
 
   /* Slate - Neutral */
-  --slate-100: hsla(210, 10%, 90%, 1);
+  --slate-100: hsl(210, 10%, 90%);
   /* Light Slate */
-  --slate-300: hsla(210, 12%, 70%, 1);
+  --slate-300: hsl(210, 12%, 70%);
   /* Medium Slate */
-  --slate-500: hsla(210, 14%, 50%, 1);
+  --slate-500: hsl(210, 14%, 50%);
   /* Neutral Slate */
-  --slate-700: hsla(210, 16%, 30%, 1);
+  --slate-700: hsl(210, 16%, 30%);
   /* Dark Slate */
 
   /* Text */
-  --text-light: rgb(255, 255, 255);
-  --text-dark: rgb(0, 0, 0);
+  --text-light: hsl(0, 0%, 100%);
+  --text-dark: hsl(0, 0%, 0%);
 
   /* Primary – Indigo (Sleek & Professional) */
-  --primary2: hsla(239, 85%, 67%, 1);
+  --primary2: hsl(239, 85%, 67%);
   /* Indigo 500 */
-  --primary-hover: hsla(239, 75%, 60%, 1);
+  --primary-hover: hsl(239, 75%, 60%);
   /* Indigo 600 */
-  --primary-light: hsla(239, 89%, 80%, 1);
+  --primary-light: hsl(239, 89%, 80%);
   /* Indigo 400 */
-  --primary-subtle: hsla(238, 100%, 95%, 1);
+  --primary-subtle: hsl(238, 100%, 95%);
   /* Indigo 100 */
 
   /* Accent – Teal (Modern & Intuitive) */
-  --accent2: hsla(174, 64%, 48%, 1);
+  --accent2: hsl(174, 64%, 48%);
   /* Teal 500 */
-  --accent-hover: hsla(174, 72%, 40%, 1);
+  --accent-hover: hsl(174, 72%, 40%);
   /* Teal 600 */
-  --accent-light: hsla(174, 72%, 70%, 1);
+  --accent-light: hsl(174, 72%, 70%);
   /* Teal 400 */
-  --accent-subtle: hsla(174, 80%, 90%, 1);
+  --accent-subtle: hsl(174, 80%, 90%);
   /* Teal 100 */
 
   /* Utility / States */
-  --success: hsla(142, 71%, 45%, 1);
+  --success: hsl(142, 71%, 45%);
   /* Green 500 */
-  --warning: hsla(48, 96%, 53%, 1);
+  --warning: hsl(48, 96%, 53%);
   /* Yellow 400 */
-  --danger: hsla(0, 84%, 60%, 1);
+  --danger: hsl(0, 84%, 60%);
   /* Red 500 */
 
-  --success-bg: hsla(142, 71%, 85%, 1);
-  --warning-bg: hsla(48, 96%, 90%, 1);
-  --danger-bg: hsla(0, 84%, 90%, 1);
+  --success-bg: hsl(142, 71%, 85%);
+  --warning-bg: hsl(48, 96%, 90%);
+  --danger-bg: hsl(0, 84%, 90%);
 
   --radius: 0.625rem;
   --background: oklch(1 0 0);

@@ -14,7 +14,7 @@ import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import LogoDark from "@/public/LogoDark.svg";
-import LogoWhite from "@/public/LogoWhite.svg";
+import Logo from "@/public/Logo.svg";
 import Link from "next/link";
 import { SiGithub } from "@icons-pack/react-simple-icons";
 import { useRouter } from "next/navigation";
@@ -48,11 +48,11 @@ export default function Header() {
 
   return (
     <div
-      className={`sticky top-0 z-50 flex items-center px-4 py-3 backdrop-blur-lg ${headerBg} shadow-lg ${borderColor} rounded-b-2xl font-[family-name:var(--font-geist-sans)]`}
+      className={`sticky top-0 z-50 flex items-center px-4 py-3 backdrop-blur-lg ${headerBg} shadow-lg ${borderColor} rounded-b-2xl font-[family-name:var(--font-sans)]`}
     >
       <Link href="/" className="flex items-center">
         <Image
-          src={isDark ? LogoWhite : LogoDark}
+          src={isDark ? LogoDark : Logo}
           alt="Zendo Logo"
           width={140}
           height={30}
@@ -67,7 +67,7 @@ export default function Header() {
           <Link
             key={label}
             href={`/${label.toLowerCase()}`}
-            className="font-[family-name:var(--font-geist-sans)] px-4 py-2 text-sm rounded-md border border-[color:var(--jet)] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] hover:text-[color:var(--text-light)] transition-colors duration-200"
+            className="px-4 py-2 text-sm rounded-md border border-[color:var(--jet)] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] hover:text-[color:var(--text-light)] transition-colors duration-200"
           >
             {label}
           </Link>
@@ -90,7 +90,7 @@ export default function Header() {
 
         <ModeToggle />
       </div>
-      {/* Mobile Menu */}
+      
       <div className="flex md:hidden items-center">
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
@@ -125,7 +125,7 @@ export default function Header() {
             </Button>
           </DialogTrigger>
           <DialogContent
-            className={`p-0 overflow-hidden rounded-2xl shadow-xl font-[family-name:var(--font-geist-sans)] 
+            className={`p-0 overflow-hidden rounded-2xl shadow-xl font-[family-name:var(--font-sans)] 
       ${
         isDark
           ? "bg-[color:var(--night)] border-[color:var(--silver-2)]"
@@ -172,7 +172,7 @@ export default function Header() {
                     <TooltipTrigger asChild>
                       <div className="group">
                         <ModeToggle />
-                        <TooltipContent className="font-[family-name:var(--font-geist-sans)] text-xs">
+                        <TooltipContent className="text-xs">
                           Toggle Theme
                         </TooltipContent>
                       </div>
@@ -194,7 +194,7 @@ export default function Header() {
                         <SiGithub className="w-5 h-5" />
                       </button>
                     </TooltipTrigger>
-                    <TooltipContent className="font-[family-name:var(--font-geist-sans)] text-xs">
+                    <TooltipContent className="text-xs">
                       Visit Github Repo
                     </TooltipContent>
                   </Tooltip>
@@ -214,7 +214,7 @@ export default function Header() {
                         <ArrowUp className="w-5 h-5" />
                       </button>
                     </TooltipTrigger>
-                    <TooltipContent className="font-[family-name:var(--font-geist-sans)] text-xs">
+                    <TooltipContent className="text-xs">
                       Go Back Home
                     </TooltipContent>
                   </Tooltip>

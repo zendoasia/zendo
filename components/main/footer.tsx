@@ -37,7 +37,7 @@ export default function Footer() {
 
   return (
     <div
-      className={`top-0 z-50 flex items-center px-4 py-3 backdrop-blur-lg overflow-hidden relative ${headerBg} shadow-lg ${borderColor} rounded-t-2xl font-[family-name:var(--font-geist-sans)]`}
+      className={`top-0 z-50 flex items-center px-4 py-3 backdrop-blur-lg overflow-hidden relative ${headerBg} shadow-lg ${borderColor} rounded-t-2xl font-[family-name:var(--font-sans)]`}
     >
       <div
         className={`absolute bottom-0 w-48 h-48 rounded-full ${glowColor} blur-[100px] opacity-100 pointer-events-none`}
@@ -59,14 +59,14 @@ export default function Footer() {
           <TooltipTrigger asChild>
             <Link
               href="#top"
-              className="ml-auto z-10 font-[family-name:var(--font-geist-mono)] px-4 py-2 text-sm rounded-md border border-[color:var(--jet)] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] hover:text-[color:var(--text-light)] transition-colors duration-200"
+              className="ml-auto z-10 font-[family-name:var(--font-mono)] px-4 py-2 text-sm rounded-md border border-[color:var(--jet)] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] hover:text-[color:var(--text-light)] transition-colors duration-200"
             >
               <ArrowUp className="w-4 h-4" />
             </Link>
           </TooltipTrigger>
           <TooltipContent
             aria-hidden="true"
-            className="border-none fill-[var(--tooltip-color)] font-[family-name:var(--font-geist-sans)] font-medium text-xs "
+            className="border-none fill-[var(--tooltip-color)] font-medium text-xs "
           >
             Back to Top
           </TooltipContent>

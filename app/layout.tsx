@@ -36,31 +36,13 @@ export const metadata: Metadata = {
   appleWebApp: true,
   applicationName: "Zendo",
   metadataBase: new URL("https://zendo.pages.dev/"),
-  icons: {
-    apple: "/icons/apple-touch-icon.png",
-    icon: "/icons/web-app-manifest-512x512.png",
-  },
   referrer: "origin-when-cross-origin",
-  other: {
-    "apple-mobile-web-app-status-bar-style": "black-translucent",
-  },
   openGraph: {
     title: "Zendo - Intuition",
     description: "The ultimate app for all of Aarush Master's work.",
     url: "https://zendo.pages.dev/",
-    siteName: "Zendo",
-    images: [
-      {
-        url: "/icons/web-app-manifest-512x512.png",
-        width: 512,
-        height: 512,
-        alt: "Zendo - Intuition",
-        type: "image/png",
-      },
-    ],
+    siteName: "Zendo"
   },
-  generator: "Next.js",
-  manifest: "/manifest.webmanifest",
   robots: "/robots.txt",
   verification: {
     google: "-q79a7PlxvBy3gr5cMmDHsT3av2Axtzrq1Vb6dcmSWA",

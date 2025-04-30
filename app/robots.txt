@@ -1,5 +1,5 @@
 # Robots file for Zendo.
-# Maybe it will help robots to do something, I don't know.
+# This was created in the AI era, the era which depressed everyone.
 
 User-agent: *
 Disallow:

@@ -1,28 +1,12 @@
 "use client";
 
-import lonelyGhostDark from "@/public/lonelyGhostDark.svg";
-import lonelyGhostWhite from "@/public/lonelyGhostWhite.svg";
-import { useState, useEffect } from "react";
-import { useTheme } from "next-themes";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { ShieldQuestion } from "lucide-react";
 import Link from "next/link";
+import lonelyGhost from "@/public/lonelyGhost.svg";
+import Image from "next/image";
 
 export default function NotFound() {
-  const { theme, systemTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
-  if (!mounted) return null;
-
-  const currentTheme = theme === "system" ? systemTheme : theme;
-  const isDark = currentTheme === "dark" || currentTheme === "system";
-
   return (
     <div className="relative w-full min-h-screen flex flex-col justify-center items-center px-4 py-8 text-center">
       <motion.div
@@ -31,7 +15,7 @@ export default function NotFound() {
         transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
       >
         <Image
-          src={isDark ? lonelyGhostWhite : lonelyGhostDark}
+          src={lonelyGhost}
           alt="Lonely Ghost"
           priority={false}
           width={0}
@@ -41,7 +25,7 @@ export default function NotFound() {
         />
       </motion.div>
 
-      <div className="flex flex-col items-center gap-2">
+      <div className="flex flex-col items-center gap-2 font-[family-name:var(--font-sans)] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)]">
         <ShieldQuestion className="w-10 h-10 text-[color:var(--danger)]" />
         <h1 className="text-3xl sm:text-4xl font-extrabold">
           Hey! Seems like you are lost?
@@ -55,9 +39,9 @@ export default function NotFound() {
 
       <Link
         href="/"
-        className="mt-8 font-[family-name:var(--font-geist-mono)] px-6 py-3 text-lg rounded-lg text-[color:var(--text-dark)] dark:text-[color:var(--text-light)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] hover:text-[color:var(--text-light)] transition-colors duration-200 border border-[color:var(--jet)] shadow-lg"
+        className="mt-8 px-6 py-3 text-md rounded-2xl hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] hover:text-[color:var(--text-light)] transition-colors duration-200 border border-[color:var(--jet)] shadow-lg"
       >
-        Go back home
+        Go Back Home
       </Link>
     </div>
   );

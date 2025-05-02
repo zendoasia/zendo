@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { ShieldQuestion } from "lucide-react";
 import Link from "next/link";
-import lonelyGhost from "@/public/lonelyGhost.svg";
+import lonelyGhost from "@/public/assets/lonelyGhost.svg";
 import Image from "next/image";
 
 export default function NotFound() {

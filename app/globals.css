@@ -57,62 +57,49 @@ html {
 
 :root {
   --font-sans: "Geist", "Geist Fallback", Arial, sans-serif;
-  --font-mono: "Geist Mono", "Geist Mono Fallback", Menlo, Monaco, Consolas, "Courier New", monospace;
+  --font-mono: "Geist Mono", "Geist Mono Fallback", Menlo, Consolas;
+  --font-code: "Jetbrains Mono", "Ubuntu", "Consolas", monospace;
   /* Neutrals */
-  --white: hsl(0, 0%, 100%);
-  --white-smoke: hsl(0, 0%, 96%);
-  --silver: hsl(0, 0%, 75%);
-  --silver-2: hsl(0, 0%, 66%);
-  --jet: hsl(0, 0%, 16%);
-  --eerie-black: hsl(0, 0%, 10%);
-  --night: hsl(0, 0%, 7%);
-  --black: hsl(0, 0%, 0%);
+  --white: #ffffff;
+  --white-smoke: #f5f5f5;
+  --silver: #bfbfbf;       /* hsl(0, 0%, 75%) */
+  --silver-2: #a8a8a8;     /* hsl(0, 0%, 66%) */
+  --jet: #292929;          /* hsl(0, 0%, 16%) */
+  --eerie-black: #1a1a1a;  /* hsl(0, 0%, 10%) */
+  --night: #121212;        /* hsl(0, 0%, 7%) */
+  --black: #000000;        /* hsl(0, 0%, 0%) */
 
   /* Slate - Neutral */
-  --slate-100: hsl(210, 10%, 90%);
-  /* Light Slate */
-  --slate-300: hsl(210, 12%, 70%);
-  /* Medium Slate */
-  --slate-500: hsl(210, 14%, 50%);
-  /* Neutral Slate */
-  --slate-700: hsl(210, 16%, 30%);
-  /* Dark Slate */
+  --slate-100: #e5eaf0;    /* hsl(210, 10%, 90%) */
+  --slate-300: #b3bfd1;    /* hsl(210, 12%, 70%) */
+  --slate-500: #7c91ad;    /* hsl(210, 14%, 50%) */
+  --slate-700: #3e5770;    /* hsl(210, 16%, 30%) */
 
   /* Text */
-  --text-light: hsl(0, 0%, 100%);
-  --text-dark: hsl(0, 0%, 0%);
+  --text-light: #ffffff;   /* hsl(0, 0%, 100%) */
+  --text-dark: #000000;    /* hsl(0, 0%, 0%) */
 
-  /* Primary – Indigo (Sleek & Professional) */
-  --primary2: hsl(239, 85%, 67%);
-  /* Indigo 500 */
-  --primary-hover: hsl(239, 75%, 60%);
-  /* Indigo 600 */
-  --primary-light: hsl(239, 89%, 80%);
-  /* Indigo 400 */
-  --primary-subtle: hsl(238, 100%, 95%);
-  /* Indigo 100 */
+  /* Primary – Indigo */
+  --primary2: #6c5ce7;         /* hsl(239, 85%, 67%) */
+  --primary-hover: #5c4dc2;    /* hsl(239, 75%, 60%) */
+  --primary-light: #918cf3;    /* hsl(239, 89%, 80%) */
+  --primary-subtle: #f0f2ff;   /* hsl(238, 100%, 95%) */
 
-  /* Accent – Teal (Modern & Intuitive) */
-  --accent2: hsl(174, 64%, 48%);
-  /* Teal 500 */
-  --accent-hover: hsl(174, 72%, 40%);
-  /* Teal 600 */
-  --accent-light: hsl(174, 72%, 70%);
-  /* Teal 400 */
-  --accent-subtle: hsl(174, 80%, 90%);
-  /* Teal 100 */
+  /* Accent – Teal */
+  --accent2: #2fcab3;          /* hsl(174, 64%, 48%) */
+  --accent-hover: #23a394;     /* hsl(174, 72%, 40%) */
+  --accent-light: #8fe4d6;     /* hsl(174, 72%, 70%) */
+  --accent-subtle: #d1f6f2;    /* hsl(174, 80%, 90%) */
 
   /* Utility / States */
-  --success: hsl(142, 71%, 45%);
-  /* Green 500 */
-  --warning: hsl(48, 96%, 53%);
-  /* Yellow 400 */
-  --danger: hsl(0, 84%, 60%);
-  /* Red 500 */
+  --success: #2ecc71;          /* hsl(142, 71%, 45%) */
+  --warning: #ffe44d;          /* hsl(48, 96%, 53%) */
+  --danger: #f2545b;           /* hsl(0, 84%, 60%) */
 
-  --success-bg: hsl(142, 71%, 85%);
-  --warning-bg: hsl(48, 96%, 90%);
-  --danger-bg: hsl(0, 84%, 90%);
+  --success-bg: #d8f7e8;       /* hsl(142, 71%, 85%) */
+  --warning-bg: #fff9db;       /* hsl(48, 96%, 90%) */
+  --danger-bg: #fddada;        /* hsl(0, 84%, 90%) */
+
 
   --radius: 0.625rem;
   --background: oklch(1 0 0);

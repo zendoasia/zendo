@@ -1,20 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import Header from "@/components/main/header";
 import { Toaster } from "sonner";
 import Footer from "@/components/main/footer";
+import { geistSans, geistMono, menlo, consolas, jetbrainsMono, ubuntu } from "@/components/modules/fonts";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "Zendo - Intuition",
@@ -41,7 +32,7 @@ export const metadata: Metadata = {
     title: "Zendo - Intuition",
     description: "The ultimate app for all of Aarush Master's work.",
     url: "https://zendo.pages.dev/",
-    siteName: "Zendo"
+    siteName: "Zendo",
   },
   robots: "/robots.txt",
   verification: {
@@ -60,7 +51,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${menlo.variable} ${ubuntu.variable} ${jetbrainsMono.variable} ${consolas.variable} antialiased`}
       >
         <ThemeProvider
           attribute="class"

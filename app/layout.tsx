@@ -4,13 +4,20 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Header from "@/components/main/header";
 import { Toaster } from "sonner";
 import Footer from "@/components/main/footer";
-import { geistSans, geistMono, menlo, consolas, jetbrainsMono, ubuntu } from "@/components/modules/fonts";
-
+import ExternalLinkInterceptor from "@/components/modules/externalLinkInterceptor";
+import {
+  geistSans,
+  geistMono,
+  menlo,
+  consolas,
+  jetbrainsMono,
+  ubuntu,
+} from "@/components/modules/fonts";
 
 export const metadata: Metadata = {
   title: "Zendo - Intuition",
-  description: "The ultimate app for all of Aarush Master's work.",
-  keywords: ["portfolio", "productivity", "technology", "aarush", "master"],
+  description: "Welcome to Zendo. This is a private website for covering my work, projects, and portfolio. Let's explore the world of technology together.",
+  keywords: ["portfolio", "productivity", "technology", "aarush", "master", "projects", "zendo", "programming", "development", "design", "management"],
   authors: [
     {
       name: "Aarush Master",
@@ -21,20 +28,27 @@ export const metadata: Metadata = {
       url: "mailto:aarush01111@gmail.com",
     },
   ],
+  assets: "https://zendo.pages.dev/assets/",
   category: "Programming and Technology",
-  abstract: "The ultimate app for all of Aarush Master's work.",
-  classification: "Portfolio",
-  appleWebApp: true,
-  applicationName: "Zendo",
   metadataBase: new URL("https://zendo.pages.dev/"),
   referrer: "origin-when-cross-origin",
   openGraph: {
-    title: "Zendo - Intuition",
-    description: "The ultimate app for all of Aarush Master's work.",
+    title: "Zendo",
+    description: "Welcome to Zendo. This is a private website for covering my work, projects, and portfolio. Let's explore the world of technology together.",
     url: "https://zendo.pages.dev/",
     siteName: "Zendo",
+    determiner: "the"
   },
   robots: "/robots.txt",
+  twitter: {
+    card: "summary_large_image",
+    title: "Zendo",
+    description: "Welcome to Zendo. This is a private website for covering my work, projects, and portfolio. Let's explore the world of technology together.",
+    creator: "@aarush01111",
+  },
+  pinterest: {
+    richPin: true,
+  },
   verification: {
     google: "-q79a7PlxvBy3gr5cMmDHsT3av2Axtzrq1Vb6dcmSWA",
     other: {
@@ -59,12 +73,13 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <ExternalLinkInterceptor/>
           <header>
             <Header />
           </header>
           <main>{children}</main>
           <aside>
-            <span className="flex justify-end gap-10 bottom-0">
+            <span>
               <Toaster />
             </span>
           </aside>

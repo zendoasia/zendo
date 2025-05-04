@@ -100,7 +100,6 @@ html {
   --warning-bg: #fff9db;       /* hsl(48, 96%, 90%) */
   --danger-bg: #fddada;        /* hsl(0, 84%, 90%) */
 
-
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);

@@ -43,21 +43,9 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
-* {
-  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
-}
-
-[data-state='open'] .tooltip-content::before {
-  display: none;
-}
-
 :root {
-  --font-sans: "Geist", "Geist Fallback", Arial, sans-serif;
-  --font-mono: "Geist Mono", "Geist Mono Fallback", Menlo, Consolas;
+  --font-text: "Geist", "Geist Fallback", Arial, sans-serif;
+  --font-text-mono: "Geist Mono", "Geist Mono Fallback", Menlo, Consolas;
   --font-code: "Jetbrains Mono", "Ubuntu", "Consolas", monospace;
   /* Neutrals */
   --white: #ffffff;
@@ -93,11 +81,11 @@ html {
 
   /* Utility / States */
   --success: #2ecc71;          /* hsl(142, 71%, 45%) */
-  --warning: #ffe44d;          /* hsl(48, 96%, 53%) */
+  --warning: #ffb84d;          /* hsl(48, 96%, 53%) */
   --danger: #f2545b;           /* hsl(0, 84%, 60%) */
 
   --success-bg: #d8f7e8;       /* hsl(142, 71%, 85%) */
-  --warning-bg: #fff9db;       /* hsl(48, 96%, 90%) */
+  --warning-bg: #fff1db;       /* hsl(48, 96%, 90%) */
   --danger-bg: #fddada;        /* hsl(0, 84%, 90%) */
 
   --radius: 0.625rem;

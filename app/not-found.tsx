@@ -1,4 +1,4 @@
-"Dummy file to add Metadata to the 404 page while preserving the 404 page's client functionality."
+"Dummy file to add Metadata to the 404 page while preserving the 404 page's client functionality.";
 
 import React from "react";
 import NotFound from "@/components/main/notFound";

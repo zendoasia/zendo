@@ -25,7 +25,7 @@ export default function NotFound() {
         />
       </motion.div>
 
-      <div className="flex flex-col items-center gap-2 font-[family-name:var(--font-sans)] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)]">
+      <div className="flex flex-col items-center gap-2 font-[family-name:var(--font-text)] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)]">
         <ShieldQuestion className="w-10 h-10 text-[color:var(--danger)]" />
         <h1 className="text-3xl sm:text-4xl font-extrabold">
           Hey! Seems like you are lost?

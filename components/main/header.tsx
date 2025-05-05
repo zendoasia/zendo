@@ -18,6 +18,7 @@ import Logo from "@/public/assets/Logo.svg";
 import Link from "next/link";
 import { SiGithub } from "@icons-pack/react-simple-icons";
 import { useRouter } from "next/navigation";
+import { openExternalLinkManually } from "@/components/modules/externalLinkInterceptor";
 import {
   Tooltip,
   TooltipContent,
@@ -35,20 +36,36 @@ export default function Header() {
     setMounted(true);
   }, []);
 
+  // useEffect(() => {
+  //   const header = document.getElementById("glass-header");
+  //   if (!header) return;
+
+  //   const handleScroll = () => {
+  //     if (window.scrollY > 50) {
+  //       header.classList.add("backdrop-blur-2xl", "bg-white/20");
+  //     } else {
+  //       header.classList.remove("backdrop-blur-2xl", "bg-white/20");
+  //     }
+  //   };
+
+  //   window.addEventListener("scroll", handleScroll);
+  //   return () => window.removeEventListener("scroll", handleScroll);
+  // }, []);
+
   if (!mounted) return null;
 
   const currentTheme = theme === "system" ? systemTheme : theme;
   const isDark = currentTheme === "dark" || currentTheme === "system";
-  const headerBg = isDark
-    ? "bg-[color:var(--night)]/80"
-    : "bg-[color:var(--white-smoke)]/60";
   const borderColor = isDark
     ? "border-[color:var(--jet)]"
     : "border-[color:var(--silver)]";
 
   return (
     <div
-      className={`sticky top-0 z-50 flex items-center px-4 py-3 backdrop-blur-lg ${headerBg} shadow-lg ${borderColor} rounded-b-2xl font-[family-name:var(--font-sans)]`}
+      className={`sticky top-0 overflow-visible z-50 flex items-center px-4 py-3 
+        backdrop-blur-xl border border-dashed ${borderColor}
+        shadow-xl transition-all duration-300 rounded-b-2xl 
+        font-[family-name:var(--font-text)]`}
     >
       <Link href="/" className="flex items-center">
         <Image
@@ -90,7 +107,7 @@ export default function Header() {
 
         <ModeToggle />
       </div>
-      
+
       <div className="flex md:hidden items-center">
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
@@ -125,7 +142,7 @@ export default function Header() {
             </Button>
           </DialogTrigger>
           <DialogContent
-            className={`p-0 overflow-hidden rounded-2xl shadow-xl font-[family-name:var(--font-sans)] 
+            className={`p-0 overflow-hidden rounded-2xl shadow-xl font-[family-name:var(--font-text)] 
       ${
         isDark
           ? "bg-[color:var(--night)] border-[color:var(--silver-2)]"
@@ -182,12 +199,11 @@ export default function Header() {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
+                      {/* THIS GITHUB BTN ON THE MENU */}
                       <button
+                        data-no-prompt
                         onClick={() => {
-                          setOpen(false);
-                          setTimeout(() => {
-                            router.push("https://github.com/aarush0101/zendo");
-                          }, 950);
+                          openExternalLinkManually("https://github.com/aarush0101/zendo");
                         }}
                         className="group w-8 h-8 rounded-xl border border-dashed overflow-hidden flex items-center justify-center transition-colors hover:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)]"
                       >

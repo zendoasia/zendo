@@ -68,9 +68,9 @@
   --text-dark: #000000;    /* hsl(0, 0%, 0%) */
 
   /* Primary – Indigo */
-  --primary2: #6c5ce7;         /* hsl(239, 85%, 67%) */
-  --primary-hover: #5c4dc2;    /* hsl(239, 75%, 60%) */
-  --primary-light: #918cf3;    /* hsl(239, 89%, 80%) */
+  --primary2: #5c5ee7;         /* hsl(239, 85%, 67%) */
+  --primary-hover: #4d4fc2;    /* hsl(239, 75%, 60%) */
+  --primary-light: #938cf3;    /* hsl(239, 89%, 80%) */
   --primary-subtle: #f0f2ff;   /* hsl(238, 100%, 95%) */
 
   /* Accent – Teal */

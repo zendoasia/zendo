@@ -75,9 +75,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ExternalLinkInterceptor/>
-          <header>
             <Header />
-          </header>
           <main>{children}</main>
           <aside>
             <span>

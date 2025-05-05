@@ -36,36 +36,17 @@ export default function Header() {
     setMounted(true);
   }, []);
 
-  // useEffect(() => {
-  //   const header = document.getElementById("glass-header");
-  //   if (!header) return;
-
-  //   const handleScroll = () => {
-  //     if (window.scrollY > 50) {
-  //       header.classList.add("backdrop-blur-2xl", "bg-white/20");
-  //     } else {
-  //       header.classList.remove("backdrop-blur-2xl", "bg-white/20");
-  //     }
-  //   };
-
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => window.removeEventListener("scroll", handleScroll);
-  // }, []);
-
   if (!mounted) return null;
 
   const currentTheme = theme === "system" ? systemTheme : theme;
   const isDark = currentTheme === "dark" || currentTheme === "system";
-  const borderColor = isDark
-    ? "border-[color:var(--jet)]"
-    : "border-[color:var(--silver)]";
 
   return (
-    <div
-      className={`sticky top-0 overflow-visible z-50 flex items-center px-4 py-3 
-        backdrop-blur-xl border border-dashed ${borderColor}
-        shadow-xl transition-all duration-300 rounded-b-2xl 
-        font-[family-name:var(--font-text)]`}
+    <header
+      className={`sticky top-0 overflow-visible z-50 flex items-center px-4 py-3
+      backdrop-blur-md border border-dashed dark:border-[color:var(--jet)] border-[color:var(--silver2)]
+      bg-opacity-10 rounded-b-2xl 
+      shadow-lg font-[family-name:var(--font-text)]`}
     >
       <Link href="/" className="flex items-center">
         <Image
@@ -199,11 +180,12 @@ export default function Header() {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      {/* THIS GITHUB BTN ON THE MENU */}
                       <button
                         data-no-prompt
                         onClick={() => {
-                          openExternalLinkManually("https://github.com/aarush0101/zendo");
+                          openExternalLinkManually(
+                            "https://github.com/aarush0101/zendo"
+                          );
                         }}
                         className="group w-8 h-8 rounded-xl border border-dashed overflow-hidden flex items-center justify-center transition-colors hover:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)]"
                       >
@@ -240,6 +222,6 @@ export default function Header() {
           </DialogContent>
         </Dialog>
       </div>
-    </div>
+    </header>
   );
 }

@@ -57,14 +57,14 @@ export function ModeToggle() {
         <Button
           variant="outline"
           size="icon"
-          className="w-8 h-8 rounded-2xl hover:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)] transition-colors duration-200"
+          className="w-1.2 h-1.2 rounded-2xl hover:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)] transition-colors duration-200"
         >
           {theme === "system" ? (
-            <MonitorCogIcon className="h-5 w-5" />
+            <MonitorCogIcon size="1.2rem" />
           ) : resolvedTheme === "light" ? (
-            <Sun className="h-5 w-5" />
+            <Sun size="1.2rem" />
           ) : (
-            <Moon className="h-5 w-5" />
+            <Moon size="1.2rem" />
           )}
           <span className="sr-only">Toggle theme</span>
         </Button>
@@ -77,7 +77,7 @@ export function ModeToggle() {
             className="flex justify-between"
           >
             {t.charAt(0).toUpperCase() + t.slice(1)}
-            {theme === t && <Check className="h-4 w-4 text-[var(--success)]" />}
+            {theme === t && <Check size="1.2rem" className="text-[var(--success)]" />}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

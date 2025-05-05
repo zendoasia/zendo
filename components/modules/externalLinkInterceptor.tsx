@@ -129,7 +129,7 @@ export default function ExternalLinkInterceptor() {
           <Check size="1.2rem" className="text-[color:var(--success)]" />
           <span className="text-xs sm:text-sm flex flex-row items-center gap-2.5">
             HTTPS <ArrowRight size="1.2rem" />
-            <span className="font-[family-name:var(--font-code)]">
+            <span className="font-[family-name:var(--font-code)] break-all max-w-full overflow-hidden text-ellipsis">
               {linkHref}
             </span>
           </span>
@@ -141,7 +141,7 @@ export default function ExternalLinkInterceptor() {
           <X size="1.2rem" className="text-[color:var(--danger)]" />
           <span className="text-xs sm:text-sm flex flex-row items-center gap-2.5">
             HTTP <ArrowRight size="1.2rem" />
-            <span className="font-[family-name:var(--font-code)]">
+            <span className="font-[family-name:var(--font-code)] break-all max-w-full overflow-hidden text-ellipsis">
               {linkHref}
             </span>
           </span>
@@ -153,7 +153,7 @@ export default function ExternalLinkInterceptor() {
           <Info size="1.2rem" className="text-[color:var(--warning)]" />
           <span className="text-xs sm:text-sm flex flex-row items-center gap-2.5">
             Unknown <ArrowRight size="1.2rem" />
-            <span className="font-[family-name:var(--font-code)]">
+            <span className="font-[family-name:var(--font-code)] break-all max-w-full overflow-hidden text-ellipsis">
               {linkHref}
             </span>
           </span>
@@ -178,8 +178,8 @@ export default function ExternalLinkInterceptor() {
             You&#39;re leaving our site
           </DrawerTitle>
           <DrawerDescription className="text-sm text-muted-foreground">
-            You&#39;re about to visit an external website not affiliated with us.
-            Proceed only if you trust it.
+            You&#39;re about to visit an external website not affiliated with
+            us. Proceed only if you trust it.
           </DrawerDescription>
         </DrawerHeader>
         <div className="bg-muted/60 text-foreground dark:bg-muted/40 p-3 rounded-md text-sm flex items-center gap-2 mt-2 max-w-full sm:max-w-[calc(100%-2rem)] md:max-w-[calc(100%-3rem)]">
@@ -192,7 +192,11 @@ export default function ExternalLinkInterceptor() {
               Cancel
             </Button>
           </DrawerClose>
-          <Button onClick={proceed} className="w-full sm:w-auto">
+          <Button
+            type="button"
+            onClick={proceed}
+            className="w-full sm:w-auto"
+          >
             Proceed
           </Button>
         </DrawerFooter>

@@ -29,7 +29,19 @@ import { detectOS } from "@/lib/utils";
 
 export default function Header() {
   const os = useMemo(() => detectOS(), []);
-  const strippedOS = useMemo(() => stripOS(), [os]);
+  const strippedOS = useMemo(() => {
+    function stripOS() {
+      if (os === "MacOS") return "mac";
+      if (os === "Windows") return "windows";
+      if (os === "Linux") return "windows";
+      if (os === "Android") return "phone";
+      if (os === "iOS") return "phone";
+      return "windows";
+    }
+  
+    return stripOS();
+  }, [os]);
+  
   const router = useRouter();
   const { theme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -39,14 +51,6 @@ export default function Header() {
     setMounted(true);
   }, []);
 
-  function stripOS() {
-    if (os === "MacOS") return "mac";
-    if (os === "Windows") return "windows";
-    if (os === "Linux") return "windows";
-    if (os === "Android") return "android";
-    if (os === "iOS") return "mac";
-    return "windows";
-  }
   if (!mounted) return null;
 
   const currentTheme = theme === "system" ? systemTheme : theme;
@@ -57,7 +61,7 @@ export default function Header() {
       className={`sticky top-0 overflow-visible z-50 flex items-center px-4 py-3
       backdrop-blur-md border-l border-r border-b border-dashed dark:border-[color:var(--jet)] border-[color:var(--silver2)]
       bg-opacity-10 rounded-b-3xl 
-      shadow-lg font-[family-name:var(--font-text)]`}
+      -lg font-[family-name:var(--font-text)]`}
     >
       <Link href="/" className="flex items-center">
         <div className="relative w-[140px] aspect-[140/30]">
@@ -89,7 +93,7 @@ export default function Header() {
 
       <div className="hidden md:flex items-center gap-[0.5rem]">
         <Button
-          className="ml-6 group inline-flex items-center justify-center gap-3 rounded-md border border-[color:var(--jet)] bg-transparent px-4 py-2 shadow-lg transition-colors duration-300 
+          className="ml-6 group inline-flex items-center justify-center gap-3 rounded-md border border-[color:var(--jet)] bg-transparent px-4 py-2 transition-colors duration-300 
              text-[color:var(--text-dark)] dark:text-[color:var(--text-light)] 
              hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] 
              hover:text-[color:var(--text-light)] focus:text-[color:var(--text-light)]"
@@ -108,8 +112,6 @@ export default function Header() {
               <span className="hidden md:inline-block text-sm font-[family-name:var(--font-code)] border border-[color:var(--jet)] px-2 py-0.5 rounded text-muted-foreground">
                 CTRL+K
               </span>
-            ) : strippedOS === "android" ? (
-              <></>
             ) : null}
           </span>
         </Button>
@@ -258,7 +260,7 @@ export default function Header() {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
-                        className="group inline-flex items-center justify-center gap-3 rounded-md border border-[color:var(--jet)] bg-transparent px-4 py-2 shadow-lg transition-colors duration-300 
+                        className="group inline-flex items-center justify-center gap-3 rounded-md border border-[color:var(--jet)] bg-transparent px-4 py-2 -lg transition-colors duration-300 
                         text-[color:var(--text-dark)] dark:text-[color:var(--text-light)] 
                         hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] 
                         hover:text-[color:var(--text-light)] focus:text-[color:var(--text-light)]"

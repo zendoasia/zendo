@@ -39,7 +39,7 @@ export default function NotFound() {
 
       <Link
         href="/"
-        className="mt-8 px-6 py-3 text-md rounded-2xl hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] hover:text-[color:var(--text-light)] transition-colors duration-200 border border-[color:var(--jet)] shadow-lg"
+        className="mt-8 px-6 py-3 text-md rounded-2xl hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] hover:text-[color:var(--text-light)] transition-colors duration-200 border border-[color:var(--jet)] -lg"
       >
         Go Back Home
       </Link>

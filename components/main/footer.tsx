@@ -11,7 +11,7 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="top-0 z-50 flex flex-col sm:flex-row items-center sm:items-center px-4 py-2 backdrop-blur-md overflow-hidden relative bg-[color:var(--white-smoke)] shadow-lg dark:bg-[color:var(--night)] border-l border-r border-t border-dashed border-[color:var(--jet)] rounded-t-3xl font-[family-name:var(--font-text)]">
+    <footer className="top-0 z-50 flex flex-col sm:flex-row items-center sm:items-center px-4 py-2 backdrop-blur-md overflow-hidden relative bg-[color:var(--white-smoke)] -lg dark:bg-[color:var(--night)] border-l border-r border-t border-dashed border-[color:var(--jet)] rounded-t-3xl font-[family-name:var(--font-text)]">
       <div
         className={`absolute bottom-0 w-48 h-48 rounded-full dark:bg-[color:var(--accent2)] bg-[color:var(--primary2)] blur-[100px] opacity-100 pointer-events-none`}
         aria-hidden="true"

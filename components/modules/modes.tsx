@@ -57,7 +57,7 @@ export function ModeToggle() {
         <Button
           variant="outline"
           size="icon"
-          className="w-1.2 h-1.2 rounded-2xl hover:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)] transition-colors duration-200"
+          className="px-2 py-4.5 rounded-md border border-[color:var(--jet)] hover:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)] transition-colors duration-300"
         >
           {theme === "system" ? (
             <MonitorCogIcon size="1.2rem" />

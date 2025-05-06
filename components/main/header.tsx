@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { ModeToggle } from "@/components/modules/modes";
 import {
   Dialog,
@@ -8,7 +8,7 @@ import {
   DialogTrigger,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { AlignCenter, ArrowRightLeft, ArrowUp } from "lucide-react";
+import { AlignJustify, X, House, Search, Settings } from "lucide-react";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
@@ -25,8 +25,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { detectOS } from "@/lib/utils";
 
 export default function Header() {
+  const os = useMemo(() => detectOS(), []);
+  const strippedOS = useMemo(() => stripOS(), [os]);
   const router = useRouter();
   const { theme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
@@ -36,6 +39,14 @@ export default function Header() {
     setMounted(true);
   }, []);
 
+  function stripOS() {
+    if (os === "MacOS") return "mac";
+    if (os === "Windows") return "windows";
+    if (os === "Linux") return "windows";
+    if (os === "Android") return "android";
+    if (os === "iOS") return "mac";
+    return "windows";
+  }
   if (!mounted) return null;
 
   const currentTheme = theme === "system" ? systemTheme : theme;
@@ -44,28 +55,30 @@ export default function Header() {
   return (
     <header
       className={`sticky top-0 overflow-visible z-50 flex items-center px-4 py-3
-      backdrop-blur-md border border-dashed dark:border-[color:var(--jet)] border-[color:var(--silver2)]
-      bg-opacity-10 rounded-b-2xl 
+      backdrop-blur-md border-l border-r border-b border-dashed dark:border-[color:var(--jet)] border-[color:var(--silver2)]
+      bg-opacity-10 rounded-b-3xl 
       shadow-lg font-[family-name:var(--font-text)]`}
     >
       <Link href="/" className="flex items-center">
-        <Image
-          src={isDark ? LogoDark : Logo}
-          alt="Zendo Logo"
-          width={140}
-          height={30}
-          priority
-          quality="1080"
-          loading="eager"
-        />
+        <div className="relative w-[140px] aspect-[140/30]">
+          <Image
+            src={isDark ? LogoDark : Logo}
+            alt="Zendo Logo"
+            fill
+            priority
+            quality={100}
+            loading="eager"
+            className="object-contain"
+          />
+        </div>
       </Link>
 
-      <div className="hidden md:flex items-center gap-3 ml-6">
+      <div className="hidden md:flex items-center gap-[0.5rem] ml-6">
         {["About", "Portfolio", "Projects", "Contact"].map((label) => (
           <Link
             key={label}
             href={`/${label.toLowerCase()}`}
-            className="px-4 py-2 text-sm rounded-md border border-[color:var(--jet)] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] hover:text-[color:var(--text-light)] transition-colors duration-200"
+            className="px-4 py-2 text-sm rounded-md border border-[color:var(--jet)] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] hover:text-[color:var(--text-light)] transition-colors duration-300"
           >
             {label}
           </Link>
@@ -74,28 +87,52 @@ export default function Header() {
 
       <div className="flex-grow" />
 
-      <div className="hidden md:flex items-center gap-3">
-        <Link
-          href="https://github.com/aarush0101"
-          target="_blank"
-          className="group w-10 h-10 rounded-2xl border border-dashed overflow-hidden 
-         transition-colors duration-200 focus:ring-0 focus:outline-none"
+      <div className="hidden md:flex items-center gap-[0.5rem]">
+        <Button
+          className="ml-6 group inline-flex items-center justify-center gap-3 rounded-md border border-[color:var(--jet)] bg-transparent px-4 py-2 shadow-lg transition-colors duration-300 
+             text-[color:var(--text-dark)] dark:text-[color:var(--text-light)] 
+             hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] 
+             hover:text-[color:var(--text-light)] focus:text-[color:var(--text-light)]"
         >
-          <div className="flex items-center justify-center w-full h-full group-hover:bg-[color:var(--primary-hover)] group-focus:bg-[color:var(--primary-hover)] dark:group-hover:bg-[color:var(--primary-hover)] dark:group-focus:bg-[color:var(--primary-hover)]">
-            <SiGithub className="w-6 h-6" />
+          <Search
+            size="1.2rem"
+            className="transition-colors duration-300 group-hover:text-[color:var(--text-light)]"
+          />
+          <span className="flex items-center gap-2">
+            <span className="font-semibold text-sm">Find</span>
+            {strippedOS === "mac" ? (
+              <span className="hidden md:inline-block text-sm font-[family-name:var(--font-code)] border border-[color:var(--jet)] px-2 py-0.5 rounded text-muted-foreground">
+                &#x2318;+K
+              </span>
+            ) : strippedOS === "windows" ? (
+              <span className="hidden md:inline-block text-sm font-[family-name:var(--font-code)] border border-[color:var(--jet)] px-2 py-0.5 rounded text-muted-foreground">
+                CTRL+K
+              </span>
+            ) : strippedOS === "android" ? (
+              <></>
+            ) : null}
+          </span>
+        </Button>
+
+        <Link
+          href="https://github.com/aarush0101/zendo"
+          target="_blank"
+          className="hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)] transition-colors duration-300 px-2 py-2 rounded-md border border-[color:var(--jet)] overflow-hidden"
+        >
+          <div className="flex items-center justify-center">
+            <SiGithub size="1.2rem" />
           </div>
         </Link>
 
         <ModeToggle />
       </div>
-
       <div className="flex md:hidden items-center">
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger asChild>
             <Button
               variant="ghost"
               size="icon"
-              className="border border-[color:var(--accent-hover)] dark:border-[color:var(--accent)] bg-transparent"
+              className="hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)] transition-colors duration-300 px-2 py-2 rounded-md border border-[color:var(--jet)] overflow-hidden"
             >
               <AnimatePresence mode="wait" initial={false}>
                 {open ? (
@@ -106,7 +143,7 @@ export default function Header() {
                     exit={{ rotate: -90, opacity: 0.99 }}
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   >
-                    <ArrowRightLeft className="h-5 w-5 text-[color:var(--accent-light)] dark:text-[color:var(--accent-subtle)]" />
+                    <X size="1.2rem" />
                   </motion.div>
                 ) : (
                   <motion.div
@@ -116,35 +153,27 @@ export default function Header() {
                     exit={{ rotate: 90, opacity: 0.99 }}
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   >
-                    <AlignCenter className="h-5 w-5 text-[color:var(--accent-light)] dark:text-[color:var(--accent-subtle)]" />
+                    <AlignJustify size="1.2rem" />
                   </motion.div>
                 )}
               </AnimatePresence>
             </Button>
           </DialogTrigger>
-          <DialogContent
-            className={`p-0 overflow-hidden rounded-2xl shadow-xl font-[family-name:var(--font-text)] 
-      ${
-        isDark
-          ? "bg-[color:var(--night)] border-[color:var(--silver-2)]"
-          : "bg-[color:var(--white-smoke)] border-[color:var(--jet)]"
-      }`}
-          >
-            <div className="px-4 pt-4">
-              <DialogTitle
-                className="text-xl font-bold 
-      text-[color:var(--text-dark)] dark:text-[color:var(--text-light)]"
-              >
+          <DialogContent className="w-[70vw] md:w-[50vw] h-[45vh] overflow-y-auto px-4 py-4 overflow-hidden rounded-md font-[family-name:var(--font-text)]">
+            <div>
+              <DialogTitle className="flex flex-row items-center gap-2 text-lg font-semibold">
+                <Settings size="2rem" className="text-[color:var(--success)]" />
                 Settings
               </DialogTitle>
             </div>
-
-            <div className="flex flex-col divide-y divide-[color:var(--border)] mt-4">
-              <div className="p-4 flex flex-col space-y-3">
-                <h3 className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
+            <hr className="border-[color:var(--jet)] opacity-40" />
+            <div className="flex flex-col space-y-2">
+              <div>
+                <h3 className="text-lg uppercase tracking-wider text-muted-foreground font-semibold">
                   Links
                 </h3>
-                <div className="flex flex-col space-y-2">
+                <br />
+                <span className="flex flex-col space-y-2">
                   {["About", "Portfolio", "Projects", "Contact"].map(
                     (label) => (
                       <button
@@ -155,22 +184,23 @@ export default function Header() {
                             router.push(`/${label.toLowerCase()}`);
                           }, 950);
                         }}
-                        className="text-left text-sm font-medium text-[color:var(--text-dark)] dark:text-[color:var(--text-light)] hover:text-[color:var(--accent)] transition-colors"
+                        className="text-left  text-sm font-medium hover:bg-[color:var(--primary-hover)] px-1 py-1 rounded-md"
                       >
                         {label}
                       </button>
                     )
                   )}
-                </div>
+                </span>
               </div>
-
-              <div className="flex justify-center space-x-4 p-4">
+              <br />
+              <hr className="border-[color:var(--jet)] opacity-40" />
+              <div className="flex justify-center space-x-2 p-[0.5rem]">
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <div className="group">
                         <ModeToggle />
-                        <TooltipContent className="text-xs">
+                        <TooltipContent className="text-sm">
                           Toggle Theme
                         </TooltipContent>
                       </div>
@@ -180,41 +210,78 @@ export default function Header() {
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <button
-                        data-no-prompt
+                      <Button
+                        variant="ghost"
                         onClick={() => {
-                          openExternalLinkManually(
-                            "https://github.com/aarush0101/zendo"
-                          );
+                          setOpen(false);
+                          setTimeout(() => {
+                            openExternalLinkManually(
+                              "https://github.com/aarush0101/zendo"
+                            );
+                          }, 950);
                         }}
-                        className="group w-8 h-8 rounded-xl border border-dashed overflow-hidden flex items-center justify-center transition-colors hover:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)]"
+                        className="hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)] transition-colors duration-300 px-4 py-4.5 rounded-md border border-[color:var(--jet)] overflow-hidden"
                       >
-                        <SiGithub className="w-5 h-5" />
-                      </button>
+                        <SiGithub size="1.2rem" />
+                      </Button>
                     </TooltipTrigger>
-                    <TooltipContent className="text-xs">
-                      Visit Github Repo
+                    <TooltipContent className="text-sm">
+                      Visit Github Repository
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
+
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <button
+                      <Button
+                        variant="ghost"
                         onClick={() => {
                           setOpen(false);
                           setTimeout(() => {
                             router.push("/");
                           }, 950);
                         }}
-                        className="group w-8 h-8 rounded-xl flex items-center justify-center transition-colors hover:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)]"
+                        className="hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)] transition-colors duration-300 px-4 py-4.5 rounded-md border border-[color:var(--jet)] overflow-hidden"
                       >
-                        <ArrowUp className="w-5 h-5" />
-                      </button>
+                        <House size="1.2rem" />
+                      </Button>
                     </TooltipTrigger>
-                    <TooltipContent className="text-xs">
+                    <TooltipContent className="text-sm">
                       Go Back Home
                     </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+              <div className="flex justify-center mt-0.5">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        className="group inline-flex items-center justify-center gap-3 rounded-md border border-[color:var(--jet)] bg-transparent px-4 py-2 shadow-lg transition-colors duration-300 
+                        text-[color:var(--text-dark)] dark:text-[color:var(--text-light)] 
+                        hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] 
+                        hover:text-[color:var(--text-light)] focus:text-[color:var(--text-light)]"
+                      >
+                        <Search
+                          size="1.2rem"
+                          className="transition-colors duration-300 group-hover:text-[color:var(--text-light)]"
+                        />
+                        <span className="flex items-center gap-2">
+                          <span className="font-semibold text-sm">Find</span>
+                          {strippedOS === "mac" ? (
+                            <span className="hidden md:inline-block text-sm font-[family-name:var(--font-code)] border border-[color:var(--jet)] px-2 py-0.5 rounded text-muted-foreground">
+                              &#x2318;+K
+                            </span>
+                          ) : strippedOS === "windows" ? (
+                            <span className="hidden md:inline-block text-sm font-[family-name:var(--font-code)] border border-[color:var(--jet)] px-2 py-0.5 rounded text-muted-foreground">
+                              CTRL+K
+                            </span>
+                          ) : null}
+                        </span>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent className="text-sm">Search</TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
               </div>

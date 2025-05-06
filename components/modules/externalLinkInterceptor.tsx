@@ -19,7 +19,6 @@ import {
   DrawerDescription,
   DrawerClose,
 } from "@/components/ui/drawer";
-import { useTheme } from "next-themes";
 
 import { useEffect, useRef, useState } from "react";
 import { Info, Check, X, OctagonAlert, ArrowRight } from "lucide-react";
@@ -49,13 +48,11 @@ export default function ExternalLinkInterceptor() {
   const [linkHref, setLinkHref] = useState<string | null>(null);
   const linkElementRef = useRef<HTMLAnchorElement | null>(null);
   const isMobile = useIsMobile();
-  const { theme, systemTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
-  const currentTheme = theme === "system" ? systemTheme : theme;
-  const isDark = currentTheme === "dark" || currentTheme === "system";
-  const borderColor = isDark
-    ? "border-[color:var(--jet)]"
-    : "border-[color:var(--silver2)]";
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
@@ -122,10 +119,12 @@ export default function ExternalLinkInterceptor() {
       );
   }, []);
 
+  if (!mounted) return null; // Prevents hydration error
+
   const stat = () => {
     if (linkHref?.includes("https://")) {
       return (
-        <span className="flex items-center gap-2 text-[color:var(--text-dark)] dark:text-[color:var(--text-light)]">
+        <span className="flex items-center gap-[1rem] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)]">
           <Check size="1.2rem" className="text-[color:var(--success)]" />
           <span className="text-xs sm:text-sm flex flex-row items-center gap-2.5">
             HTTPS <ArrowRight size="1.2rem" />
@@ -137,7 +136,7 @@ export default function ExternalLinkInterceptor() {
       );
     } else if (linkHref?.includes("http://")) {
       return (
-        <span className="flex items-center gap-2 text-[color:var(--text-dark)] dark:text-[color:var(--text-light)]">
+        <span className="flex items-center gap-[1rem] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)]">
           <X size="1.2rem" className="text-[color:var(--danger)]" />
           <span className="text-xs sm:text-sm flex flex-row items-center gap-2.5">
             HTTP <ArrowRight size="1.2rem" />
@@ -149,7 +148,7 @@ export default function ExternalLinkInterceptor() {
       );
     } else {
       return (
-        <span className="flex items-center gap-2 text-[color:var(--text-dark)] dark:text-[color:var(--text-light)]">
+        <span className="flex items-center gap-[1rem] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)]">
           <Info size="1.2rem" className="text-[color:var(--warning)]" />
           <span className="text-xs sm:text-sm flex flex-row items-center gap-2.5">
             Unknown <ArrowRight size="1.2rem" />
@@ -164,39 +163,35 @@ export default function ExternalLinkInterceptor() {
 
   // ————————————————————————————————————————
   // 🖥️ DESKTOP: AlertDialog
-  // 📱 MOBILE: Drawer(Radix-UI does not allow two dialogs to be stacked, plus, a drawer is a better for UX)
+  // 📱 MOBILE: Drawer(a drawer is a better for UX)
   // ————————————————————————————————————————
 
   return isMobile ? (
     <Drawer open={showPrompt} onOpenChange={setShowPrompt}>
       <DrawerContent
-        className={`rounded-2xl px-4 pt-4 pb-6 border border-dashed ${borderColor} bg-background shadow-lg transition-transform font-[family-name:var(--font-text)]`}
+        className={`flex flex-col items-center justify-center rounded-2xl px-4 pt-4 pb-6 transition-transform font-[family-name:var(--font-text)]`}
       >
         <DrawerHeader className="space-y-1">
-          <DrawerTitle className="flex items-center gap-2 text-base font-semibold text-foreground">
+          <DrawerTitle className="flex items-center gap-[0.5rem] text-base font-semibold">
             <OctagonAlert size="1.2rem" className="text-destructive" />
             You&#39;re leaving our site
           </DrawerTitle>
-          <DrawerDescription className="text-sm text-muted-foreground">
+          <DrawerDescription className="text-md">
             You&#39;re about to visit an external website not affiliated with
             us. Proceed only if you trust it.
           </DrawerDescription>
         </DrawerHeader>
-        <div className="bg-muted/60 text-foreground dark:bg-muted/40 p-3 rounded-md text-sm flex items-center gap-2 mt-2 max-w-full sm:max-w-[calc(100%-2rem)] md:max-w-[calc(100%-3rem)]">
+        <div className="bg-muted p-[1.2rem] rounded-2xl text-foreground text-sm flex items-center gap-2 mt-2 max-w-full sm:max-w-[calc(100%-2rem)] md:max-w-[calc(100%-3rem)]">
           {stat()}
         </div>
 
-        <DrawerFooter className="pt-4 flex flex-col sm:flex-row gap-2">
+        <DrawerFooter className="pt-4 flex flex-col sm:flex-row gap-[0.5rem]">
           <DrawerClose asChild>
             <Button variant="secondary" className="w-full sm:w-auto">
               Cancel
             </Button>
           </DrawerClose>
-          <Button
-            type="button"
-            onClick={proceed}
-            className="w-full sm:w-auto"
-          >
+          <Button type="button" onClick={proceed} className="w-full sm:w-auto">
             Proceed
           </Button>
         </DrawerFooter>
@@ -205,21 +200,21 @@ export default function ExternalLinkInterceptor() {
   ) : (
     <AlertDialog open={showPrompt} onOpenChange={setShowPrompt}>
       <AlertDialogContent
-        className={`rounded-2xl space-y-4 border border-dashed ${borderColor} shadow-lg transition-transform font-[family-name:var(--font-text)]`}
+        className={`rounded-2xl space-y-4 transition-transform font-[family-name:var(--font-text)]`}
       >
         <AlertDialogHeader>
-          <AlertDialogTitle className="flex items-center gap-2 text-lg font-semibold text-foreground">
+          <AlertDialogTitle className="flex items-center gap-[0.5rem] text-lg font-semibold text-foreground">
             <OctagonAlert size="1.2rem" className="text-destructive" />
             You&#39;re leaving our site
           </AlertDialogTitle>
-          <AlertDialogDescription className="text-muted-foreground text-sm">
+          <AlertDialogDescription className="text-md">
             You&#39;re about to visit an external website. This link is not
             affiliated with or controlled by us. Continue only if you trust the
             source.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <div className="bg-muted p-3 rounded-md">{stat()}</div>
-        <AlertDialogFooter className="pt-4">
+        <div className="bg-muted p-[1.2rem] rounded-3xl">{stat()}</div>
+        <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={proceed}>Proceed</AlertDialogAction>
         </AlertDialogFooter>

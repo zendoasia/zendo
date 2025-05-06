@@ -82,9 +82,7 @@ export default function RootLayout({
               <Toaster />
             </span>
           </aside>
-          <footer>
-            <Footer />
-          </footer>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>

@@ -169,10 +169,10 @@ export default function ExternalLinkInterceptor() {
   return isMobile ? (
     <Drawer open={showPrompt} onOpenChange={setShowPrompt}>
       <DrawerContent
-        className={`flex flex-col items-center justify-center rounded-2xl px-4 pt-4 pb-6 transition-transform font-[family-name:var(--font-text)]`}
+        className={`flex flex-col items-center justify-center rounded-[radius:var(--radius)] px-4 pt-4 pb-6 transition-transform font-[family-name:var(--font-text)]`}
       >
         <DrawerHeader className="space-y-1">
-          <DrawerTitle className="flex items-center gap-[0.5rem] text-base font-semibold">
+          <DrawerTitle className="flex items-center gap-[0.5rem] text-base font-[weight:var(--default-font-weight)]">
             <OctagonAlert size="1.2rem" className="text-destructive" />
             You&#39;re leaving our site
           </DrawerTitle>
@@ -181,7 +181,7 @@ export default function ExternalLinkInterceptor() {
             us. Proceed only if you trust it.
           </DrawerDescription>
         </DrawerHeader>
-        <div className="bg-muted p-[1.2rem] rounded-2xl text-foreground text-sm flex items-center gap-2 mt-2 max-w-full sm:max-w-[calc(100%-2rem)] md:max-w-[calc(100%-3rem)]">
+        <div className="bg-muted p-[1.2rem] rounded-[radius:var(--radius)] text-foreground text-sm flex items-center gap-2 mt-2 max-w-full sm:max-w-[calc(100%-2rem)] md:max-w-[calc(100%-3rem)]">
           {stat()}
         </div>
 
@@ -200,10 +200,10 @@ export default function ExternalLinkInterceptor() {
   ) : (
     <AlertDialog open={showPrompt} onOpenChange={setShowPrompt}>
       <AlertDialogContent
-        className={`rounded-2xl space-y-4 transition-transform font-[family-name:var(--font-text)]`}
+        className={`rounded-[radius:var(--radius)] space-y-4 transition-transform font-[family-name:var(--font-text)]`}
       >
         <AlertDialogHeader>
-          <AlertDialogTitle className="flex items-center gap-[0.5rem] text-lg font-semibold text-foreground">
+          <AlertDialogTitle className="flex items-center gap-[0.5rem] text-lg font-[weight:var(--default-font-weight)] text-foreground">
             <OctagonAlert size="1.2rem" className="text-destructive" />
             You&#39;re leaving our site
           </AlertDialogTitle>
@@ -213,7 +213,7 @@ export default function ExternalLinkInterceptor() {
             source.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <div className="bg-muted p-[1.2rem] rounded-3xl">{stat()}</div>
+        <div className="bg-muted p-[1.2rem] rounded-[radius:var(--radius)]">{stat()}</div>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={proceed}>Proceed</AlertDialogAction>

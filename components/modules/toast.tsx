@@ -85,7 +85,7 @@ export default function sendToast(type: string, message: string): void {
       description: (
         <button
           onClick={() => toast.dismiss(toastId)}
-          className={`absolute top-1 right-1 rounded-md p-1 transition-colors ${hoverAndFocusBg}`}
+          className={`absolute top-1 right-1 rounded-[radius:var(--radius)] p-1 transition-colors ${hoverAndFocusBg}`}
         >
 
           <X className={`h-4 w-4 ${textColor}`} />

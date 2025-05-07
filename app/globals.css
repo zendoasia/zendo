@@ -43,6 +43,10 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+.html {
+  scroll-behavior: smooth;
+}
+
 :root {
   --font-text: "Geist", "Geist Fallback", Arial, sans-serif;
   --font-text-mono: "Geist Mono", "Geist Mono Fallback", Menlo, Consolas;
@@ -87,6 +91,8 @@
   --success-bg: #d8f7e8;       /* hsl(142, 71%, 85%) */
   --warning-bg: #fff1db;       /* hsl(48, 96%, 90%) */
   --danger-bg: #fddada;        /* hsl(0, 84%, 90%) */
+
+  --default-font-weight: "medium";
 
   --radius: 0.625rem;
   --background: oklch(1 0 0);

@@ -20,7 +20,7 @@ export default function NotFound() {
           priority={false}
           width={0}
           height={0}
-          className="w-[60vw] md:w-[30vw] aspect-[3/4] max-w-[80%] rounded-full object-contain"
+          className="w-[60vw] md:w-[30vw] aspect-[3/4] max-w-[80%] rounded-[radius:var(--radius)] object-contain"
           loading="lazy"
         />
       </motion.div>
@@ -39,7 +39,7 @@ export default function NotFound() {
 
       <Link
         href="/"
-        className="mt-8 px-6 py-3 text-md rounded-2xl hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] hover:text-[color:var(--text-light)] transition-colors duration-200 border border-[color:var(--jet)] -lg"
+        className="mt-8 px-4 py-3 text-md rounded-[radius:var(--radius)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] hover:text-[color:var(--text-light)] transition-colors duration-200 border border-[color:var(--jet)] -lg"
       >
         Go Back Home
       </Link>

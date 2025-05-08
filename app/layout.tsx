@@ -4,7 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Header from "@/components/main/header";
 import { Toaster } from "sonner";
 import Footer from "@/components/main/footer";
-import ExternalLinkInterceptor from "@/components/modules/externalLinkInterceptor";
+import ExternalLinkInterceptor from "@/components/externalLinkInterceptor";
 import {
   geistSans,
   geistMono,
@@ -12,7 +12,8 @@ import {
   consolas,
   jetbrainsMono,
   ubuntu,
-} from "@/components/modules/fonts";
+  spaceGrotesk
+} from "@/components/fonts";
 
 export const metadata: Metadata = {
   title: "Zendo - Intuition",
@@ -66,7 +67,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${menlo.variable} ${ubuntu.variable} ${jetbrainsMono.variable} ${consolas.variable} antialiased`}
+        className={`${geistSans.variable} ${spaceGrotesk.variable} ${geistMono.variable} ${menlo.variable} ${ubuntu.variable} ${jetbrainsMono.variable} ${consolas.variable} antialiased`}
       >
         <ThemeProvider
           attribute="class"

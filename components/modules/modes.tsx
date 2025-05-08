@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Moon, Sun, MonitorCogIcon, Check } from "lucide-react";
+import { Moon, Sun, Monitor, Check } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,13 +25,17 @@ export function ModeToggle() {
 
   const handleThemeChange = async (newTheme: string) => {
     if (!mounted) {
-      sendToast(
-        "warning",
-        "Theme changer component is not yet mounted, you may experience some issues."
-      );
+      setTimeout(() => {
+        sendToast(
+          "warning",
+          "Theming components are not mounted yet, you may experience some issues. Please refresh."
+        );
+      });
     }
     if (theme === newTheme) {
-      sendToast("neutral", `Already using ${newTheme} theme.`);
+      setTimeout(() => {
+        sendToast("neutral", `Already using ${newTheme} theme.`);
+      });
       return;
     }
 
@@ -55,18 +59,19 @@ export function ModeToggle() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          variant="outline"
           size="icon"
-          className="z-[100] px-4 py-2.5 rounded-[radius:var(--radius)] border border-[color:var(--jet)] hover:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)] transition-colors duration-300"
+          className="bg-transparent text-[color:var(--jet)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] border border-[color:var(--jet)] rounded-[radius:var(--radius)] px-4 py-2.5 transition-colors duration-300"
         >
-          {theme === "system" ? (
-            <MonitorCogIcon size="1.2rem" />
-          ) : resolvedTheme === "light" ? (
-            <Sun size="1.2rem" />
-          ) : (
-            <Moon size="1.2rem" />
-          )}
-          <span className="sr-only">Toggle theme</span>
+          <span className="text-black dark:text-white">
+            {theme === "system" ? (
+              <Monitor size="1.2rem" />
+            ) : resolvedTheme === "light" ? (
+              <Sun size="1.2rem" />
+            ) : (
+              <Moon size="1.2rem" />
+            )}
+            <span className="sr-only">Toggle theme</span>
+          </span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
@@ -77,7 +82,12 @@ export function ModeToggle() {
             className="flex justify-between"
           >
             {t.charAt(0).toUpperCase() + t.slice(1)}
-            {theme === t && <Check size="1.2rem" className="text-[var(--success)]" />}
+            {theme === t && (
+              <Check
+                size="1.2rem"
+                className="text-green-600 dark:text-green-500"
+              />
+            )}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

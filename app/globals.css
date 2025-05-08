@@ -51,6 +51,7 @@
   --font-text: "Geist", "Geist Fallback", Arial, sans-serif;
   --font-text-mono: "Geist Mono", "Geist Mono Fallback", Menlo, Consolas;
   --font-code: "Jetbrains Mono", "Ubuntu", "Consolas", monospace;
+  --font-space-grotesk: "Space Grotesk", "Geist", "Geist Fallback", Arial, sans-serif;
   /* Neutrals */
   --white: #ffffff;
   --white-smoke: #f5f5f5;

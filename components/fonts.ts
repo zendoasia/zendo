@@ -1,8 +1,8 @@
-import { JetBrains_Mono, Ubuntu, Geist, Geist_Mono } from "next/font/google";
+import { JetBrains_Mono, Ubuntu, Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
 import localFont from "next/font/local";
 
 export const menlo = localFont({
-  src: "../../public/fonts/Menlo/Menlo-Regular.woff2",
+  src: "../public/fonts/Menlo/Menlo-Regular.woff2",
   weight: "400",
   style: "normal",
   variable: "--font-menlo",
@@ -12,22 +12,22 @@ export const menlo = localFont({
 export const consolas = localFont({
   src: [
     {
-      path: "../../public/fonts/Consolas/Consolas.woff2",
+      path: "../public/fonts/Consolas/Consolas.woff2",
       weight: "400",
       style: "normal",
     },
     {
-      path: "../../public/fonts/Consolas/Consolas-Italic.woff2",
+      path: "../public/fonts/Consolas/Consolas-Italic.woff2",
       weight: "400",
       style: "italic",
     },
     {
-      path: "../../public/fonts/Consolas/Consolas-Bold.woff2",
+      path: "../public/fonts/Consolas/Consolas-Bold.woff2",
       weight: "700",
       style: "normal",
     },
     {
-      path: "../../public/fonts/Consolas/Consolas-BoldItalic.woff2",
+      path: "../public/fonts/Consolas/Consolas-BoldItalic.woff2",
       weight: "700",
       style: "italic",
     },
@@ -60,3 +60,9 @@ export const geistMono = Geist_Mono({
   subsets: ["latin"],
   display: "swap",
 });
+
+export const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
+  subsets: ["latin"],
+  display: "swap"
+})

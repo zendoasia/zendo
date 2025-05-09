@@ -6,6 +6,17 @@ import Link from "next/link";
 import lonelyGhost from "@/public/assets/lonelyGhost.svg";
 import Image from "next/image";
 import { ContainerTextFlip } from "@/components/ui/container-text-flip";
+import {
+  HoverCard,
+  HoverCardTrigger,
+  HoverCardContent,
+} from "@/components/ui/hover-card";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion";
 
 export default function NotFound() {
   return (
@@ -33,7 +44,7 @@ export default function NotFound() {
             Hey Buddy! Seems like you are lost?
           </h1>
         </div>
-        <p className="text-lg">
+        <span className="text-lg">
           Sorry but we are not able to find the page you are looking for. Maybe
           checkout our
           <span className="inline-block text-sm mr-2 ml-2">
@@ -42,13 +53,35 @@ export default function NotFound() {
             </Link>
           </span>
           for finding something truly good.
-        </p>
-        <Link
-          href="/"
-          className="px-4 py-2.5 text-md rounded-[radius:var(--radius)] border border-[color:var(--jet)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] transition-colors duration-300"
-        >
-          Go Back Home
-        </Link>
+        </span>
+
+        <div className="hidden md:block">
+          <HoverCard>
+            <HoverCardTrigger asChild>
+              <span className="px-4 py-2.5 text-md rounded-[radius:var(--radius)] border border-[color:var(--jet)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] transition-colors duration-300">
+                What do you mean?
+              </span>
+            </HoverCardTrigger>
+            <HoverCardContent className="text-sm font-[family-name:var(--font-space-grotesk)] leading-relaxed">
+              The page you are visiting was either moved or does not exist at
+              this location. Please check the URL you are visiting and retry.
+            </HoverCardContent>
+          </HoverCard>
+        </div>
+
+        <div className="block md:hidden w-full">
+          <Accordion type="single" collapsible>
+            <AccordionItem value="info">
+              <AccordionTrigger className="px-4 py-2.5 text-md rounded-[radius:var(--radius)] border border-[color:var(--jet)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] transition-colors duration-300">
+                What do you mean?
+              </AccordionTrigger>
+              <AccordionContent className="text-sm font-[family-name:var(--font-space-grotesk)] leading-relaxed px-1 pt-2 pb-4">
+                The page you are visiting was either moved or does not exist at
+                this location. Please check the URL you are visiting and retry.
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
       </div>
     </div>
   );

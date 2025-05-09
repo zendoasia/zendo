@@ -103,7 +103,7 @@ export default function Header() {
           </div>
         </Link>
 
-        <div className="hidden md:flex items-center gap-[0.5rem] ml-6">
+        <nav className="hidden md:flex items-center gap-[0.5rem] ml-6">
           {["About", "Portfolio", "Projects", "Contact"].map((label) => (
             <Link
               key={label}
@@ -113,11 +113,11 @@ export default function Header() {
               {label}
             </Link>
           ))}
-        </div>
+        </nav>
 
         <div className="flex-grow" />
 
-        <div className="hidden md:flex items-center gap-[0.5rem] md:ml-auto w-full md:w-auto justify-center md:justify-end">
+        <aside className="hidden md:flex items-center gap-[0.5rem] md:ml-auto w-full md:w-auto justify-center md:justify-end">
           <Button
             onClick={() => setOpenS(true)}
             className="ml-6 group inline-flex items-center justify-center gap-3 rounded-[radius:var(--radius)] border border-[color:var(--jet)] bg-transparent px-4 py-2.5 transition-colors duration-300 hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)]"
@@ -161,16 +161,15 @@ export default function Header() {
           </Link>
 
           <ModeToggle />
-        </div>
+        </aside>
 
         <Button
-          data-no-aria-hidden
           onClick={() => {
             setOpen(!open);
           }}
-          variant="secondary"
+          variant="ghost"
           size="icon"
-          className="block md:hidden hover:bg-[color:var(--primary-hover)] border border-[color:var(--jet)] px-2 py-2 rounded-[radius:var(--radius)]"
+          className="block md:hidden hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)] transition-colors duration-300 px-2 py-2.5 rounded-[radius:var(--radius)] border border-[color:var(--jet)] overflow-hidden"
         >
           <AnimatePresence mode="wait" initial={false}>
             {open ? (
@@ -206,7 +205,7 @@ export default function Header() {
         />
       )}
 
-      {openS && <LazySearchBar />}
+      {openS && <LazySearchBar setOpenSAction={setOpenS} />}
     </>
   );
 }

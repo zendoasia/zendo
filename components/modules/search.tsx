@@ -8,8 +8,9 @@ import {
   CommandEmpty,
   CommandGroup,
 } from "@/components/ui/command";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useState } from "react";
-import { Search} from "lucide-react";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden"; 
 
 const items = [
   { label: "Dashboard", value: "dashboard" },
@@ -18,37 +19,49 @@ const items = [
   { label: "Logout", value: "logout" },
 ];
 
-export default function SearchBar() {
+interface Props {
+  setOpenSAction: (v: boolean) => void;
+}
+
+export default function SearchBar({ setOpenSAction }: Props) {
   const [search, setSearch] = useState("");
 
   return (
-    <div className="max-w-md mx-auto mt-10">
-      <Command className="rounded-2xl border shadow-md bg-white dark:bg-gray-900">
-        <div className="flex items-center px-3 pt-3 relative">
-          <Search className="w-4 h-4 text-muted-foreground absolute left-4 top-3.5" />
-          <CommandInput
-            placeholder="Search pages..."
-            value={search}
-            onValueChange={setSearch}
-            className="pl-10 pr-3 py-2"
-          />
+    <Dialog open onOpenChange={(open) => !open && setOpenSAction(false)}>
+      <DialogContent className="p-0 max-w-md">
+        <DialogTitle>
+          <VisuallyHidden>Search dialog</VisuallyHidden>
+        </DialogTitle>
 
-        </div>
-        <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup heading="Suggestions">
-            {items
-              .filter((item) =>
-                item.label.toLowerCase().includes(search.toLowerCase())
-              )
-              .map((item) => (
-                <CommandItem key={item.value} value={item.value}>
-                  {item.label}
-                </CommandItem>
-              ))}
-          </CommandGroup>
-        </CommandList>
-      </Command>
-    </div>
+        <Command className="border-none shadow-none">
+          <div className="px-4 pt-4">
+            <CommandInput
+              placeholder="Search pages..."
+              value={search}
+              onValueChange={setSearch}
+              className="pl-10 pr-3 py-2"
+            />
+          </div>
+          <CommandList>
+            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandGroup heading="Suggestions">
+              {items
+                .filter((item) =>
+                  item.label.toLowerCase().includes(search.toLowerCase())
+                )
+                .map((item) => (
+                  <CommandItem
+                    key={item.value}
+                    value={item.value}
+                    onSelect={() => setOpenSAction(false)}
+                  >
+                    {item.label}
+                  </CommandItem>
+                ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </DialogContent>
+    </Dialog>
   );
 }

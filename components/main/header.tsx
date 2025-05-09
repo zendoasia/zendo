@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { ModeToggle } from "@/components/modules/modes";
-import { AlignJustify, X, Search } from "lucide-react";
+import { Menu, X, Search } from "lucide-react";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
@@ -13,19 +13,19 @@ import Link from "next/link";
 import { SiGithub } from "@icons-pack/react-simple-icons";
 import { detectOS } from "@/lib/utils";
 import dynamic from "next/dynamic";
-import { Skeleton } from "@/components/ui/skeleton";
 
 const LazyMobileMenu = dynamic(
   () => import("@/components/modules/mobileMenu"),
   {
-    loading: () => (
-      <div className="fixed inset-0 w-full h-full bg-[color:var(--background)] dark:bg-[color:var(--background)] flex items-center justify-center">
-        <Skeleton className="w-full h-full" />
-      </div>
-    ),
+    loading: () => null,
     ssr: false,
   }
 );
+
+const LazySearchBar = dynamic(() => import("@/components/modules/search"), {
+  loading: () => null,
+  ssr: false,
+});
 
 export default function Header() {
   const os = useMemo(() => detectOS(), []);
@@ -56,61 +56,31 @@ export default function Header() {
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    if (open) {
-      document.addEventListener("keydown", onKeyDown);
-      return () => document.removeEventListener("keydown", onKeyDown);
-    }
-  }, [open]);
-
-  useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpenS(false);
+      if (e.key === "Escape") {
+        if (openS) setOpenS(false);
+        else if (open) setOpen(false);
+      }
     };
 
-    if (openS) {
-      document.addEventListener("keydown", onKeyDown);
-      return () => document.removeEventListener("keydown", onKeyDown);
-    }
-  }, [openS]);
-
-  useEffect(() => {
-    const elements = document.body.querySelectorAll("main, footer, header");
-
-    if (open) {
-      elements.forEach((el) => {
-        if (!el.hasAttribute("data-no-aria-hidden")) {
-          el.setAttribute("aria-hidden", "true");
-        } else {
-          el.setAttribute("aria-hidden", "false");
-        }
-      });
-    } else {
-      elements.forEach((el) => {
-        el.removeAttribute("aria-hidden");
-      });
-    }
-
-    return () => {
-      elements.forEach((el) => {
-        el.removeAttribute("aria-hidden");
-      });
-    };
-  }, [open]);
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [open, openS]);
 
   useEffect(() => {
     const downS = (e: KeyboardEvent) => {
       if (e.key.toLowerCase() === "k" && (e.metaKey || e.ctrlKey)) {
-        //  Support both MacOS Command Key, and Standard Ctrl Key.
         e.preventDefault();
-        setOpenS((openS) => !openS);
+        if (open) {
+          setOpen(false);
+        } else {
+          setOpenS((prev) => !prev);
+        }
       }
     };
 
     document.addEventListener("keydown", downS);
     return () => document.removeEventListener("keydown", downS);
-  }, []);
+  }, [open]);
 
   if (!mounted) return null;
 
@@ -221,21 +191,22 @@ export default function Header() {
                 exit={{ rotate: 90, opacity: 1 }}
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
               >
-                <AlignJustify size="1.2rem" />
+                <Menu size="1.2rem" />
               </motion.div>
             )}
           </AnimatePresence>
         </Button>
       </header>
-      <AnimatePresence mode="wait">
-        {open && (
-          <LazyMobileMenu
-            setOpen={setOpen}
-            setOpenS={setOpenS}
-            strippedOS={strippedOS}
-          />
-        )}
-      </AnimatePresence>
+
+      {open && (
+        <LazyMobileMenu
+          setOpenAction={setOpen}
+          setOpenSAction={setOpenS}
+          strippedOS={strippedOS}
+        />
+      )}
+
+      {openS && <LazySearchBar />}
     </>
   );
 }

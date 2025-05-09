@@ -5,6 +5,7 @@ import { CircleHelp } from "lucide-react";
 import Link from "next/link";
 import lonelyGhost from "@/public/assets/lonelyGhost.svg";
 import Image from "next/image";
+import { ContainerTextFlip } from "@/components/ui/container-text-flip";
 
 export default function NotFound() {
   return (
@@ -26,14 +27,21 @@ export default function NotFound() {
       </motion.div>
 
       <div className="flex flex-col items-center md:items-start gap-[2rem] max-w-xl">
-        <div className="flex items-center gap-3">
-          <CircleHelp size="3rem" className="text-rose-600" />
+        <div className="flex items-center gap-[0.3rem]">
+          <CircleHelp size="2.5rem" className="text-rose-600" />
           <h1 className="text-xl font-[family-name:var(--font-space-grotesk)] font-extrabold">
             Hey Buddy! Seems like you are lost?
           </h1>
         </div>
         <p className="text-lg">
-          Time for some ramen! This page does not exist here, does it?
+          Sorry but we are not able to find the page you are looking for. Maybe
+          checkout our
+          <span className="inline-block text-sm mr-2 ml-2">
+            <Link href="/">
+              <ContainerTextFlip words={["homepage", "hub", "start"]} />
+            </Link>
+          </span>
+          for finding something truly good.
         </p>
         <Link
           href="/"

@@ -24,9 +24,19 @@ import { useEffect, useRef, useState } from "react";
 import { Info, Check, X, OctagonAlert, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export function openExternalLinkManually(href: string) {
+export function openExternalLinkManually({
+  href,
+  target = "_self",
+  rel = "",
+}: {
+  href: string;
+  target?: string;
+  rel?: string;
+}) {
   window.dispatchEvent(
-    new CustomEvent("open-external-link", { detail: { href } })
+    new CustomEvent("open-external-link", {
+      detail: { href, target, rel },
+    })
   );
 }
 
@@ -49,6 +59,8 @@ export default function ExternalLinkInterceptor() {
   const linkElementRef = useRef<HTMLAnchorElement | null>(null);
   const isMobile = useIsMobile();
   const [mounted, setMounted] = useState(false);
+  const lastClickedUrlRef = useRef<string | null>(null);
+  const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -56,6 +68,10 @@ export default function ExternalLinkInterceptor() {
 
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
+      if (timeoutIdRef.current) {
+        clearTimeout(timeoutIdRef.current); // Clear the previous timeout if any
+      }
+
       const path = event.composedPath() as HTMLElement[];
       const anchor = path.find((el) => el instanceof HTMLAnchorElement) as
         | HTMLAnchorElement
@@ -82,9 +98,19 @@ export default function ExternalLinkInterceptor() {
       event.preventDefault();
       event.stopPropagation();
 
-      linkElementRef.current = anchor;
-      setLinkHref(href);
-      setShowPrompt(true);
+      if (href === lastClickedUrlRef.current) {
+        timeoutIdRef.current = setTimeout(() => {
+          lastClickedUrlRef.current = null;
+          setShowPrompt(true);
+          setLinkHref(href);
+          linkElementRef.current = anchor;
+        }, 250);
+      } else {
+        lastClickedUrlRef.current = href;
+        setShowPrompt(true);
+        setLinkHref(href);
+        linkElementRef.current = anchor;
+      }
     };
 
     document.addEventListener("click", handleClick, true);
@@ -92,18 +118,37 @@ export default function ExternalLinkInterceptor() {
   }, []);
 
   const proceed = () => {
-    if (linkElementRef.current && linkHref) {
-      const target = linkElementRef.current.getAttribute("target") || "_self";
-      const rel = linkElementRef.current.getAttribute("rel") || "";
+    try {
+      if (linkElementRef.current && linkHref) {
+        const target = linkElementRef.current.getAttribute("target") || "_self";
+        let rel = linkElementRef.current.getAttribute("rel") || "";
 
-      window.open(linkHref, target, rel);
-      setShowPrompt(false);
+        if (target === "_blank" && !rel.includes("noopener")) {
+          rel += " noopener noreferrer";
+        }
+
+        window.open(linkHref, target, rel);
+        setShowPrompt(false);
+      }
+    } catch (error) {
+      console.error("Failed to open external link:", error);
     }
   };
 
   useEffect(() => {
-    const handleCustomOpen = (e: CustomEvent<{ href: string }>) => {
-      setLinkHref(e.detail.href);
+    const handleCustomOpen = (
+      e: CustomEvent<{ href: string; target?: string; rel?: string }>
+    ) => {
+      const { href, target = "_self", rel = "" } = e.detail;
+
+      // Create a dummy anchor for consistency
+      const a = document.createElement("a");
+      a.href = href;
+      a.target = target;
+      a.rel = rel;
+
+      linkElementRef.current = a;
+      setLinkHref(href);
       setShowPrompt(true);
     };
 
@@ -111,7 +156,6 @@ export default function ExternalLinkInterceptor() {
       "open-external-link",
       handleCustomOpen as EventListener
     );
-
     return () =>
       window.removeEventListener(
         "open-external-link",
@@ -167,16 +211,25 @@ export default function ExternalLinkInterceptor() {
   // ————————————————————————————————————————
 
   return isMobile ? (
-    <Drawer open={showPrompt} onOpenChange={setShowPrompt}>
+    <Drawer
+      open={showPrompt}
+      onOpenChange={setShowPrompt}
+      aria-labelledby="external-link-alert"
+      aria-describedby="external-link-description"
+    >
       <DrawerContent
         className={`flex flex-col items-center justify-center rounded-[radius:var(--radius)] px-4 pt-4 pb-6 transition-transform font-[family-name:var(--font-text)]`}
       >
         <DrawerHeader className="space-y-1">
           <DrawerTitle className="flex items-center gap-[0.5rem] text-base font-[weight:var(--default-font-weight)]">
-            <OctagonAlert size="1.2rem" className="text-destructive" />
+            <OctagonAlert
+              size="1.2rem"
+              className="text-destructive"
+              id="external-link-alert"
+            />
             You&#39;re leaving our site
           </DrawerTitle>
-          <DrawerDescription className="text-md">
+          <DrawerDescription className="text-md" id="external-link-description">
             You&#39;re about to visit an external website not affiliated with
             us. Proceed only if you trust it.
           </DrawerDescription>
@@ -198,22 +251,33 @@ export default function ExternalLinkInterceptor() {
       </DrawerContent>
     </Drawer>
   ) : (
-    <AlertDialog open={showPrompt} onOpenChange={setShowPrompt}>
+    <AlertDialog
+      open={showPrompt}
+      onOpenChange={setShowPrompt}
+      aria-labelledby="external-link-alert"
+      aria-describedby="external-link-description"
+    >
       <AlertDialogContent
-        className={`rounded-[radius:var(--radius)] space-y-4 transition-transform font-[family-name:var(--font-text)]`}
+        className="rounded-[radius:var(--radius)] space-y-4 transition-transform font-[family-name:var(--font-text)]"
+        aria-describedby="external-link-description" // Explicitly link it to the description
       >
-        <AlertDialogHeader>
+        <AlertDialogHeader id="external-link-alert">
           <AlertDialogTitle className="flex items-center gap-[0.5rem] text-lg font-[weight:var(--default-font-weight)] text-foreground">
             <OctagonAlert size="1.2rem" className="text-destructive" />
             You&#39;re leaving our site
           </AlertDialogTitle>
-          <AlertDialogDescription className="text-md">
+          <AlertDialogDescription
+            className="text-md"
+            id="external-link-description" // This ID matches the aria-describedby above
+          >
             You&#39;re about to visit an external website. This link is not
             affiliated with or controlled by us. Continue only if you trust the
             source.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <div className="bg-muted p-[1.2rem] rounded-[radius:var(--radius)]">{stat()}</div>
+        <div className="bg-muted p-[1.2rem] rounded-[radius:var(--radius)]">
+          {stat()}
+        </div>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={proceed}>Proceed</AlertDialogAction>

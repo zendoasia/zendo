@@ -46,6 +46,10 @@
 .html {
   scroll-behavior: smooth;
 }
+.custom-rounded-right {
+  border-top-right-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+}
 
 :root {
   --font-text: "Geist", "Geist Fallback", Arial, sans-serif;

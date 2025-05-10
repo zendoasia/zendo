@@ -1,0 +1,116 @@
+name: Create Release
+
+on: workflow_dispatch
+
+jobs:
+  create_release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        python-version: [ "3.13" ]
+
+    steps:
+      - name: Cancel previous runs
+        uses: styfle/cancel-workflow-action@0.5.0
+        with:
+          access_token: ${{ github.token }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create output directory
+        run: |
+          mkdir -p output
+          mkdir -p temparchives
+
+      - name: Prepare exclusion patterns
+        id: prepare_excludes
+        uses: './.github/actions/exclusionPatterns'
+        with:
+          cp: 'false'
+
+      - name: Get Git Info
+        id: git_info
+        run: |
+          echo "COMMIT_HASH=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+          echo "REPO_NAME=$(basename -s .git `git config --get remote.origin.url`)" >> $GITHUB_ENV
+          echo "CONTRIBUTORS_SINCE=$(git shortlog -s --since="1 month ago" | wc -l)" >> $GITHUB_ENV
+          echo "WHATS_CHANGED_URL=${{ github.event.repository.html_url }}/commits/$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: Prepare config for release
+        run: |
+          pip install orjson
+          python ./schema/compressor/compressor.py --commit_hash "${{ env.COMMIT_HASH }}" --repo_name "${{ env.REPO_NAME }}" --contributors_since "${{ env.CONTRIBUTORS_SINCE }}" --whats_changed_url "${{ env.WHATS_CHANGED_URL }}"
+          sleep 5
+
+      - name: Parse schema.json
+        run: |
+          if [[ -f ./temp/schema.json ]]; then
+            python ./schema/compressor/parse.py
+          fi
+        id: prepare_config
+
+      - name: Create .tar file
+        run: |
+          TAR_EXCLUDES=$(< tarIgnore.txt)
+          TAR_EXCLUDES="$TAR_EXCLUDES --exclude=output/* --exclude=temparchives/* --exclude=temp/*"
+          echo "TAR_EXCLUDES: $TAR_EXCLUDES"
+          tar --warning=no-file-changed $TAR_EXCLUDES -cf output/${{ github.event.repository.name }}.tar ./*
+
+      - name: Create .zip file
+        run: |
+          ZIP_EXCLUDES=$(cat zipIgnore.txt | xargs)
+          zip -r output/${{ github.event.repository.name }}.zip ./* $ZIP_EXCLUDES
+
+      - name: Create .7z file
+        run: |
+          SEVENZ_EXCLUDES=$(< 7zIgnore.txt)
+          SEVENZ_EXCLUDES="$SEVENZ_EXCLUDES -x!output/${{ github.event.repository.name }}.7z"
+          7z a output/${{ github.event.repository.name }}.7z ./* $SEVENZ_EXCLUDES || echo "Ignoring errors and continuing"
+
+      - name: Create .tar.gz file
+        run: |
+          TAR_EXCLUDES=$(< tarIgnore.txt)
+          TAR_EXCLUDES="$TAR_EXCLUDES --exclude=output/* --exclude=temparchives/* --exclude=temp/*"
+          tar --warning=no-file-changed $TAR_EXCLUDES -czvf temparchives/${{ github.event.repository.name }}.tar.gz ./*
+          mv temparchives/${{ github.event.repository.name }}.tar.gz output/
+
+      - name: Create .tar.xz file
+        run: |
+          TAR_EXCLUDES=$(< tarIgnore.txt)
+          TAR_EXCLUDES="$TAR_EXCLUDES --exclude=output/* --exclude=temparchives/* --exclude=temp/*"
+          tar --warning=no-file-changed $TAR_EXCLUDES -cJvf temparchives/${{ github.event.repository.name }}.tar.xz ./*
+          mv temparchives/${{ github.event.repository.name }}.tar.xz output/
+
+      - name: Create .tar.bz2 file
+        run: |
+          TAR_EXCLUDES=$(< tarIgnore.txt)
+          TAR_EXCLUDES="$TAR_EXCLUDES --exclude=output/* --exclude=temparchives/* --exclude=temp/*"
+          tar --warning=no-file-changed $TAR_EXCLUDES -cvjSf temparchives/${{ github.event.repository.name }}.tar.bz2 ./*
+          mv temparchives/${{ github.event.repository.name }}.tar.bz2 output/
+
+      - name: Create .tar.zst file
+        run: |
+          TAR_EXCLUDES=$(< tarIgnore.txt)
+          TAR_EXCLUDES="$TAR_EXCLUDES --exclude=output/* --exclude=temparchives/* --exclude=temp/*"
+          tar --warning=no-file-changed $TAR_EXCLUDES --zstd -cf temparchives/${{ github.event.repository.name }}.tar.zst ./*
+          mv temparchives/${{ github.event.repository.name }}.tar.zst output/
+
+      - name: Create Release
+        id: create_release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Creating release..."
+          TAG_NAME=${{ steps.prepare_config.outputs.release_tag }}
+          DESCB64=${{ steps.prepare_config.outputs.release_description_b64 }}
+          DESC=$(echo "$DESCB64" | base64 -d)
+          gh release create $TAG_NAME output/* \
+            --title "${{ steps.prepare_config.outputs.release_title }}" \
+            --notes "$DESC"
+
+      - name: Clean up
+        run: |
+          rm -rf ignore.txt tarIgnore.txt zipIgnore.txt ./temp/schema.json ./temparchives

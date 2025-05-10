@@ -1,0 +1,64 @@
+name: Bug Report
+description: Report incorrect behavior/unexpected results of a function. Alternately, report incorrect spellings, pluralization, grammar, or punctuation.
+labels: bug
+body:
+  - type: textarea
+    attributes:
+      label: Reproducible Steps - How can our team member locate the bug?
+      description: >
+        Help us improve by specifying how exactly you found the bug or exception.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Actual Expectations - What did you expect from this function initially?
+      description: >
+        Please specify the exact output you were expecting from the function while it was computing.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Actual Output - What did it return?
+      description: >
+        Please specify what the function actually returned as output, including any errors or trace-backs.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Bug Description
+      description: >
+        Please provide any additional information that you think might be helpful in resolving this issue.
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Environment
+      description: >
+        Please provide any additional information about the environment in which the bug was found, if any.
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Bug Location
+      description: >
+        If you have found out the bug's location in the scripts, please include it here to help us further track down the issue.
+    validations:
+      required: false
+  - type: checkboxes
+    attributes:
+      label: Checklist - Verify yourself before submitting.
+      description: >
+        It is expected that you have checked the following before submitting this bug report.
+      options:
+        - label: There are not any duplicates related to this issue, as far as I know.
+          required: false
+        - label: I have included whatever tracebacks/messages/outputs/logs I could find.
+          required: false
+        - label: This not a code change, rather a spell, punctuation, or grammar correction.
+          required: false
+  - type: textarea
+    attributes:
+      label: Summary
+      description: A short summary of what your bug request is for.
+    validations:
+      required: false

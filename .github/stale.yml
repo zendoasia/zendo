@@ -1,0 +1,27 @@
+daysUntilStale: 120
+
+daysUntilClose: 14
+
+exemptLabels:
+  - bug
+  - unconfirmed bug
+  - dependencies
+  - documentation
+  - news
+  - legal
+
+staleLabel: wontfix
+
+markComment: >
+  This thread has been marked as stale because we're unable to
+  find any recent activity within the threshold of 120 days.
+  If you believe that this is an incorrect label, you can send a comment or
+  any type of activities in this thread to stop it from shutting down within 14
+  days from now.
+
+closeComment: false
+
+
+closeComment: true
+
+remove-stale-when-updated: true

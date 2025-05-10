@@ -1,0 +1,105 @@
+name: 'Retrieve exclusion patterns'
+description: 'Retrieves a list of exclusion patterns for either pushing to Pterodactyl or compression.'
+inputs:
+  cp:
+    description: "Whether to make ignore pattern for compressor or pterodactyl file excludes. False = Compression, True = Pterodactyl"
+    required: false
+    default: 'false'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Make Exclusion Patterns for compression
+      id: prepare_excludes
+      shell: bash
+      run: |
+        if [ "${{ inputs.cp }}" != "false" ]; then
+          echo "Skipping compression patterns."
+          true 
+        else
+          touch ignore.txt
+
+          TEMP_IGNORE_FILE=$(mktemp)
+
+          if [[ -f .gitignore ]]; then
+            sed '/^#/d; s/#.*//; /^$/d' .gitignore >> "$TEMP_IGNORE_FILE"
+          fi
+
+          if [[ -f .dockerignore ]]; then
+            sed '/^#/d; s/#.*//; /^$/d' .dockerignore >> "$TEMP_IGNORE_FILE"
+          fi
+
+          echo ".devcontainer/*" >> "$TEMP_IGNORE_FILE"
+          echo ".git/*" >> "$TEMP_IGNORE_FILE"
+          echo ".vscode/*" >> "$TEMP_IGNORE_FILE"
+          echo "ignore.txt" >> "$TEMP_IGNORE_FILE"
+          echo "output/*" >> "$TEMP_IGNORE_FILE"
+          echo "temparchives/*" >> "$TEMP_IGNORE_FILE"
+          echo "temp/*" >> "$TEMP_IGNORE_FILE"
+          echo "zipIgnore.txt" >> "$TEMP_IGNORE_FILE"
+          echo "tarIgnore.txt" >> "$TEMP_IGNORE_FILE"
+          echo "7zIgnore.txt" >> "$TEMP_IGNORE_FILE"
+          echo "compressor.settings.txt" >> "$TEMP_IGNORE_FILE"
+          echo "temp" >> "$TEMP_IGNORE_FILE"
+          echo "temparchives" >> "$TEMP_IGNORE_FILE"
+          echo "output" >> "$TEMP_IGNORE_FILE"
+          echo "tempIgnore.txt" >> "$TEMP_IGNORE_FILE"
+
+          sort -u "$TEMP_IGNORE_FILE" > ignore.txt
+          awk '{print "--exclude=" $0}' ignore.txt > tarIgnore.txt
+          awk '{print "-x " $0}' ignore.txt > zipIgnore.txt
+          awk '{print "-x " $0}' ignore.txt > 7zIgnore.txt
+
+          rm "$TEMP_IGNORE_FILE"
+        fi
+
+        sleep 3
+
+    - name: Make Exclusion Patterns for pushing
+      id: prepare_patterns
+      shell: bash
+      run: |
+        if [ "${{ inputs.cp }}" != "true" ]; then
+          echo "Skipping push patterns."
+          true 
+        else
+          touch tempIgnore.txt
+
+          TEMP_IGNORE_FILE=$(mktemp)
+
+          if [[ -f .gitignore ]]; then
+            sed '/^#/d; s/#.*//; /^$/d' .gitignore >> "$TEMP_IGNORE_FILE"
+          fi
+
+          if [[ -f .dockerignore ]]; then
+            sed '/^#/d; s/#.*//; /^$/d' .dockerignore >> "$TEMP_IGNORE_FILE"
+          fi
+        
+          echo ".devcontainer/*" >> "$TEMP_IGNORE_FILE"
+          echo ".git/*" >> "$TEMP_IGNORE_FILE"
+          echo ".vscode/*" >> "$TEMP_IGNORE_FILE"
+          echo "ignore.txt" >> "$TEMP_IGNORE_FILE"
+          echo "output/*" >> "$TEMP_IGNORE_FILE"
+          echo "temparchives/*" >> "$TEMP_IGNORE_FILE"
+          echo "temp/*" >> "$TEMP_IGNORE_FILE"
+          echo "zipIgnore.txt" >> "$TEMP_IGNORE_FILE"
+          echo "tarIgnore.txt" >> "$TEMP_IGNORE_FILE"
+          echo "7zIgnore.txt" >> "$TEMP_IGNORE_FILE"
+          echo "compressor.settings.txt" >> "$TEMP_IGNORE_FILE"
+          echo "temp" >> "$TEMP_IGNORE_FILE"
+          echo "temparchives" >> "$TEMP_IGNORE_FILE"
+          echo "output" >> "$TEMP_IGNORE_FILE"
+          echo "tempIgnore.txt" >> "$TEMP_IGNORE_FILE"
+
+          sort -u "$TEMP_IGNORE_FILE" > tempIgnore.txt
+
+          EXCLUDE_PATTERN=$(tr '\n' '|' < tempIgnore.txt | sed 's/|$//')  
+           
+          touch ignore.txt
+          
+          echo $EXCLUDE_PATTERN >> ignore.txt
+
+          rm "$TEMP_IGNORE_FILE"
+        fi
+
+        sleep 3

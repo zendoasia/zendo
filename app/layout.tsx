@@ -12,13 +12,26 @@ import {
   consolas,
   jetbrainsMono,
   ubuntu,
-  spaceGrotesk
+  spaceGrotesk,
 } from "@/components/fonts";
 
 export const metadata: Metadata = {
   title: "Zendo - Intuition",
-  description: "Welcome to Zendo. This is a private website for covering my work, projects, and portfolio. Let's explore the world of technology together.",
-  keywords: ["portfolio", "productivity", "technology", "aarush", "master", "projects", "zendo", "programming", "development", "design", "management"],
+  description:
+    "Welcome to Zendo. This is a private website for covering my work, projects, and portfolio. Let's explore the world of technology together.",
+  keywords: [
+    "portfolio",
+    "productivity",
+    "technology",
+    "aarush",
+    "master",
+    "projects",
+    "zendo",
+    "programming",
+    "development",
+    "design",
+    "management",
+  ],
   authors: [
     {
       name: "Aarush Master",
@@ -35,16 +48,18 @@ export const metadata: Metadata = {
   referrer: "origin-when-cross-origin",
   openGraph: {
     title: "Zendo",
-    description: "Welcome to Zendo. This is a private website for covering my work, projects, and portfolio. Let's explore the world of technology together.",
+    description:
+      "Welcome to Zendo. This is a private website for covering my work, projects, and portfolio. Let's explore the world of technology together.",
     url: "https://zendo.pages.dev/",
     siteName: "Zendo",
-    determiner: "the"
+    determiner: "the",
   },
   robots: "/robots.txt",
   twitter: {
     card: "summary_large_image",
     title: "Zendo",
-    description: "Welcome to Zendo. This is a private website for covering my work, projects, and portfolio. Let's explore the world of technology together.",
+    description:
+      "Welcome to Zendo. This is a private website for covering my work, projects, and portfolio. Let's explore the world of technology together.",
     creator: "@aarush01111",
   },
   pinterest: {
@@ -67,7 +82,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${spaceGrotesk.variable} ${geistMono.variable} ${menlo.variable} ${ubuntu.variable} ${jetbrainsMono.variable} ${consolas.variable} antialiased`}
+        className={`w-screen overflow-x-clip ${geistSans.variable} ${spaceGrotesk.variable} ${geistMono.variable} ${menlo.variable} ${ubuntu.variable} ${jetbrainsMono.variable} ${consolas.variable} antialiased`}
       >
         <ThemeProvider
           attribute="class"
@@ -75,8 +90,8 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ExternalLinkInterceptor/>
-            <Header />
+          <ExternalLinkInterceptor />
+          <Header />
           <main>{children}</main>
           <aside>
             <span>

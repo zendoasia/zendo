@@ -5,7 +5,20 @@ export const runtime = "edge";
 
 export async function POST(req: NextRequest) {
   try {
-    const { jwtToken, token } = await req.json();
+    let body: any;
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json(
+        {
+          code: 400,
+          message: "Invalid or missing JSON body in request.",
+        },
+        { status: 400 }
+      );
+    }
+
+    const { jwtToken, token } = body;
 
     if (!jwtToken) {
       return NextResponse.json(
@@ -18,8 +31,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // JWT Verification using jose
     try {
-      const secret = new TextEncoder().encode(process.env.NEXT_PRIVATE_JWT_SECRET!);
+      const secret = new TextEncoder().encode(
+        process.env.NEXT_PRIVATE_JWT_SECRET!
+      );
       const { payload } = await jwtVerify(jwtToken, secret);
 
       if (payload.from !== process.env.NEXT_PRIVATE_JWT_PAYLOAD_MESSAGE) {
@@ -31,31 +47,11 @@ export async function POST(req: NextRequest) {
           { status: 422 }
         );
       }
-    } catch {
+    } catch (err) {
+      console.error("JWT verification failed:", err);
       return NextResponse.json(
         { code: 403, message: "Invalid origin token." },
         { status: 403 }
-      );
-    }
-
-    const ip =
-      req.headers.get("cf-connecting-ip") ??
-      req.headers.get("x-forwarded-for") ??
-      "127.0.0.1";
-
-    const rateRes = await fetch(
-      `${process.env.NEXT_PUBLIC_ORIGIN}/security/rate-check?ip=${ip}`
-    );
-    const { allowed } = await rateRes.json();
-
-    if (!allowed) {
-      return NextResponse.json(
-        {
-          code: 429,
-          message:
-            "Rate limit exceeded. Too many requests in a short span of time.",
-        },
-        { status: 429 }
       );
     }
 
@@ -64,7 +60,7 @@ export async function POST(req: NextRequest) {
         {
           code: 400,
           message:
-            "Token is missing from body. Please include the token received from cloudflare turnstile to verify the interaction.",
+            "Token is missing from body. Please include the token received from Cloudflare Turnstile.",
         },
         { status: 400 }
       );
@@ -82,7 +78,32 @@ export async function POST(req: NextRequest) {
       }
     );
 
-    const turnstileData = await turnstileRes.json();
+    if (!turnstileRes.ok) {
+      const errorText = await turnstileRes.text();
+      console.error("Turnstile server error response:", errorText);
+      return NextResponse.json(
+        {
+          code: 502,
+          message: "Failed to contact Turnstile verification server.",
+        },
+        { status: 502 }
+      );
+    }
+
+    let turnstileData: any;
+    try {
+      turnstileData = await turnstileRes.json();
+    } catch (err) {
+      const raw = await turnstileRes.text();
+      console.error("Failed to parse Turnstile response JSON:", raw);
+      return NextResponse.json(
+        {
+          code: 502,
+          message: "Invalid JSON received from Turnstile server.",
+        },
+        { status: 502 }
+      );
+    }
 
     if (!turnstileData.success) {
       return NextResponse.json(
@@ -102,7 +123,7 @@ export async function POST(req: NextRequest) {
   } catch (err) {
     console.error(`Failed to verify turnstile, unexpected exception: ${err}`);
     return NextResponse.json(
-      { code: 500, message: "Unexpected server side error occurred." },
+      { code: 500, message: "Unexpected server-side error occurred." },
       { status: 500 }
     );
   }

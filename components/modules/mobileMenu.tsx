@@ -26,28 +26,13 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
-
-interface Props {
-  setOpenAction: (v: boolean) => void;
-  setOpenSAction: (v: boolean) => void;
-  strippedOS: string | null;
-}
-
-type NavItem = {
-  label: string;
-  icon: React.ElementType;
-  path: string;
-};
-
-type NavGroups = {
-  [key: string]: NavItem[];
-};
+import { NavGroups, MobileMenuProps } from "@/types";
 
 export default function MobileMenu({
   setOpenAction,
   setOpenSAction,
   strippedOS,
-}: Props) {
+}: MobileMenuProps) {
   const router = useRouter();
 
   const navItems: NavGroups = {

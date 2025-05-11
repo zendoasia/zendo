@@ -6,10 +6,10 @@ This project makes use of the following open-source libraries, fonts, and UI com
 
 - [Next.js](https://nextjs.org/) – MIT License  
 - [Tailwind CSS](https://tailwindcss.com/) – MIT License  
-- [shadcn/ui](https://ui.shadcn.dev/) – MIT License  
+- [shadcn/ui](https://ui.shadcn.com/) – MIT License  
   - Includes components from [Radix UI](https://www.radix-ui.com/) – MIT License  
 - [Aceternity UI](https://ui.aceternity.com/) – Custom components adapted from original  
-  - Licensed under MIT – See [original repo](https://github.com/aceternity/ui)  
+  - Licensed under MIT   
   - ⚠️ **Note**: Components have been mildly modified to align with React 19 and customized to suit project needs  
 - [Lucide React](https://lucide.dev/) – ISC License  
 - [React Icons](https://react-icons.github.io/react-icons/) – MIT License  

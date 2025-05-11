@@ -1,14 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { ModeToggle } from "@/components/modules/modes";
-import {
-  Dialog,
-  DialogContent,
-  DialogTrigger,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { AlignCenter, ArrowRightLeft, ArrowUp } from "lucide-react";
+import { Menu, X, Search } from "lucide-react";
 import Image from "next/image";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
@@ -17,229 +11,201 @@ import LogoDark from "@/public/assets/LogoDark.svg";
 import Logo from "@/public/assets/Logo.svg";
 import Link from "next/link";
 import { SiGithub } from "@icons-pack/react-simple-icons";
-import { useRouter } from "next/navigation";
-import { openExternalLinkManually } from "@/components/modules/externalLinkInterceptor";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { detectOS } from "@/lib/utils";
+import dynamic from "next/dynamic";
+
+const LazyMobileMenu = dynamic(
+  () => import("@/components/modules/mobileMenu"),
+  {
+    loading: () => null,
+    ssr: false,
+  }
+);
+
+const LazySearchBar = dynamic(() => import("@/components/modules/search"), {
+  loading: () => null,
+  ssr: false,
+});
 
 export default function Header() {
-  const router = useRouter();
+  const os = useMemo(() => detectOS(), []);
+  const strippedOS = useMemo(() => {
+    if (!os) return null;
+    switch (os) {
+      case "MacOS":
+        return "mac";
+      case "Windows":
+      case "Linux":
+        return "windows";
+      case "Android":
+      case "iOS":
+        return "phone";
+      default:
+        return null;
+    }
+  }, [os]);
+
   const { theme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openS, setOpenS] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // useEffect(() => {
-  //   const header = document.getElementById("glass-header");
-  //   if (!header) return;
+  useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (openS) setOpenS(false);
+        else if (open) setOpen(false);
+      }
+    };
 
-  //   const handleScroll = () => {
-  //     if (window.scrollY > 50) {
-  //       header.classList.add("backdrop-blur-2xl", "bg-white/20");
-  //     } else {
-  //       header.classList.remove("backdrop-blur-2xl", "bg-white/20");
-  //     }
-  //   };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [open, openS]);
 
-  //   window.addEventListener("scroll", handleScroll);
-  //   return () => window.removeEventListener("scroll", handleScroll);
-  // }, []);
+  useEffect(() => {
+    const downS = (e: KeyboardEvent) => {
+      if (e.key.toLowerCase() === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        if (open) {
+          setOpen(false);
+        } else {
+          setOpenS((prev) => !prev);
+        }
+      }
+    };
+
+    document.addEventListener("keydown", downS);
+    return () => document.removeEventListener("keydown", downS);
+  }, [open]);
 
   if (!mounted) return null;
 
   const currentTheme = theme === "system" ? systemTheme : theme;
   const isDark = currentTheme === "dark" || currentTheme === "system";
-  const borderColor = isDark
-    ? "border-[color:var(--jet)]"
-    : "border-[color:var(--silver)]";
 
   return (
-    <div
-      className={`sticky top-0 overflow-visible z-50 flex items-center px-4 py-3 
-        backdrop-blur-xl border border-dashed ${borderColor}
-        shadow-xl transition-all duration-300 rounded-b-2xl 
-        font-[family-name:var(--font-text)]`}
-    >
-      <Link href="/" className="flex items-center">
-        <Image
-          src={isDark ? LogoDark : Logo}
-          alt="Zendo Logo"
-          width={140}
-          height={30}
-          priority
-          quality="1080"
-          loading="eager"
-        />
-      </Link>
-
-      <div className="hidden md:flex items-center gap-3 ml-6">
-        {["About", "Portfolio", "Projects", "Contact"].map((label) => (
-          <Link
-            key={label}
-            href={`/${label.toLowerCase()}`}
-            className="px-4 py-2 text-sm rounded-md border border-[color:var(--jet)] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] hover:text-[color:var(--text-light)] transition-colors duration-200"
-          >
-            {label}
-          </Link>
-        ))}
-      </div>
-
-      <div className="flex-grow" />
-
-      <div className="hidden md:flex items-center gap-3">
-        <Link
-          href="https://github.com/aarush0101"
-          target="_blank"
-          className="group w-10 h-10 rounded-2xl border border-dashed overflow-hidden 
-         transition-colors duration-200 focus:ring-0 focus:outline-none"
-        >
-          <div className="flex items-center justify-center w-full h-full group-hover:bg-[color:var(--primary-hover)] group-focus:bg-[color:var(--primary-hover)] dark:group-hover:bg-[color:var(--primary-hover)] dark:group-focus:bg-[color:var(--primary-hover)]">
-            <SiGithub className="w-6 h-6" />
+    <>
+      <header className="sticky top-0 z-50 flex flex-wrap items-center px-4 py-3 gap-y-2 backdrop-blur-md border-l border-r border-b border-dashed dark:border-[color:var(--jet)] border-[color:var(--silver2)] bg-opacity-10 rounded-b-[radius:var(--radius)] font-[family-name:var(--font-text)]">
+        <Link href="/" className="flex items-center">
+          <div className="relative w-[140px] aspect-[140/30]">
+            <Image
+              src={isDark ? LogoDark : Logo}
+              alt="Zendo Logo"
+              fill
+              priority
+              loading="eager"
+              className="object-contain"
+            />
           </div>
         </Link>
 
-        <ModeToggle />
-      </div>
-
-      <div className="flex md:hidden items-center">
-        <Dialog open={open} onOpenChange={setOpen}>
-          <DialogTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="border border-[color:var(--accent-hover)] dark:border-[color:var(--accent)] bg-transparent"
+        <nav className="hidden md:flex items-center gap-[0.5rem] ml-6">
+          {["About", "Portfolio", "Projects", "Contact"].map((label) => (
+            <Link
+              key={label}
+              href={`/${label.toLowerCase()}`}
+              className="px-4 py-2 text-md rounded-[radius:var(--radius)] border border-[color:var(--jet)] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] hover:text-[color:var(--text-light)] transition-colors duration-300 font-[weight:var(--default-font-weight)]"
             >
-              <AnimatePresence mode="wait" initial={false}>
-                {open ? (
-                  <motion.div
-                    key="open"
-                    initial={{ rotate: 90, opacity: 0.99 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: -90, opacity: 0.99 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  >
-                    <ArrowRightLeft className="h-5 w-5 text-[color:var(--accent-light)] dark:text-[color:var(--accent-subtle)]" />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="closed"
-                    initial={{ rotate: -90, opacity: 0.99 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: 90, opacity: 0.99 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                  >
-                    <AlignCenter className="h-5 w-5 text-[color:var(--accent-light)] dark:text-[color:var(--accent-subtle)]" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </Button>
-          </DialogTrigger>
-          <DialogContent
-            className={`p-0 overflow-hidden rounded-2xl shadow-xl font-[family-name:var(--font-text)] 
-      ${
-        isDark
-          ? "bg-[color:var(--night)] border-[color:var(--silver-2)]"
-          : "bg-[color:var(--white-smoke)] border-[color:var(--jet)]"
-      }`}
+              {label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="flex-grow" />
+
+        <aside className="hidden md:flex items-center gap-[0.5rem] md:ml-auto w-full md:w-auto justify-center md:justify-end">
+          <Button
+            onClick={() => setOpenS(true)}
+            className="ml-6 group inline-flex items-center justify-center gap-3 rounded-[radius:var(--radius)] border border-[color:var(--jet)] bg-transparent px-4 py-2.5 transition-colors duration-300 hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)]"
           >
-            <div className="px-4 pt-4">
-              <DialogTitle
-                className="text-xl font-bold 
-      text-[color:var(--text-dark)] dark:text-[color:var(--text-light)]"
+            <Search size="1.2rem" className="dark:text-white text-black" />
+            <span className="flex items-center gap-2">
+              <span className="font-[weight:var(--default-font-weight)] text-sm dark:text-white text-black">
+                Search...
+              </span>
+              <kbd className="text-xs font-[weight:var(--default-font-weight)] md:inline-block font-[family-name:var(--font-code)] border border-[color:var(--jet)] px-2 py-0.5 rounded-sm text-muted-foreground">
+                <span className="sr-only">
+                  {strippedOS === "mac"
+                    ? "Command key plus K"
+                    : strippedOS === "windows"
+                    ? "Control key plus K"
+                    : strippedOS === "phone"
+                    ? "Press to search"
+                    : "Press to refresh"}
+                </span>
+                {strippedOS === "mac" ? (
+                  <>{"\u2318"} K</>
+                ) : strippedOS === "windows" ? (
+                  <>CTRL K</>
+                ) : strippedOS === "phone" ? (
+                  <>PRESS</>
+                ) : !strippedOS ? (
+                  <>REFRESH</>
+                ) : null}
+              </kbd>
+            </span>
+          </Button>
+
+          <Link
+            href="https://github.com/aarush0101/zendo"
+            target="_blank"
+            className="hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)] transition-colors duration-300 px-2 py-2 rounded-[radius:var(--radius)] border border-[color:var(--jet)] overflow-hidden"
+          >
+            <div className="flex items-center justify-center">
+              <SiGithub size="1.2rem" />
+            </div>
+          </Link>
+
+          <ModeToggle />
+        </aside>
+
+        <Button
+          onClick={() => {
+            setOpen(!open);
+          }}
+          variant="ghost"
+          size="icon"
+          className="block md:hidden hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)] transition-colors duration-300 px-2 py-2.5 rounded-[radius:var(--radius)] border border-[color:var(--jet)] overflow-hidden"
+        >
+          <AnimatePresence mode="wait" initial={false}>
+            {open ? (
+              <motion.div
+                key="open"
+                initial={{ rotate: 90, opacity: 1 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: -90, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
               >
-                Settings
-              </DialogTitle>
-            </div>
+                <X size="1.2rem" />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="closed"
+                initial={{ rotate: -90, opacity: 1 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: 90, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              >
+                <Menu size="1.2rem" />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </Button>
+      </header>
 
-            <div className="flex flex-col divide-y divide-[color:var(--border)] mt-4">
-              <div className="p-4 flex flex-col space-y-3">
-                <h3 className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
-                  Links
-                </h3>
-                <div className="flex flex-col space-y-2">
-                  {["About", "Portfolio", "Projects", "Contact"].map(
-                    (label) => (
-                      <button
-                        key={label}
-                        onClick={() => {
-                          setOpen(false);
-                          setTimeout(() => {
-                            router.push(`/${label.toLowerCase()}`);
-                          }, 950);
-                        }}
-                        className="text-left text-sm font-medium text-[color:var(--text-dark)] dark:text-[color:var(--text-light)] hover:text-[color:var(--accent)] transition-colors"
-                      >
-                        {label}
-                      </button>
-                    )
-                  )}
-                </div>
-              </div>
+      {open && (
+        <LazyMobileMenu
+          setOpenAction={setOpen}
+          setOpenSAction={setOpenS}
+          strippedOS={strippedOS}
+        />
+      )}
 
-              <div className="flex justify-center space-x-4 p-4">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="group">
-                        <ModeToggle />
-                        <TooltipContent className="text-xs">
-                          Toggle Theme
-                        </TooltipContent>
-                      </div>
-                    </TooltipTrigger>
-                  </Tooltip>
-                </TooltipProvider>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      {/* THIS GITHUB BTN ON THE MENU */}
-                      <button
-                        data-no-prompt
-                        onClick={() => {
-                          openExternalLinkManually("https://github.com/aarush0101/zendo");
-                        }}
-                        className="group w-8 h-8 rounded-xl border border-dashed overflow-hidden flex items-center justify-center transition-colors hover:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)]"
-                      >
-                        <SiGithub className="w-5 h-5" />
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent className="text-xs">
-                      Visit Github Repo
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button
-                        onClick={() => {
-                          setOpen(false);
-                          setTimeout(() => {
-                            router.push("/");
-                          }, 950);
-                        }}
-                        className="group w-8 h-8 rounded-xl flex items-center justify-center transition-colors hover:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)]"
-                      >
-                        <ArrowUp className="w-5 h-5" />
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent className="text-xs">
-                      Go Back Home
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
-    </div>
+      {openS && <LazySearchBar setOpenSAction={setOpenS} />}
+    </>
   );
 }

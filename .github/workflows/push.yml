@@ -1,0 +1,95 @@
+name: Push to Pterodactyl
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Cancel previous runs
+        uses: styfle/cancel-workflow-action@0.5.0
+        with:
+          access_token: ${{ github.token }}
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Retrieve files from Pterodactyl
+        id: server-files
+        uses: /.github/actions/PTERODACTYLFetch
+        with:
+          PTERODACTYL_API_KEY: ${{ secrets.PTERODACTYL_API_KEY }}
+          PTERODACTYL_SERVER_ID: ${{ secrets.PTERODACTYL_SERVER_ID }}
+
+      - name: Prepare Exclusion list
+        uses: ./.github/actions/exclusionPatterns
+        with:
+          cp: 'true'
+
+      - name: Read exclusion list
+        id: prepare_patterns
+        run: |
+          EXCLUDES=$(cat ignore.txt | xargs)
+
+      - name: Get changed files
+        id: changed-files
+        run: |
+          git fetch origin master
+          CHANGED_FILES=$(git diff --name-only HEAD origin/main | grep -v -E "${{ steps.prepare_patterns.outputs.EXCLUDES }}")
+          echo "changed_files=$CHANGED_FILES" >> $GITHUB_OUTPUT
+
+      - name: Check for updates
+        id: check-updates
+        run: |
+          SERVER_FILES="${{ steps.server-files.outputs.server_files }}"
+          CHANGED_FILES="${{ steps.changed-files.outputs.changed_files }}"
+          
+          IFS=' ' read -r -a SERVER_ARRAY <<< "$SERVER_FILES"
+          IFS=' ' read -r -a CHANGED_ARRAY <<< "$CHANGED_FILES"
+
+          FILES_TO_UPLOAD=()
+          for file in "${CHANGED_ARRAY[@]}"; do
+            if [[ ! " ${SERVER_ARRAY[@]} " =~ " ${file} " ]]; then
+              FILES_TO_UPLOAD+=("$file")
+            fi
+          done
+          
+          if [ ${#FILES_TO_UPLOAD[@]} -eq 0 ]; then
+            echo "No files to upload."
+            echo "Aborting action..."
+            echo "files_to_upload=null" >> $GITHUB_OUTPUT
+          else
+            echo "files_to_upload=${FILES_TO_UPLOAD[*]}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload files via SFTP
+        if: steps.check-updates.outputs.files_to_upload != ''
+        env:
+          SFTP_HOST: ${{ secrets.SFTP_HOST }}
+          SFTP_USER: ${{ secrets.SFTP_USER }}
+          SFTP_PASS: ${{ secrets.SFTP_PASS }}
+          SFTP_ROOT: ${{ secrets.PTERODACTYL_CF_ROOT }}
+        run: |
+          FILES_TO_UPLOAD="${{ steps.check-updates.outputs.files_to_upload }}"
+          
+          SFTP_CMD_FILE=$(mktemp)
+          echo "lcd $(pwd)" >> $SFTP_CMD_FILE  
+          
+          for file in $FILES_TO_UPLOAD; do
+            echo "put \"$file\" \"$SFTP_ROOT/$file\"" >> $SFTP_CMD_FILE
+          done
+          
+          sftp -oBatchMode=no -b $SFTP_CMD_FILE $SFTP_USER@$SFTP_HOST <<< "$SFTP_PASS"
+          
+          rm $SFTP_CMD_FILE
+
+      - name: Restart the server
+        uses: './.github/actions/PTERODACTYLRestart'
+        with:
+          off: 'true'
+
+      - name: Clean up
+        run: rm -rf ignore.txt tarIgnore.txt zipIgnore.txt ./temp/schema.json ./temparchives tempIgnore.txt

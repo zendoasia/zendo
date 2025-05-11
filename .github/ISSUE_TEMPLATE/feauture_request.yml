@@ -1,0 +1,57 @@
+name: Feature Request/Removal
+description: Suggest/Remove a feature for any project component, service component,or application component. Alternately, request an entirely new feature.
+labels: enhancement
+body:
+  - type: dropdown
+    attributes:
+      multiple: false
+      label: Which component/service does this feature request concern?
+      options:
+        - Main website
+        - Hosting Service
+        - Automation Software
+        - Entirely new component/service idea
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Why do you think we need this component or service?
+      description: >
+        What does this feature request aim to achieve? What is the purpose of this feature? How can it help Zendo?.
+    validations:
+      required: true
+  - type: textarea
+    attributes: 
+        label: How can this feature be implemented?
+        description: >
+            Please provide a detailed explanation of how this feature can be implemented. What are the steps to be taken? What are the prerequisites?
+    validations:
+        required: true
+  - type: textarea
+    attributes: 
+      label: Additional Context/Information.
+      description: >
+          Please provide any additional information that you think might be helpful in implementing this feature.
+    validations:
+      required: false
+  - type: checkboxes
+    attributes:
+      label: Checklist - Verify yourself before submitting.
+      description: >
+        It is expected that you have checked the following before submitting this feature report.
+      options:
+        - label: There are not any duplicates related to this request, as far as I know.
+          required: false
+        - label: I have included every idea I could find to help the team implement this feature.
+          required: false
+        - label: This feature already exists, this request is to modify it.
+          required: false
+        - label: This feature does not implement, rather remove something.
+          required: false
+  - type: textarea
+    attributes:
+      label: Summary
+      description: A short summary of what your bug request is for.
+    validations:
+      required: false

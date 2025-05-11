@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+import { SignJWT } from "jose";
 
 export const runtime = "edge";
 
@@ -16,13 +16,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const token = jwt.sign(
-    { from: process.env.NEXT_PRIVATE_JWT_PAYLOAD_MESSAGE },
-    process.env.NEXT_PRIVATE_JWT_SECRET!,
-    {
-      expiresIn: "1m",
-    }
-  );
+  const secret = new TextEncoder().encode(process.env.NEXT_PRIVATE_JWT_SECRET!);
+
+  const token = await new SignJWT({ from: process.env.NEXT_PRIVATE_JWT_PAYLOAD_MESSAGE })
+    .setProtectedHeader({ alg: "HS256" })
+    .setExpirationTime("1m")
+    .sign(secret);
 
   return NextResponse.json({ code: 200, jwtToken: token }, { status: 200 });
 }

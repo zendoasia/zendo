@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import jwt from "jsonwebtoken";
+import { jwtVerify } from "jose";
 
 export const runtime = "edge";
 
@@ -19,8 +19,10 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-      const decoded = jwt.verify(jwtToken, process.env.NEXT_PRIVATE_JWT_SECRET!) as jwt.JwtPayload;
-      if (decoded.from !== process.env.NEXT_PRIVATE_JWT_PAYLOAD_MESSAGE) {
+      const secret = new TextEncoder().encode(process.env.NEXT_PRIVATE_JWT_SECRET!);
+      const { payload } = await jwtVerify(jwtToken, secret);
+
+      if (payload.from !== process.env.NEXT_PRIVATE_JWT_PAYLOAD_MESSAGE) {
         return NextResponse.json(
           {
             code: 422,

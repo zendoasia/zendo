@@ -1,6 +1,20 @@
 {
-    "name": "zendo",
-    "compatibility_date": "2024-05-05",
-    "compatibility_flags": ["nodejs_compat"]
-  }
-  
+  "name": "zendo",
+  "main": "test/do-test-worker.js",
+  "compatibility_date": "2024-05-05",
+  "compatibility_flags": ["nodejs_compat"],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "RATE_LIMITER",
+        "class_name": "RateLimiter"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_classes": ["RateLimiter"]
+    }
+  ]
+}

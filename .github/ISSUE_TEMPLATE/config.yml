@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+- name: Ask questions
+  about: Ask questions through discussions about the website.
+  url: https://github.com/aarush0101/zendo/discussions
+- name: Zendo Website
+  about: Visit Zendo's official site, whose source code is held by this repository.
+  url: https://zendo.pages.dev/

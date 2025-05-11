@@ -1,0 +1,42 @@
+name: Sync Branches
+
+on:
+  workflow_dispatch:
+
+jobs:
+  sync_branches:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Cancel previous runs
+        uses: styfle/cancel-workflow-action@0.5.0
+        with:
+          access_token: ${{ github.token }}
+          
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Git
+        run: |
+          git config --global user.name "aarush0101"
+
+      - name: Fetch all branches and Push
+        run: |
+          git fetch --all
+          git branch -r | grep -v '\->' | while read -r branch; do
+            branch_name=${branch#origin/}
+          
+            if [[ "$branch_name" != "master" ]]; then
+              echo "Merging into branch $branch_name"
+          
+              git checkout $branch_name
+          
+              git merge origin/master
+          
+              git push origin $branch_name
+            fi
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

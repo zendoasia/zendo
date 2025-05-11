@@ -43,10 +43,22 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+.html, body {
+  scroll-behavior: smooth;
+}
+
+
+.custom-rounded-right {
+  border-top-right-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+}
+
+
 :root {
   --font-text: "Geist", "Geist Fallback", Arial, sans-serif;
   --font-text-mono: "Geist Mono", "Geist Mono Fallback", Menlo, Consolas;
   --font-code: "Jetbrains Mono", "Ubuntu", "Consolas", monospace;
+  --font-space-grotesk: "Space Grotesk", "Geist", "Geist Fallback", Arial, sans-serif;
   /* Neutrals */
   --white: #ffffff;
   --white-smoke: #f5f5f5;
@@ -68,9 +80,9 @@
   --text-dark: #000000;    /* hsl(0, 0%, 0%) */
 
   /* Primary – Indigo */
-  --primary2: #6c5ce7;         /* hsl(239, 85%, 67%) */
-  --primary-hover: #5c4dc2;    /* hsl(239, 75%, 60%) */
-  --primary-light: #918cf3;    /* hsl(239, 89%, 80%) */
+  --primary2: #5c5ee7;         /* hsl(239, 85%, 67%) */
+  --primary-hover: #4d4fc2;    /* hsl(239, 75%, 60%) */
+  --primary-light: #938cf3;    /* hsl(239, 89%, 80%) */
   --primary-subtle: #f0f2ff;   /* hsl(238, 100%, 95%) */
 
   /* Accent – Teal */
@@ -87,6 +99,8 @@
   --success-bg: #d8f7e8;       /* hsl(142, 71%, 85%) */
   --warning-bg: #fff1db;       /* hsl(48, 96%, 90%) */
   --danger-bg: #fddada;        /* hsl(0, 84%, 90%) */
+
+  --default-font-weight: "medium";
 
   --radius: 0.625rem;
   --background: oklch(1 0 0);

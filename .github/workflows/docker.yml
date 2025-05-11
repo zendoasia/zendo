@@ -2,6 +2,8 @@ name: zendo
 
 on:
   push:
+    branches:
+      - master
 
 env:
   REGISTRY: ghcr.io

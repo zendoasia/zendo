@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
+import { TurnstileResponse } from "@/types";
 
 export const runtime = "edge";
 
 export async function POST(req: NextRequest) {
   try {
-    let body: any;
+    let body: Record<string, unknown>;
     try {
       body = await req.json();
     } catch {
@@ -18,7 +19,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { jwtToken, token } = body;
+    const { jwtToken, token } = body as { jwtToken?: string; token?: string };
 
     if (!jwtToken) {
       return NextResponse.json(
@@ -31,7 +32,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // JWT Verification using jose
+    if (typeof jwtToken !== "string") {
+      return NextResponse.json(
+        {
+          code: 400,
+          message: "Invalid JWT token format.",
+        },
+        { status: 400 }
+      );
+    }
+
     try {
       const secret = new TextEncoder().encode(
         process.env.NEXT_PRIVATE_JWT_SECRET!
@@ -66,6 +76,16 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    if (typeof token !== "string") {
+      return NextResponse.json(
+        {
+          code: 400,
+          message: "Invalid Turnstile token format.",
+        },
+        { status: 400 }
+      );
+    }
+
     const turnstileRes = await fetch(
       "https://challenges.cloudflare.com/turnstile/v0/siteverify",
       {
@@ -90,10 +110,11 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    let turnstileData: any;
+    let turnstileData: TurnstileResponse;
     try {
       turnstileData = await turnstileRes.json();
     } catch (err) {
+      console.error(`Failed to parse turnstile response json due to error ${err}, finding out reason...`);
       const raw = await turnstileRes.text();
       console.error("Failed to parse Turnstile response JSON:", raw);
       return NextResponse.json(

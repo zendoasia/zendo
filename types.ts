@@ -7,6 +7,13 @@ export interface RateLimiterEnv {
   NEXT_ORIGIN: string;
 }
 
+export interface TurnstileResponse {
+  success: boolean;
+  "challenge_ts": string; 
+  "hostname": string;
+  "error-codes"?: string[]; 
+}
+
 export interface RateLimiterState {
   storage: DurableObjectStorage;
   blockConcurrencyWhile: (cb: () => Promise<void>) => void;
@@ -76,6 +83,6 @@ export interface NavigatorUAData {
   
 
 export interface RateLimitCheckProps {
-  request: CloudflareRequest; // Use the correct type from @cloudflare/workers-types
+  request: CloudflareRequest; 
   env: RateLimiterEnv;
 }

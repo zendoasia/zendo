@@ -1,0 +1,6 @@
+Contact: https://zendo.pages.dev/security/report
+Contact: mailto:aarush01111@gmail.com
+Encryption: https://zendo.pages.dev/security/zendo-public-key.asc
+Acknowledgements: https://zendo.pages.dev/security/acknowledgements
+Policy: https://zendo.pages.dev/secuity/policy
+Preferred-Languages: en 

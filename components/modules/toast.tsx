@@ -4,18 +4,7 @@ import { toast } from "sonner";
 import { X } from "lucide-react";
 import { FaCircleInfo } from "react-icons/fa6";
 import React from "react";
-
-interface ToastStyle {
-  container: string;
-  hoverAndFocus: string;
-  iconColor: string;
-  icon?: React.JSX.Element;
-  toastFunction:
-    | typeof toast.success
-    | typeof toast.error
-    | typeof toast.warning
-    | typeof toast;
-}
+import { ToastStyle } from "@/types";
 
 export default function sendToast(type: string, message: string): void {
   const toastTypes = ["error", "success", "neutral", "warning"];

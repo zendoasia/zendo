@@ -9,6 +9,7 @@ import {
   CommandGroup,
 } from "@/components/ui/command";
 import { useState } from "react";
+import { SearchProps } from "@/types";
 
 const items = [
   { label: "Dashboard", value: "dashboard" },
@@ -17,11 +18,8 @@ const items = [
   { label: "Logout", value: "logout" },
 ];
 
-interface Props {
-  setOpenSAction: (v: boolean) => void;
-}
 
-export default function SearchBar({ setOpenSAction }: Props) {
+export default function SearchBar({ setOpenSAction }: SearchProps) {
   const [search, setSearch] = useState("");
 
   return (

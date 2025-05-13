@@ -1,10 +1,13 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { CircleHelp } from "lucide-react";
 import Link from "next/link";
 import lonelyGhost from "@/public/assets/lonelyGhost.svg";
 import Image from "next/image";
+import { Skeleton } from "@/components/ui/skeleton"; 
+import { cn } from "@/lib/utils";
 import { ContainerTextFlip } from "@/components/ui/container-text-flip";
 import {
   HoverCard,
@@ -17,27 +20,35 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
 
 export default function NotFound() {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   return (
-    <div className="relative isolate font-[weight:var(--default-font-weight)] font-[family-name:var(--font-text)] w-full min-h-screen flex flex-col md:flex-row justify-center items-center gap-[8rem] px-4 py-8.5 text-center md:text-left">
+    <div className={cn("relative isolate w-full min-h-screen flex flex-col min-[864px]:flex-row justify-center items-center gap-[8rem] px-4 py-8.5 text-center min-[864px]:text-left")}>
       <motion.div
-        className="flex justify-center items-center md:order-1"
+        className={cn("flex justify-center items-center min-[864px]:order-1")}
         animate={{ y: ["0%", "-10%", "0%"] }}
         transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
       >
-        <div className="relative w-full max-w-[400px] bg-transparent">
+        <div className={cn("relative w-full max-w-[400px]")}>
+          {!imageLoaded && (
+            <Skeleton className={cn("w-full aspect-[1/1] rounded-xl")} />
+          )}
           <Image
             src={lonelyGhost}
             alt="Lonely Ghost"
-            width={400}
-            priority
-            className="object-contain w-full h-auto"
+            onLoad={() => setImageLoaded(true)}
+            loading="lazy"
+            className={cn(`object-contain w-full h-auto min-h-[150px] transition-opacity duration-500 ${
+              imageLoaded ? "opacity-100" : "opacity-0"
+            }`)}
           />
         </div>
       </motion.div>
 
-      <div className="flex flex-col items-center md:items-start gap-[2rem] max-w-xl">
+      <div className={cn("flex flex-col items-center min-[864px]:items-start gap-[2rem] max-w-xl")}>
         <div className="flex items-center gap-[0.3rem]">
           <CircleHelp size="2.5rem" className="text-rose-600" />
           <h1 className="text-xl font-[family-name:var(--font-space-grotesk)] font-extrabold">
@@ -49,18 +60,18 @@ export default function NotFound() {
           checkout our
           <span className="inline-block text-sm mr-2 ml-2">
             <Link href="/">
-              <ContainerTextFlip words={["homepage", "hub", "start"]} />
+              <ContainerTextFlip words={["homepage", "hub", "start"]} aria-label="Home Page"/>
             </Link>
           </span>
           for finding something truly good.
         </span>
 
-        <div className="hidden md:block">
+        <div className="hidden min-[864px]:block">
           <HoverCard>
             <HoverCardTrigger asChild>
-              <span className="px-4 py-2.5 text-md rounded-[radius:var(--radius)] border border-[color:var(--jet)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] transition-colors duration-300">
+              <Button className="px-4 py-2.5 text-md rounded-[radius:var(--radius)] border border-[color:var(--jet)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] transition-colors duration-300">
                 What do you mean?
-              </span>
+              </Button>
             </HoverCardTrigger>
             <HoverCardContent className="text-sm font-[family-name:var(--font-space-grotesk)] leading-relaxed">
               The page you are visiting was either moved or does not exist at
@@ -69,7 +80,7 @@ export default function NotFound() {
           </HoverCard>
         </div>
 
-        <div className="block md:hidden w-full">
+        <div className="block min-[864px]:hidden w-full">
           <Accordion type="single" collapsible>
             <AccordionItem value="info">
               <AccordionTrigger className="px-4 py-2.5 text-md rounded-[radius:var(--radius)] border border-[color:var(--jet)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] transition-colors duration-300">

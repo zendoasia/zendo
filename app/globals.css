@@ -43,16 +43,35 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-.html, body {
-  scroll-behavior: smooth;
+
+.html,
+body {
+  @apply scroll-smooth
 }
 
-
-.custom-rounded-right {
-  border-top-right-radius: var(--radius);
-  border-bottom-right-radius: var(--radius);
+.app-gap {
+  @apply gap-[0.5rem]
 }
 
+.app-border {
+  @apply border-l border-r dark:border-[color:var(--jet)] border-[color:var(--silver2)]
+}
+
+.rounded-right {
+  @apply rounded-tr-[var(--radius)] rounded-br-[var(--radius)];
+}
+
+.nav-btn {
+  @apply bg-transparent cursor-pointer text-base px-3 py-2.5 rounded-[var(--radius)] border border-[color:var(--jet)] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] hover:text-[color:var(--text-light)] transition-colors duration-400;
+}
+
+.app-padding {
+  @apply px-3 py-1.5
+}
+
+.app-font {
+  @apply font-[family-name:var(--font-text)] font-medium
+}
 
 :root {
   --font-text: "Geist", "Geist Fallback", Arial, sans-serif;
@@ -62,43 +81,69 @@
   /* Neutrals */
   --white: #ffffff;
   --white-smoke: #f5f5f5;
-  --silver: #bfbfbf;       /* hsl(0, 0%, 75%) */
-  --silver-2: #a8a8a8;     /* hsl(0, 0%, 66%) */
-  --jet: #292929;          /* hsl(0, 0%, 16%) */
-  --eerie-black: #1a1a1a;  /* hsl(0, 0%, 10%) */
-  --night: #121212;        /* hsl(0, 0%, 7%) */
-  --black: #000000;        /* hsl(0, 0%, 0%) */
+  --silver: #bfbfbf;
+  /* hsl(0, 0%, 75%) */
+  --silver-2: #a8a8a8;
+  /* hsl(0, 0%, 66%) */
+  --jet: #292929;
+  /* hsl(0, 0%, 16%) */
+  --eerie-black: #1a1a1a;
+  /* hsl(0, 0%, 10%) */
+  --night: #121212;
+  /* hsl(0, 0%, 7%) */
+  --black: #000000;
+  /* hsl(0, 0%, 0%) */
 
   /* Slate - Neutral */
-  --slate-100: #e5eaf0;    /* hsl(210, 10%, 90%) */
-  --slate-300: #b3bfd1;    /* hsl(210, 12%, 70%) */
-  --slate-500: #7c91ad;    /* hsl(210, 14%, 50%) */
-  --slate-700: #3e5770;    /* hsl(210, 16%, 30%) */
+  --slate-100: #e5eaf0;
+  /* hsl(210, 10%, 90%) */
+  --slate-300: #b3bfd1;
+  /* hsl(210, 12%, 70%) */
+  --slate-500: #7c91ad;
+  /* hsl(210, 14%, 50%) */
+  --slate-700: #3e5770;
+  /* hsl(210, 16%, 30%) */
 
   /* Text */
-  --text-light: #ffffff;   /* hsl(0, 0%, 100%) */
-  --text-dark: #000000;    /* hsl(0, 0%, 0%) */
+  --text-light: #ffffff;
+  /* hsl(0, 0%, 100%) */
+  --text-dark: #000000;
+  /* hsl(0, 0%, 0%) */
 
   /* Primary – Indigo */
-  --primary2: #5c5ee7;         /* hsl(239, 85%, 67%) */
-  --primary-hover: #4d4fc2;    /* hsl(239, 75%, 60%) */
-  --primary-light: #938cf3;    /* hsl(239, 89%, 80%) */
-  --primary-subtle: #f0f2ff;   /* hsl(238, 100%, 95%) */
+  --primary2: #5c5ee7;
+  /* hsl(239, 85%, 67%) */
+  --primary-hover: #4d4fc2;
+  /* hsl(239, 75%, 60%) */
+  --primary-light: #938cf3;
+  /* hsl(239, 89%, 80%) */
+  --primary-subtle: #f0f2ff;
+  /* hsl(238, 100%, 95%) */
 
   /* Accent – Teal */
-  --accent2: #2fcab3;          /* hsl(174, 64%, 48%) */
-  --accent-hover: #23a394;     /* hsl(174, 72%, 40%) */
-  --accent-light: #8fe4d6;     /* hsl(174, 72%, 70%) */
-  --accent-subtle: #d1f6f2;    /* hsl(174, 80%, 90%) */
+  --accent2: #2fcab3;
+  /* hsl(174, 64%, 48%) */
+  --accent-hover: #23a394;
+  /* hsl(174, 72%, 40%) */
+  --accent-light: #8fe4d6;
+  /* hsl(174, 72%, 70%) */
+  --accent-subtle: #d1f6f2;
+  /* hsl(174, 80%, 90%) */
 
   /* Utility / States */
-  --success: #2ecc71;          /* hsl(142, 71%, 45%) */
-  --warning: #ffb84d;          /* hsl(48, 96%, 53%) */
-  --danger: #f2545b;           /* hsl(0, 84%, 60%) */
+  --success: #2ecc71;
+  /* hsl(142, 71%, 45%) */
+  --warning: #ffb84d;
+  /* hsl(48, 96%, 53%) */
+  --danger: #f2545b;
+  /* hsl(0, 84%, 60%) */
 
-  --success-bg: #d8f7e8;       /* hsl(142, 71%, 85%) */
-  --warning-bg: #fff1db;       /* hsl(48, 96%, 90%) */
-  --danger-bg: #fddada;        /* hsl(0, 84%, 90%) */
+  --success-bg: #d8f7e8;
+  /* hsl(142, 71%, 85%) */
+  --warning-bg: #fff1db;
+  /* hsl(48, 96%, 90%) */
+  --danger-bg: #fddada;
+  /* hsl(0, 84%, 90%) */
 
   --default-font-weight: "medium";
 

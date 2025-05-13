@@ -11,8 +11,10 @@ import LogoDark from "@/public/assets/LogoDark.svg";
 import Logo from "@/public/assets/Logo.svg";
 import Link from "next/link";
 import { SiGithub } from "@icons-pack/react-simple-icons";
-import { detectOS } from "@/lib/utils";
+import { detectOS, stripOS } from "@/lib/utils";
 import dynamic from "next/dynamic";
+import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const LazyMobileMenu = dynamic(
   () => import("@/components/modules/mobileMenu"),
@@ -30,25 +32,14 @@ const LazySearchBar = dynamic(() => import("@/components/modules/search"), {
 export default function Header() {
   const os = useMemo(() => detectOS(), []);
   const strippedOS = useMemo(() => {
-    if (!os) return null;
-    switch (os) {
-      case "MacOS":
-        return "mac";
-      case "Windows":
-      case "Linux":
-        return "windows";
-      case "Android":
-      case "iOS":
-        return "phone";
-      default:
-        return null;
-    }
+    return stripOS(os);
   }, [os]);
 
   const { theme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
   const [openS, setOpenS] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -57,8 +48,13 @@ export default function Header() {
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        if (openS) setOpenS(false);
-        else if (open) setOpen(false);
+        if (openS) {
+          setOpenS(false);
+          return;
+        }
+        if (open) {
+          setOpen(false);
+        }
       }
     };
 
@@ -80,54 +76,126 @@ export default function Header() {
 
     document.addEventListener("keydown", downS);
     return () => document.removeEventListener("keydown", downS);
-  }, [open]);
+  }, [open, openS]);
 
   if (!mounted) return null;
-
   const currentTheme = theme === "system" ? systemTheme : theme;
   const isDark = currentTheme === "dark" || currentTheme === "system";
 
   return (
     <>
-      <header className="sticky top-0 z-50 flex flex-wrap items-center px-4 py-3 gap-y-2 backdrop-blur-md border-l border-r border-b border-dashed dark:border-[color:var(--jet)] border-[color:var(--silver2)] bg-opacity-10 rounded-b-[radius:var(--radius)] font-[family-name:var(--font-text)]">
-        <Link href="/" className="flex items-center">
-          <div className="relative w-[140px] aspect-[140/30]">
-            <Image
-              src={isDark ? LogoDark : Logo}
-              alt="Zendo Logo"
-              fill
-              priority
-              loading="eager"
-              className="object-contain"
-            />
-          </div>
-        </Link>
+      <header
+        aria-label="Primary Header"
+        className={cn(
+          "sticky top-0 z-50 flex flex-wrap items-center border-0 border-b-[0.1rem] px-4 py-2.5 gap-y-2 backdrop-blur-md app-font"
+        )}
+      >
+        <Button
+          aria-label="Skip Navigation"
+          variant="ghost"
+          asChild
+          className={cn(
+            "sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 z-50 nav-btn px-4 py-2.5 rounded-[var(--radius)]"
+          )}
+        >
+          <Link
+            aria-label="Skip to main content"
+            href="#main"
+            onClick={(e) => {
+              e.preventDefault();
+              const main = document.getElementById("main");
+              if (main) {
+                main.scrollIntoView({ behavior: "smooth" });
+                main.focus();
+              }
+            }}
+            className={cn("w-full h-full flex items-center justify-center")}
+          >
+            Skip Navigation
+          </Link>
+        </Button>
 
-        <nav className="hidden md:flex items-center gap-[0.5rem] ml-6">
+        <Button
+          variant="ghost"
+          asChild
+          className={cn(
+            "flex items-center transition-colors bg-transparent duration-400"
+          )}
+        >
+          <Link
+            key="logo-link"
+            href="/"
+            className={cn("relative w-[140px] aspect-[140/30]")}
+          >
+            {!imageLoaded && (
+              <Skeleton
+                key="logo-skeleton"
+                className={cn("absolute inset-0 w-full h-full rounded-full")}
+              />
+            )}
+
+            <Image
+              key="logo-image"
+              src={isDark ? LogoDark : Logo}
+              alt="Zendo Logo SVG"
+              fill
+              loading="lazy"
+              onLoad={() => setImageLoaded(true)}
+              className={cn(
+                "object-contain transition-opacity duration-300",
+                imageLoaded ? "opacity-100" : "opacity-0"
+              )}
+            />
+          </Link>
+        </Button>
+
+        <nav
+          aria-label="Primary Navigation and Inter-Links"
+          className={cn(
+            "hidden min-[864px]:flex items-center gap-[0.5rem] ml-7"
+          )}
+        >
           {["About", "Portfolio", "Projects", "Contact"].map((label) => (
-            <Link
+            <Button
               key={label}
-              href={`/${label.toLowerCase()}`}
-              className="px-4 py-2 text-md rounded-[radius:var(--radius)] border border-[color:var(--jet)] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] hover:text-[color:var(--text-light)] transition-colors duration-300 font-[weight:var(--default-font-weight)]"
+              variant="ghost"
+              className={cn("nav-btn")}
+              asChild
             >
-              {label}
-            </Link>
+              <Link href={`/${label.toLowerCase()}`}>{label}</Link>
+            </Button>
           ))}
         </nav>
 
-        <div className="flex-grow" />
+        <div className={cn("flex-grow")} />
 
-        <aside className="hidden md:flex items-center gap-[0.5rem] md:ml-auto w-full md:w-auto justify-center md:justify-end">
+        <aside
+          aria-label="Secondary Navigation - Search and themes"
+          className={cn(
+            "hidden min-[864px]:flex items-center app-gap min-[866px]:ml-auto w-full min-[864px]:w-auto justify-center min-[866px]:justify-end"
+          )}
+        >
           <Button
+            variant="ghost"
             onClick={() => setOpenS(true)}
-            className="ml-6 group inline-flex items-center justify-center gap-3 rounded-[radius:var(--radius)] border border-[color:var(--jet)] bg-transparent px-4 py-2.5 transition-colors duration-300 hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)]"
+            className={cn(
+              "ml-6 group inline-flex items-center justify-center gap-3 nav-btn"
+            )}
           >
-            <Search size="1.2rem" className="dark:text-white text-black" />
-            <span className="flex items-center gap-2">
-              <span className="font-[weight:var(--default-font-weight)] text-sm dark:text-white text-black">
-                Search...
+            <Search
+              size="1.2rem"
+              className={cn("dark:text-white text-black")}
+            />
+            <span className={cn("flex items-center gap-5")}>
+              <span className={cn("text-sm dark:text-white text-black")}>
+                Search
               </span>
-              <kbd className="text-xs font-[weight:var(--default-font-weight)] md:inline-block font-[family-name:var(--font-code)] border border-[color:var(--jet)] px-2 py-0.5 rounded-sm text-muted-foreground">
+              <kbd
+                aria-label="Search Bar Shortcut"
+                className={cn(
+                  "text-xs min-[864px]:inline-block app-font-code border app-border px-2 py-0.5 rounded-[var(--radius)] text-muted-foreground"
+                )}
+              >
                 <span className="sr-only">
                   {strippedOS === "mac"
                     ? "Command key plus K"
@@ -150,51 +218,63 @@ export default function Header() {
             </span>
           </Button>
 
-          <Link
-            href="https://github.com/aarush0101/zendo"
-            target="_blank"
-            className="hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)] transition-colors duration-300 px-2 py-2 rounded-[radius:var(--radius)] border border-[color:var(--jet)] overflow-hidden"
+          <Button
+            variant="ghost"
+            className={cn("nav-btn")}
+            asChild
+            key="github-repository"
           >
-            <div className="flex items-center justify-center">
-              <SiGithub size="1.2rem" />
-            </div>
-          </Link>
+            <Link href="https://github.com/aarush0101/zendo" target="_blank">
+              <span className="flex items-center justify-center">
+                <span className="sr-only">GitHub Repository</span>
+                <SiGithub size="1.2rem" />
+              </span>
+            </Link>
+          </Button>
 
           <ModeToggle />
         </aside>
 
-        <Button
-          onClick={() => {
-            setOpen(!open);
-          }}
-          variant="ghost"
-          size="icon"
-          className="block md:hidden hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] dark:hover:bg-[color:var(--primary-hover)] dark:focus:bg-[color:var(--primary-hover)] transition-colors duration-300 px-2 py-2.5 rounded-[radius:var(--radius)] border border-[color:var(--jet)] overflow-hidden"
+        <span
+          className={cn("flex flex-col justify-center items-center ml-2 mr-2")}
         >
-          <AnimatePresence mode="wait" initial={false}>
-            {open ? (
-              <motion.div
-                key="open"
-                initial={{ rotate: 90, opacity: 1 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: -90, opacity: 1 }}
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
-              >
-                <X size="1.2rem" />
-              </motion.div>
-            ) : (
-              <motion.div
-                key="closed"
-                initial={{ rotate: -90, opacity: 1 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: 90, opacity: 1 }}
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
-              >
-                <Menu size="1.2rem" />
-              </motion.div>
+          <Button
+            aria-label="Mobile Menu Button"
+            key="mobile-menu"
+            onClick={() => {
+              setOpen(!open);
+            }}
+            variant="ghost"
+            size="icon"
+            className={cn(
+              "flex justify-center items-center p-2 gap-[0.5rem] nav-btn min-[864px]:hidden"
             )}
-          </AnimatePresence>
-        </Button>
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              {open ? (
+                <motion.div
+                  key="open"
+                  initial={{ rotate: 90, opacity: 1 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: -90, opacity: 1 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                >
+                  <X size="1.2rem" aria-label="Close Mobile Menu Icon" />
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="closed"
+                  initial={{ rotate: -90, opacity: 1 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 1 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                >
+                  <Menu size="1.2rem" aria-label="Open Mobile Menu Icon" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </Button>
+        </span>
       </header>
 
       {open && (

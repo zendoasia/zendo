@@ -54,7 +54,7 @@ export default function MobileMenu({
     <Sheet open onOpenChange={setOpenAction}>
       <SheetContent
         side="left"
-        className="w-[280px] border-r border-b border-t border-dashed border-[color:var(--jet)] custom-rounded-right flex flex-col justify-between p-0 font-[family-name:var(--font-text)]"
+        className="w-[280px] border-r border-b border-t border-dashed border-[color:var(--jet)] rounded-right flex flex-col justify-between p-0 font-[family-name:var(--font-text)]"
       >
         <div className="flex flex-col px-4 py-2.5 gap-6 flex-1">
           <SheetHeader className="flex flex-row gap-[0.5rem] items-center">

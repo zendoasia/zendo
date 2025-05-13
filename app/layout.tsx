@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import "./globals.css";
+import "@/app/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import Header from "@/components/main/header";
 import { Toaster } from "sonner";
 import Footer from "@/components/main/footer";
 import ExternalLinkInterceptor from "@/components/externalLinkInterceptor";
@@ -14,6 +13,9 @@ import {
   ubuntu,
   spaceGrotesk,
 } from "@/components/fonts";
+import dynamic from "next/dynamic";
+import Header from "@/components/main/header";
+
 
 export const metadata: Metadata = {
   title: "Zendo - Intuition",
@@ -92,7 +94,7 @@ export default function RootLayout({
         >
           <ExternalLinkInterceptor />
           <Header />
-          <main>{children}</main>
+          <main tabIndex={-1} id="main" className="outline-none">{children}</main>
           <aside>
             <span>
               <Toaster />

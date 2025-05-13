@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import sendToast from "@/components/modules/toast";
+import { cn } from "@/lib/utils";
 
 export function ModeToggle() {
   const { theme, resolvedTheme, setTheme } = useTheme();
@@ -59,10 +60,10 @@ export function ModeToggle() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          size="icon"
-          className="bg-transparent text-[color:var(--jet)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] border border-[color:var(--jet)] rounded-[radius:var(--radius)] px-4 py-2.5 transition-colors duration-300"
+          variant="ghost"
+          className={cn("nav-btn")}
         >
-          <span className="text-black dark:text-white">
+          <span className={cn("text-black dark:text-white")}>
             {theme === "system" ? (
               <Monitor size="1.2rem" />
             ) : resolvedTheme === "light" ? (
@@ -70,22 +71,23 @@ export function ModeToggle() {
             ) : (
               <Moon size="1.2rem" />
             )}
-            <span className="sr-only">Toggle theme</span>
+            <span className={cn("sr-only")}>Toggle theme</span>
           </span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" aria-label="Theme Options">
         {["light", "dark", "system"].map((t) => (
           <DropdownMenuItem
             key={t}
             onClick={() => handleThemeChange(t)}
-            className="flex justify-between"
+            className={cn("flex justify-between")}
           >
             {t.charAt(0).toUpperCase() + t.slice(1)}
             {theme === t && (
               <Check
                 size="1.2rem"
-                className="text-green-600 dark:text-green-500"
+                aria-hidden={true}
+                className={cn("text-green-600 dark:text-green-500")}
               />
             )}
           </DropdownMenuItem>

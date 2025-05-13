@@ -10,8 +10,9 @@ export type OS = "MacOS" | "Windows" | "Linux" | "iOS" | "Android" | "Other";
 
 export function detectOS(): OS {
   if (typeof navigator === "undefined") return "Other";
-  
-  const uaData = (navigator as unknown as { userAgentData?: NavigatorUAData }).userAgentData;
+
+  const uaData = (navigator as unknown as { userAgentData?: NavigatorUAData })
+    .userAgentData;
   if (uaData?.platform) {
     const platform = uaData.platform;
     if (platform.startsWith("Win")) return "Windows";
@@ -31,4 +32,20 @@ export function detectOS(): OS {
   if (/iPhone|iPad|iPod/i.test(ua)) return "iOS";
 
   return "Other";
+}
+
+export function stripOS(os: OS): string | null {
+  if (!os) return null;
+  switch (os) {
+    case "MacOS":
+      return "mac";
+    case "Windows":
+    case "Linux":
+      return "windows";
+    case "Android":
+    case "iOS":
+      return "phone";
+    default:
+      return null;
+  }
 }

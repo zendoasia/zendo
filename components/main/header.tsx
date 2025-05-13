@@ -80,7 +80,6 @@ export default function Header() {
 
   if (!mounted) return null;
   const currentTheme = theme === "system" ? systemTheme : theme;
-  const isDark = currentTheme === "dark" || currentTheme === "system";
 
   return (
     <>
@@ -122,28 +121,36 @@ export default function Header() {
             "flex items-center transition-colors bg-transparent duration-400"
           )}
         >
+          {/* Preload both logos at once to prevent network requests */}
           <Link
             key="logo-link"
             href="/"
-            className={cn("relative w-[140px] aspect-[140/30]")}
+            className="relative w-[140px] aspect-[140/30]"
           >
             {!imageLoaded && (
-              <Skeleton
-                key="logo-skeleton"
-                className={cn("absolute inset-0 w-full h-full rounded-full")}
-              />
+              <Skeleton className="absolute inset-0 w-full h-full rounded-full" />
             )}
 
             <Image
-              key="logo-image"
-              src={isDark ? LogoDark : Logo}
-              alt="Zendo Logo SVG"
+              src={Logo}
+              alt="Zendo Logo Light"
               fill
               loading="lazy"
               onLoad={() => setImageLoaded(true)}
               className={cn(
-                "object-contain transition-opacity duration-300",
-                imageLoaded ? "opacity-100" : "opacity-0"
+                "absolute inset-0 object-contain transition-opacity duration-300",
+                currentTheme === "light" ? "opacity-100" : "opacity-0"
+              )}
+            />
+            <Image
+              src={LogoDark}
+              alt="Zendo Logo Dark"
+              fill
+              loading="lazy"
+              onLoad={() => setImageLoaded(true)}
+              className={cn(
+                "absolute inset-0 object-contain transition-opacity duration-300",
+                currentTheme === "dark" ? "opacity-100" : "opacity-0"
               )}
             />
           </Link>
@@ -193,7 +200,7 @@ export default function Header() {
               <kbd
                 aria-label="Search Bar Shortcut"
                 className={cn(
-                  "text-xs min-[864px]:inline-block app-font-code border app-border px-2 py-0.5 rounded-[var(--radius)] text-muted-foreground"
+                  "text-xs min-[864px]:inline-block app-font-code border app-border px-2 py-0.5 rounded-md text-muted-foreground"
                 )}
               >
                 <span className="sr-only">

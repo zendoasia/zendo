@@ -62,11 +62,11 @@ body {
 }
 
 .nav-btn {
-  @apply bg-transparent cursor-pointer text-base px-3 py-2.5 rounded-[var(--radius)] border border-[color:var(--jet)] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] hover:text-[color:var(--text-light)] transition-colors duration-400;
+  @apply bg-transparent cursor-pointer py-0 px-2 text-base rounded-[var(--radius)] border border-[color:var(--jet)] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] transition-colors duration-400;
 }
 
 .app-padding {
-  @apply px-3 py-1.5
+  @apply py-0 px-2
 }
 
 .app-font {

@@ -6,7 +6,7 @@ import { CircleHelp } from "lucide-react";
 import Link from "next/link";
 import lonelyGhost from "@/public/assets/lonelyGhost.svg";
 import Image from "next/image";
-import { Skeleton } from "@/components/ui/skeleton"; 
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { ContainerTextFlip } from "@/components/ui/container-text-flip";
 import {
@@ -26,7 +26,11 @@ export default function NotFound() {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
-    <div className={cn("relative isolate w-full min-h-screen flex flex-col min-[864px]:flex-row justify-center items-center gap-[8rem] px-4 py-8.5 text-center min-[864px]:text-left")}>
+    <div
+      className={cn(
+        "relative isolate w-full min-h-screen flex flex-col min-[864px]:flex-row justify-center items-center gap-[8rem] px-4 py-8.5 text-center min-[864px]:text-left"
+      )}
+    >
       <motion.div
         className={cn("flex justify-center items-center min-[864px]:order-1")}
         animate={{ y: ["0%", "-10%", "0%"] }}
@@ -41,32 +45,43 @@ export default function NotFound() {
             alt="Lonely Ghost"
             onLoad={() => setImageLoaded(true)}
             loading="lazy"
-            className={cn(`object-contain w-full h-auto min-h-[150px] transition-opacity duration-500 ${
-              imageLoaded ? "opacity-100" : "opacity-0"
-            }`)}
+            className={cn(
+              `object-contain w-full h-auto min-h-[150px] transition-opacity duration-500 ${
+                imageLoaded ? "opacity-100" : "opacity-0"
+              }`
+            )}
           />
         </div>
       </motion.div>
 
-      <div className={cn("flex flex-col items-center min-[864px]:items-start gap-[2rem] max-w-xl")}>
+      <div
+        className={cn(
+          "flex flex-col items-center min-[864px]:items-start gap-[2rem] max-w-xl"
+        )}
+      >
         <div className="flex items-center gap-[0.3rem]">
           <CircleHelp size="2.5rem" className="text-rose-600" />
           <h1 className="text-xl font-[family-name:var(--font-space-grotesk)] font-extrabold">
             Hey Buddy! Seems like you are lost?
           </h1>
         </div>
-        <span className="text-lg">
-          Sorry but we are not able to find the page you are looking for. Maybe
-          checkout our
-          <span className="inline-block text-sm mr-2 ml-2">
-            <Link href="/">
-              <ContainerTextFlip words={["homepage", "hub", "start"]} aria-label="Home Page"/>
-            </Link>
+        <section>
+          <span className="text-lg">
+            Sorry but we are not able to find the page you are looking for.
+            Maybe checkout our
+            <span className="inline-block text-sm mr-2 ml-2">
+              <Link href="/">
+                <ContainerTextFlip
+                  words={["homepage", "hub", "start"]}
+                  aria-label="Home Page"
+                />
+              </Link>
+            </span>
+            for finding something truly good.
           </span>
-          for finding something truly good.
-        </span>
+        </section>
 
-        <div className="hidden min-[864px]:block">
+        <section className="hidden min-[864px]:block">
           <HoverCard>
             <HoverCardTrigger asChild>
               <Button className="px-4 py-2.5 text-md rounded-[radius:var(--radius)] border border-[color:var(--jet)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] transition-colors duration-300">
@@ -78,9 +93,9 @@ export default function NotFound() {
               this location. Please check the URL you are visiting and retry.
             </HoverCardContent>
           </HoverCard>
-        </div>
+        </section>
 
-        <div className="block min-[864px]:hidden w-full">
+        <section className="block min-[864px]:hidden w-full">
           <Accordion type="single" collapsible>
             <AccordionItem value="info">
               <AccordionTrigger className="px-4 py-2.5 text-md rounded-[radius:var(--radius)] border border-[color:var(--jet)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] transition-colors duration-300">
@@ -92,7 +107,7 @@ export default function NotFound() {
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-        </div>
+        </section>
       </div>
     </div>
   );

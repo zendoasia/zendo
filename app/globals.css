@@ -73,6 +73,31 @@ body {
   @apply font-[family-name:var(--font-text)] font-medium
 }
 
+.app-font-mono {
+  @apply font-[family-name:var(--font-text-mono)] font-medium
+}
+
+.app-font-code {
+  @apply font-[family-name:var(--font-code)] font-medium
+}
+
+@layer utilities {
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+  }
+}
+
+
 :root {
   --font-text: "Geist", "Geist Fallback", Arial, sans-serif;
   --font-text-mono: "Geist Mono", "Geist Mono Fallback", Menlo, Consolas;

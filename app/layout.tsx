@@ -19,6 +19,7 @@ import Head from "next/head";
 import LogoDark from "@/public/assets/LogoDark.svg";
 import Logo from "@/public/assets/Logo.svg";
 import { cn } from "@/lib/utils";
+import AnimatedSection from "@/components/animatedSection";
 
 export const metadata: Metadata = {
   title: "Zendo - Intuition",
@@ -91,7 +92,9 @@ export default function RootLayout({
         <link rel="preload" href={LogoDark.src} as="image" />
       </Head>
       <body
-        className={cn(`w-screen overflow-x-clip ${geistSans.variable} ${spaceGrotesk.variable} ${geistMono.variable} ${menlo.variable} ${ubuntu.variable} ${jetbrainsMono.variable} ${consolas.variable} antialiased`)}
+        className={cn(
+          `w-screen overflow-x-clip ${geistSans.variable} ${spaceGrotesk.variable} ${geistMono.variable} ${menlo.variable} ${ubuntu.variable} ${jetbrainsMono.variable} ${consolas.variable} antialiased`
+        )}
       >
         <ThemeProvider
           attribute="class"
@@ -101,18 +104,22 @@ export default function RootLayout({
         >
           <ExternalLinkInterceptor />
           <Header />
-          <main
-            tabIndex={-1}
-            id="main"
-            className={cn("outline-none app-font")}
-          >
-            {children}
-          </main>
-          <aside aria-label="Notifications and Tips">
+          <AnimatedSection>
+            <main
+              tabIndex={-1}
+              id="main"
+              className={cn("text-balance outline-none app-font")}
+            >
+              {children}
+            </main>
+          </AnimatedSection>
+          <section className="text-balance" aria-label="Notifications and Tips">
             <LightModeTipAlert />
-            <Toaster />
-          </aside>
-          <Footer />
+            <Toaster position="bottom-right" richColors={true} />
+          </section>
+          <AnimatedSection>
+            <Footer />
+          </AnimatedSection>
         </ThemeProvider>
       </body>
     </html>

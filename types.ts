@@ -86,3 +86,8 @@ export interface RateLimitCheckProps {
   request: CloudflareRequest; 
   env: RateLimiterEnv;
 }
+
+export interface ToasterProps {
+  type: "neutral" | "success" | "error" | "warning"
+  message: string,
+}

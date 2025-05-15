@@ -77,14 +77,14 @@ export default function NotFound() {
                 />
               </Link>
             </span>
-            for finding something truly good.
+            for finding something truly awesome.
           </span>
         </section>
 
         <section className="hidden min-[864px]:block">
           <HoverCard>
             <HoverCardTrigger asChild>
-              <Button className="px-4 py-2.5 text-md rounded-[radius:var(--radius)] border border-[color:var(--jet)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] transition-colors duration-300">
+              <Button className="px-4 py-2.5 text-md border border-[color:var(--jet)] transition-colors duration-400">
                 What do you mean?
               </Button>
             </HoverCardTrigger>
@@ -98,7 +98,7 @@ export default function NotFound() {
         <section className="block min-[864px]:hidden w-full">
           <Accordion type="single" collapsible>
             <AccordionItem value="info">
-              <AccordionTrigger className="px-4 py-2.5 text-md rounded-[radius:var(--radius)] border border-[color:var(--jet)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] transition-colors duration-300">
+              <AccordionTrigger className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 text-md rounded-[radius:var(--radius)] border border-[color:var(--jet)] transition-colors duration-400 [&>svg]:text-[var(--primary2)] [&>svg]:w-[1.2rem] [&>svg]:h-[1.2rem]">
                 What do you mean?
               </AccordionTrigger>
               <AccordionContent className="text-sm font-[family-name:var(--font-space-grotesk)] leading-relaxed px-1 pt-2 pb-4">

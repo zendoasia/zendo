@@ -83,12 +83,15 @@ export default function Header() {
 
   return (
     <>
-      <header
-        aria-label="Primary Header"
-        className={cn(
-          "sticky top-0 z-50 flex flex-wrap items-center border-0 border-b-[0.1rem] px-4 py-2.5 gap-y-2 backdrop-blur-md app-font"
-        )}
-      >
+<motion.header
+  aria-label="Primary Header"
+  initial={{ opacity: 0, y: -40 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+  className={cn(
+    "sticky top-0 z-50 flex flex-wrap items-center border-0 border-b-[0.1rem] px-4 py-2.5 gap-y-2 backdrop-blur-md app-font"
+  )}
+>
         <Button
           aria-label="Skip Navigation"
           variant="ghost"
@@ -106,6 +109,10 @@ export default function Header() {
               if (main) {
                 main.scrollIntoView({ behavior: "smooth" });
                 main.focus();
+              } else {
+                console.error(
+                  "Failed to find the main element on the page. Are you sure there is a main tag with id='main'?"
+                );
               }
             }}
             className={cn("w-full h-full flex items-center justify-center")}
@@ -164,6 +171,7 @@ export default function Header() {
         >
           {["About", "Portfolio", "Projects", "Contact"].map((label) => (
             <Button
+              size="lg"
               key={label}
               variant="ghost"
               className={cn("nav-btn")}
@@ -176,13 +184,14 @@ export default function Header() {
 
         <div className={cn("flex-grow")} />
 
-        <aside
+        <section
           aria-label="Secondary Navigation - Search and themes"
           className={cn(
             "hidden min-[864px]:flex items-center app-gap min-[866px]:ml-auto w-full min-[864px]:w-auto justify-center min-[866px]:justify-end"
           )}
         >
           <Button
+            size="lg"
             variant="ghost"
             onClick={() => setOpenS(true)}
             className={cn(
@@ -191,10 +200,9 @@ export default function Header() {
           >
             <Search
               size="1.2rem"
-              className={cn("dark:text-white text-black")}
             />
             <span className={cn("flex items-center gap-5")}>
-              <span className={cn("text-sm dark:text-white text-black")}>
+              <span className={cn("text-sm")}>
                 Search
               </span>
               <kbd
@@ -227,6 +235,7 @@ export default function Header() {
 
           <Button
             variant="ghost"
+            size="icon"
             className={cn("nav-btn")}
             asChild
             key="github-repository"
@@ -240,9 +249,9 @@ export default function Header() {
           </Button>
 
           <ModeToggle />
-        </aside>
+        </section>
 
-        <span
+        <section
           className={cn("flex flex-col justify-center items-center ml-2 mr-2")}
         >
           <Button
@@ -281,8 +290,8 @@ export default function Header() {
               )}
             </AnimatePresence>
           </Button>
-        </span>
-      </header>
+        </section>
+      </motion.header>
 
       {open && (
         <LazyMobileMenu

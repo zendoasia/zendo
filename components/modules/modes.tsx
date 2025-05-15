@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Moon, Sun, Monitor, Check } from "lucide-react";
-import { useTheme } from "next-themes";
+import { useHandleThemeChange } from "@/hooks/useThemeChanger";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,59 +9,18 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import sendToast from "@/components/modules/toast";
 import { cn } from "@/lib/utils";
 
 export function ModeToggle() {
-  const { theme, resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  // Ensure the component is mounted first to avoid hydration issues.
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+ 
+  const { handleThemeChange, theme, resolvedTheme, mounted } = useHandleThemeChange();
 
   if (!mounted) return null;
-
-  const handleThemeChange = async (newTheme: string) => {
-    if (!mounted) {
-      setTimeout(() => {
-        sendToast(
-          "warning",
-          "Theming components are not mounted yet, you may experience some issues. Please refresh."
-        );
-      });
-    }
-    if (theme === newTheme) {
-      setTimeout(() => {
-        sendToast("neutral", `Already using ${newTheme} theme.`);
-      });
-      return;
-    }
-
-    try {
-      setTheme(newTheme);
-      setTimeout(() => {
-        sendToast("success", `Successfully switched to ${newTheme} theme.`);
-      }, 100);
-    } catch (error) {
-      console.error("Theme switch failed:", error);
-      sendToast(
-        "error",
-        `Failed to switch theme due to unexpected exception: ${
-          (error as Error).message
-        }`
-      );
-    }
-  };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          className={cn("nav-btn")}
-        >
+        <Button size="icon" variant="ghost" className={cn("nav-btn")}>
           <span className={cn("text-black dark:text-white")}>
             {theme === "system" ? (
               <Monitor size="1.2rem" />

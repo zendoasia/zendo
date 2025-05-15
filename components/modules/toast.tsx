@@ -5,8 +5,10 @@ import { X } from "lucide-react";
 import { FaCircleInfo } from "react-icons/fa6";
 import React from "react";
 import { ToastStyle } from "@/types";
+import { cn } from "@/lib/utils";
+import { ToasterProps } from "@/types";
 
-export default function sendToast(type: string, message: string): void {
+export default function sendToast({ type, message }: ToasterProps): void {
   const toastTypes = ["error", "success", "neutral", "warning"];
   if (!toastTypes.includes(type)) {
     console.error(
@@ -16,7 +18,6 @@ export default function sendToast(type: string, message: string): void {
     );
     return;
   }
-
   const toastStyles: Record<string, ToastStyle> = {
     error: {
       container:
@@ -62,9 +63,9 @@ export default function sendToast(type: string, message: string): void {
     toastStyles[type];
 
   const toastId = toastFunction(
-    <div className="font-[family-name:var(--font-text)] flex items-center gap-2 w-full">
+    <div className={cn("app-font flex items-center gap-2 w-full")} >
       {icon ?? null}
-      <span className="text-md font-[weight:var(--default-font-weight)]">
+      <span className={cn("text-md")}>
         {message}
       </span>
     </div>,
@@ -74,9 +75,9 @@ export default function sendToast(type: string, message: string): void {
       description: (
         <button
           onClick={() => toast.dismiss(toastId)}
-          className={`absolute top-2 right-2 rounded-[var(--radius)] p-1 transition-colors duration-300 ${hoverAndFocus}`}
+          className={cn(`absolute top-2 right-2 rounded-[var(--radius)] p-1 transition-colors duration-300 ${hoverAndFocus}`)}
         >
-          <X size="1.2rem" className={`${iconColor}`} />
+          <X size="1.2rem" className={cn(`${iconColor}`)} />
         </button>
       ),
     }

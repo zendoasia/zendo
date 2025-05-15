@@ -1,23 +1,12 @@
 "use client";
 
-import {
-  Sheet,
-  SheetContent,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/modules/modes";
-import {
-  Briefcase,
-  Folder,
-  Home,
-  Info,
-  Mail,
-  Search,
-} from "lucide-react";
+import { Briefcase, Folder, Home, Info, Mail, Search } from "lucide-react";
 import { SiGithub } from "@icons-pack/react-simple-icons";
-import { TiThMenuOutline } from "react-icons/ti";
+import { BiSolidBellRing } from "react-icons/bi";
 import { openExternalLinkManually } from "@/components/externalLinkInterceptor";
 import {
   Accordion,
@@ -27,6 +16,7 @@ import {
 } from "@/components/ui/accordion";
 import { NavGroups, MobileMenuProps } from "@/types";
 import { cn } from "@/lib/utils";
+import { Separator } from "@/components/ui/separator";
 
 export default function MobileMenu({
   setOpenAction,
@@ -80,18 +70,26 @@ export default function MobileMenu({
         aria-label="Mobile Menu"
         side="left"
         className={cn(
-          "top-0 left-0 z-50 w-[50%] max-[373px]:w-[270px] border-r border-b border-t border-[color:var(--jet)] rounded-right flex flex-col p-0 app-font overflow-hidden"
+          "top-0 left-0 z-50 border-r border-b border-t border-[color:var(--jet)] rounded-right flex flex-col p-0 app-font overflow-hidden",
+          "w-[85%] max-w-xs sm:w-[60%] md:w-[50%]"
         )}
       >
-        <div className="flex items-center gap-2 px-4 py-2.5">
-          <TiThMenuOutline
-            size="2rem"
-            className="text-emerald-700 dark:text-emerald-500"
-          />
-          <SheetTitle className="text-xl font-extrabold">Menu</SheetTitle>
+        <div className="flex flex-col px-[1.2rem] pt-4 pb-3">
+          <div className="flex items-center gap-2">
+            <BiSolidBellRing
+              size="1.25rem"
+              className="text-emerald-700 dark:text-emerald-500"
+            />
+            <SheetTitle className="text-lg font-semibold app-font-space">
+              Quick Access
+            </SheetTitle>
+          </div>
+          <p className="text-sm text-muted-foreground mt-1">
+            Quick links and tools
+          </p>
         </div>
 
-        <hr className="mx-auto w-[100%] border-t border-[color:var(--jet)]" />
+        <Separator className="my-[0.5]" />
 
         <nav
           className="flex-1 overflow-y-auto px-[1.2rem] pt-[1.2rem] pb-[1.2rem] scroll-smooth no-scrollbar"
@@ -122,7 +120,7 @@ export default function MobileMenu({
           </Accordion>
         </nav>
 
-        <hr className="mx-auto w-[100%] border-t border-[color:var(--jet)]" />
+        <Separator className="my-[0.5]" />
 
         <section className="sticky pb-[3.5rem] bottom-0 z-100 px-[0.7rem] py-[0.7rem] flex flex-col gap-4">
           <Button

@@ -70,15 +70,18 @@ body {
 }
 
 .app-font {
-  @apply font-[family-name:var(--font-text)] font-medium
+  @apply font-[family-name:var(--font-text)] font-medium text-balance
 }
 
 .app-font-mono {
-  @apply font-[family-name:var(--font-text-mono)] font-medium
+  @apply font-[family-name:var(--font-text-mono)] font-medium text-balance
 }
 
+.app-font-space {
+  @apply font-[family-name:var(--font-space-grotesk)] font-medium text-balance
+}
 .app-font-code {
-  @apply font-[family-name:var(--font-code)] font-medium
+  @apply font-[family-name:var(--font-code)] font-medium text-balance
 }
 
 @layer utilities {

@@ -3,7 +3,6 @@
 import {
   Sheet,
   SheetContent,
-  SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useRouter } from "next/navigation";
@@ -11,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/modules/modes";
 import {
   Briefcase,
-  CircleChevronDown,
   Folder,
   Home,
   Info,

@@ -8,11 +8,14 @@ interface AnimatedSectionProps {
   className?: string;
 }
 
-export default function AnimatedSection({ children, className = "" }: AnimatedSectionProps) {
+export default function AnimatedSection({
+  children,
+  className = "",
+}: AnimatedSectionProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, {
-    once: true,       // only animate once
-    margin: "-50px",  
+    once: true, // only animate once
+    margin: "-50px",
   });
 
   return (

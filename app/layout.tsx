@@ -20,6 +20,7 @@ import LogoDark from "@/public/assets/LogoDark.svg";
 import Logo from "@/public/assets/Logo.svg";
 import { cn } from "@/lib/utils";
 import AnimatedSection from "@/components/animatedSection";
+import ThemeSanitizer from "@/hooks/themeSanitizer";
 
 export const metadata: Metadata = {
   title: "Zendo - Intuition",
@@ -98,10 +99,11 @@ export default function RootLayout({
       >
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="dark"
           enableSystem
           disableTransitionOnChange
         >
+          <ThemeSanitizer />
           <ExternalLinkInterceptor />
           <Header />
           <AnimatedSection>

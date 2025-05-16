@@ -1,5 +1,6 @@
 import { toast } from "sonner";
 import { DurableObjectNamespace, DurableObjectStorage, Request as CloudflareRequest } from '@cloudflare/workers-types';
+import type { Dispatch, SetStateAction } from "react"
 
 export interface RateLimiterEnv {
   RATE_LIMITER: DurableObjectNamespace;
@@ -20,9 +21,11 @@ export interface RateLimiterState {
 }
 
 export interface MobileMenuProps {
-  setOpenAction: (v: boolean) => void;
-  setOpenSAction: (v: boolean) => void;
-  strippedOS: string | null;
+  setOpenAction: Dispatch<SetStateAction<boolean>>
+  setOpenSAction: Dispatch<SetStateAction<boolean>>
+  strippedOS: string | null
+  open?: boolean
+  onCloseComplete?: () => void
 }
 
 export type NavItem = {
@@ -36,7 +39,9 @@ export type NavGroups = {
 };
 
 export interface SearchProps {
-  setOpenSAction: (v: boolean) => void;
+  setOpenSAction: Dispatch<SetStateAction<boolean>>
+  openS?: boolean
+  onCloseComplete?: () => void
 }
 
 export interface ToastStyle {

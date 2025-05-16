@@ -39,7 +39,7 @@ export default function LightModeTipAlert() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: "-100%", opacity: 0 }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
-          className="fixed top-4 left-1/2 -translate-x-1/2 w-full z-[105] flex justify-center px-4 py-2.5 pointer-events-auto touch-none"
+          className="fixed top-4 inset-x-4 z-[105] flex justify-center pointer-events-auto touch-none"
         >
           <Alert className="max-w-xl w-full relative shadow-lg app-font flex items-start gap-3">
             <FaCircleInfo

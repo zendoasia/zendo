@@ -25,7 +25,7 @@ export function useHandleThemeChange() {
     if (theme === newTheme) {
       setTimeout(() => {
         sendToast({
-          type: "warning",
+          type: "neutral",
           message: `Already using ${newTheme} theme.`,
         });
       });

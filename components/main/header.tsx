@@ -15,58 +15,20 @@ import { detectOS, stripOS } from "@/lib/utils";
 import dynamic from "next/dynamic";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Separator } from "../ui/separator";
+import SearchSkeleton from "@/components/skeletons/searchSkeleton";
+import MobileMenuSkeleton from "@/components/skeletons/mobileMenuSkeleton";
+
+
 const LazyMobileMenu = dynamic(
   () => import("@/components/modules/mobileMenu"),
   {
-    loading: () => (
-      <motion.div
-        initial={{ x: "-100%" }}
-        animate={{ x: 0 }}
-        exit={{ x: "-100%" }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-        aria-label="Mobile Menu"
-        className={cn(
-          "top-0 left-0 z-50 border-r border-b border-t border-[color:var(--jet)] rounded-right flex flex-col p-0 app-font overflow-hidden",
-          "w-[85%] max-w-xs sm:w-[60%] md:w-[50%]"
-        )}
-      >
-        <div className="flex flex-col gap-3 px-[1.2rem] pt-4 pb-3">
-          <Skeleton className="h-4 w-2/3" />
-          <Skeleton className="h-3 w-1/2" />
-        </div>
-
-        <Separator className="my-[0.5]" />
-
-        <div className="flex-1 overflow-y-auto px-[1.2rem] pt-[1.2rem] pb-[1.2rem] scroll-smooth no-scrollbar flex flex-col gap-4">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="flex flex-col gap-2">
-              <Skeleton className="h-3 w-24" />
-              <Skeleton className="h-9 w-full rounded-md" />
-              <Skeleton className="h-9 w-5/6 rounded-md" />
-              <Skeleton className="h-9 w-2/3 rounded-md" />
-            </div>
-          ))}
-        </div>
-
-        <Separator className="my-[0.5]" />
-
-        <div className="pb-[3.5rem] bottom-0 z-100 px-[0.7rem] py-[0.7rem] flex flex-col gap-4">
-          <Skeleton className="h-9 w-full rounded-md" />
-          <Skeleton className="h-9 w-full rounded-md" />
-          <div className="flex justify-between">
-            <Skeleton className="h-9 w-[60%] rounded-md" />
-            <Skeleton className="h-9 w-9 rounded-md" />
-          </div>
-        </div>
-      </motion.div>
-    ),
+    loading: () => <MobileMenuSkeleton/>,
     ssr: false,
   }
 );
 
 const LazySearchBar = dynamic(() => import("@/components/modules/search"), {
-  loading: () => null,
+  loading: () => <SearchSkeleton/>,
   ssr: false,
 });
 

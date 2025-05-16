@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/command";
 import { useState } from "react";
 import { SearchProps } from "@/types";
+import { useEffect } from "react";
 
 const items = [
   { label: "Dashboard", value: "dashboard" },
@@ -18,12 +19,28 @@ const items = [
   { label: "Logout", value: "logout" },
 ];
 
-
-export default function SearchBar({ setOpenSAction }: SearchProps) {
+export default function SearchBar({
+  setOpenSAction,
+  openS = true, // Default to true for backward compatibility
+  onCloseComplete,
+}: SearchProps) {
   const [search, setSearch] = useState("");
+  const [isClosing, setIsClosing] = useState(false);
+
+  useEffect(() => {
+    if (!openS && !isClosing) {
+      setIsClosing(true);
+      const timer = setTimeout(() => {
+        if (onCloseComplete) onCloseComplete();
+        setIsClosing(false);
+      }, 300);
+
+      return () => clearTimeout(timer);
+    }
+  }, [openS, isClosing, onCloseComplete]);
 
   return (
-    <CommandDialog open onOpenChange={(open) => !open && setOpenSAction(false)}>
+    <CommandDialog open={openS} onOpenChange={setOpenSAction}>
       <CommandInput
         placeholder="Search pages..."
         value={search}

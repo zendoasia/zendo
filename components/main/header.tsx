@@ -81,6 +81,8 @@ export default function Header() {
   const [open, setOpen] = useState(false);
   const [openS, setOpenS] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [shouldRender, setShouldRender] = useState(false);
+  const [shouldRenderS, setShouldRenderS] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -104,6 +106,15 @@ export default function Header() {
   }, [open, openS]);
 
   useEffect(() => {
+    if (openS) {
+      document.body.style.overflow = openS ? "hidden" : "unset";
+    }
+    if (open) {
+      document.body.style.overflow = open ? "hidden" : "unset";
+    }
+  }, [open, openS]);
+
+  useEffect(() => {
     const downS = (e: KeyboardEvent) => {
       if (e.key.toLowerCase() === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
@@ -117,6 +128,18 @@ export default function Header() {
 
     document.addEventListener("keydown", downS);
     return () => document.removeEventListener("keydown", downS);
+  }, [open, openS]);
+
+  useEffect(() => {
+    if (openS) {
+      // When opening, immediately render
+      setShouldRenderS(true);
+    }
+    if (open) {
+      // When opening, immediately render
+      setShouldRender(true);
+    }
+    // When closing, we'll let the component itself tell us when to unmount
   }, [open, openS]);
 
   if (!mounted) return null;
@@ -330,15 +353,27 @@ export default function Header() {
         </section>
       </motion.header>
 
-      {open && (
+      {shouldRender && (
         <LazyMobileMenu
+          open={open}
           setOpenAction={setOpen}
           setOpenSAction={setOpenS}
           strippedOS={strippedOS}
+          onCloseComplete={() => {
+            if (!open) setShouldRender(false);
+          }}
         />
       )}
 
-      {openS && <LazySearchBar setOpenSAction={setOpenS} />}
+      {shouldRenderS && (
+        <LazySearchBar
+          openS={openS}
+          setOpenSAction={setOpenS}
+          onCloseComplete={() => {
+            if (!openS) setShouldRender(false);
+          }}
+        />
+      )}
     </>
   );
 }

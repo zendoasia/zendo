@@ -39,7 +39,7 @@
   },
   "devDependencies": {
     "@cloudflare/next-on-pages": "^1.13.12",
-    "@cloudflare/workers-types": "^4.20250510.0",
+    "@cloudflare/workers-types": "^4.20250515.0",
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4.1.6",
     "@types/js-cookie": "^3.0.6",

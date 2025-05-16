@@ -11,13 +11,11 @@ import {
 import { useState } from "react";
 import { SearchProps } from "@/types";
 import { useEffect } from "react";
-
-const items = [
-  { label: "Dashboard", value: "dashboard" },
-  { label: "Settings", value: "settings" },
-  { label: "Profile", value: "profile" },
-  { label: "Logout", value: "logout" },
-];
+import { Info, Bot } from "lucide-react";
+import { NavGroups } from "@/types";
+import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { Separator } from "@/components/ui/separator";
 
 export default function SearchBar({
   setOpenSAction,
@@ -26,7 +24,14 @@ export default function SearchBar({
 }: SearchProps) {
   const [search, setSearch] = useState("");
   const [isClosing, setIsClosing] = useState(false);
+  const router = useRouter();
 
+  const navItems: NavGroups = {
+    links: [{ label: "About", icon: Info, path: "/about" }],
+    projects: [{ label: "Pixelite", icon: Bot, path: "/projects/pixelite" }],
+  };
+
+  const sectionKeys = Object.keys(navItems);
   useEffect(() => {
     if (!openS && !isClosing) {
       setIsClosing(true);
@@ -39,31 +44,49 @@ export default function SearchBar({
     }
   }, [openS, isClosing, onCloseComplete]);
 
+  const handleNavigate = (path: string) => {
+    setOpenSAction(false);
+    setTimeout(() => router.push(path), 250);
+  };
+
   return (
     <CommandDialog open={openS} onOpenChange={setOpenSAction}>
       <CommandInput
-        placeholder="Search pages..."
+        placeholder="Search all across my work"
         value={search}
         onValueChange={setSearch}
-        className="pl-10 pr-3 py-2"
+        className={cn("p-2")}
       />
-      <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
-        <CommandGroup heading="Suggestions">
-          {items
-            .filter((item) =>
-              item.label.toLowerCase().includes(search.toLowerCase())
-            )
-            .map((item) => (
-              <CommandItem
-                key={item.value}
-                value={item.value}
-                onSelect={() => setOpenSAction(false)}
-              >
-                {item.label}
-              </CommandItem>
-            ))}
-        </CommandGroup>
+      <CommandList className={cn("pb-2 pt-2")}>
+        <CommandEmpty>
+          No results found for your query. Please check your query and try
+          again.
+        </CommandEmpty>
+        {sectionKeys.map((sectionKey, index) => (
+          <div key={sectionKey}>
+            <CommandGroup
+              heading={
+                <span className="app-font-mono text-xs text-muted-foreground">
+                  {sectionKey.toUpperCase()}
+                </span>
+              }
+            >
+              {navItems[sectionKey].map(({ label, icon: Icon, path }) => (
+                <CommandItem
+                  key={label}
+                  onSelect={() => handleNavigate(path)}
+                  className={cn("flex items-center gap-2")}
+                >
+                  <Icon size="1.2rem" />
+                  {label}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+
+            {/* Add separator unless it's the last group */}
+            {index < sectionKeys.length - 1 && <Separator className="my-1" />}
+          </div>
+        ))}
       </CommandList>
     </CommandDialog>
   );

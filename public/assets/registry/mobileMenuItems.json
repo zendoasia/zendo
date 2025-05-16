@@ -1,0 +1,8 @@
+{
+  "links": [
+    { "label": "About", "icon": "Info", "path": "/about" },
+    { "label": "Portfolio", "icon": "Briefcase", "path": "/portfolio" },
+    { "label": "Projects", "icon": "Folder", "path": "/projects" },
+    { "label": "Contact", "icon": "Mail", "path": "/contact" }
+  ]
+}

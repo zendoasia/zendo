@@ -1,17 +1,23 @@
 # Install dependencies
-FROM node:20-alpine AS deps
+FROM node:20-slim AS deps
 
 WORKDIR /app
 
 # Install system deps
-RUN apk add --no-cache libc6-compat
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get update && apt-get install -y libc6 && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y tini && rm -rf /var/lib/apt/lists/*
+COPY nginx-entrypoint.sh /app/nginx-entrypoint.sh
+RUN chmod +x /app/nginx-entrypoint.sh
+
+ENTRYPOINT ["/usr/bin/tini", "--"]
 
 # Copy lockfiles and install dependencies
 COPY package.json package-lock.json* ./
 RUN npm install --frozen-lockfile
 
 # Build app
-FROM node:20-alpine AS builder
+FROM node:20-slim AS builder
 
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
@@ -19,18 +25,19 @@ COPY . .
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_OPTIONS=--dns-result-order=ipv4first
 
 RUN npm run build
 
 # Final runtime image
-FROM node:20-alpine AS runner
+FROM node:20-slim AS runner
 
 WORKDIR /app
 
 ENV NODE_ENV=production
 ENV PORT=3000
 
-RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
+RUN groupadd -g 1001 nodejs && useradd -m -u 1001 -g nodejs nextjs
 
 # Copy necessary files for runtime
 COPY --from=builder /app/public ./public

@@ -1,7 +1,16 @@
 import { toast } from "sonner";
-import { DurableObjectNamespace, DurableObjectStorage, Request as CloudflareRequest } from '@cloudflare/workers-types';
-import type { Dispatch, SetStateAction } from "react"
+import {
+  DurableObjectNamespace,
+  DurableObjectStorage,
+  Request as CloudflareRequest,
+} from "@cloudflare/workers-types";
+import type { Dispatch, SetStateAction } from "react";
 import { motion } from "framer-motion";
+
+export interface ArticleWrapperProps {
+  children: React.ReactNode;
+  className?: string;
+}
 
 export interface RateLimiterEnv {
   RATE_LIMITER: DurableObjectNamespace;
@@ -9,11 +18,24 @@ export interface RateLimiterEnv {
   NEXT_ORIGIN: string;
 }
 
+export interface FooterLinkItem {
+  name: string;
+  path: string;
+  items: {
+    title: string;
+    path: string;
+  }[];
+}
+
+export interface FooterLink {
+  title: FooterLinkItem;
+}
+
 export interface TurnstileResponse {
   success: boolean;
-  "challenge_ts": string; 
-  "hostname": string;
-  "error-codes"?: string[]; 
+  challenge_ts: string;
+  hostname: string;
+  "error-codes"?: string[];
 }
 
 export interface RateLimiterState {
@@ -22,11 +44,11 @@ export interface RateLimiterState {
 }
 
 export interface MobileMenuProps {
-  setOpenAction: Dispatch<SetStateAction<boolean>>
-  setOpenSAction: Dispatch<SetStateAction<boolean>>
-  strippedOS: string | null
-  open?: boolean
-  onCloseComplete?: () => void
+  setOpenAction: Dispatch<SetStateAction<boolean>>;
+  setOpenSAction: Dispatch<SetStateAction<boolean>>;
+  strippedOS: string | null;
+  open?: boolean;
+  onCloseComplete?: () => void;
 }
 
 export type NavItem = {
@@ -40,9 +62,9 @@ export type NavGroups = {
 };
 
 export interface SearchProps {
-  setOpenSAction: Dispatch<SetStateAction<boolean>>
-  openS?: boolean
-  onCloseComplete?: () => void
+  setOpenSAction: Dispatch<SetStateAction<boolean>>;
+  openS?: boolean;
+  onCloseComplete?: () => void;
 }
 
 export interface ToastStyle {
@@ -84,18 +106,17 @@ export interface GlowingEffectProps {
 }
 
 export interface NavigatorUAData {
-    platform: string;
+  platform: string;
 }
-  
 
 export interface RateLimitCheckProps {
-  request: CloudflareRequest; 
+  request: CloudflareRequest;
   env: RateLimiterEnv;
 }
 
 export interface ToasterProps {
-  type: "neutral" | "success" | "error" | "warning"
-  message: string,
+  type: "neutral" | "success" | "error" | "warning";
+  message: string;
 }
 
 export type TagType = "div" | "section" | "article" | "main";

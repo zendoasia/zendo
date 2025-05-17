@@ -19,7 +19,6 @@ import Head from "next/head";
 import LogoDark from "@/public/assets/LogoDark.svg";
 import Logo from "@/public/assets/Logo.svg";
 import { cn } from "@/lib/utils";
-import AnimatedSection from "@/components/animatedSection";
 import ThemeSanitizer from "@/hooks/themeSanitizer";
 
 export const metadata: Metadata = {
@@ -94,7 +93,7 @@ export default function RootLayout({
       </Head>
       <body
         className={cn(
-          `w-screen overflow-x-clip ${geistSans.variable} ${spaceGrotesk.variable} ${geistMono.variable} ${menlo.variable} ${ubuntu.variable} ${jetbrainsMono.variable} ${consolas.variable} antialiased`
+          `scroll-smooth w-full p-0 m-0 overflow-x-clip ${geistSans.variable} ${spaceGrotesk.variable} ${geistMono.variable} ${menlo.variable} ${ubuntu.variable} ${jetbrainsMono.variable} ${consolas.variable} antialiased`
         )}
       >
         <ThemeProvider
@@ -106,22 +105,21 @@ export default function RootLayout({
           <ThemeSanitizer />
           <ExternalLinkInterceptor />
           <Header />
-          <AnimatedSection>
-            <main
-              tabIndex={-1}
-              id="main"
-              className={cn("text-balance outline-none app-font")}
-            >
-              {children}
-            </main>
-          </AnimatedSection>
-          <section className="text-balance" aria-label="Notifications and Tips">
+          <main
+            tabIndex={-1}
+            id="main"
+            className={cn(
+              "text-base outline-none app-font",
+              "max-[864px]:pt-[3.5rem]"
+            )}
+          >
+            {children}
+          </main>
+          <section className="text-base" aria-label="Notifications and Tips">
             <LightModeTipAlert />
             <Toaster position="bottom-right" richColors={true} />
           </section>
-          <AnimatedSection>
-            <Footer />
-          </AnimatedSection>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>

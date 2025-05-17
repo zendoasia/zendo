@@ -67,15 +67,6 @@ export default function Header() {
   }, [open, openS]);
 
   useEffect(() => {
-    if (openS) {
-      document.body.style.overflow = openS ? "hidden" : "unset";
-    }
-    if (open) {
-      document.body.style.overflow = open ? "hidden" : "unset";
-    }
-  }, [open, openS]);
-
-  useEffect(() => {
     const downS = (e: KeyboardEvent) => {
       if (e.key.toLowerCase() === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
@@ -108,13 +99,12 @@ export default function Header() {
 
   return (
     <>
-      <motion.header
+      <header
         aria-label="Primary Header"
-        initial={{ opacity: 0, y: -40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
         className={cn(
-          "sticky top-0 z-50 flex flex-wrap items-center border-0 border-b-[0.1rem] px-8 py-2.5 max-[864px]:px-4 gap-y-2 backdrop-blur-md app-font"
+          "sticky top-0 left-0 right-0 z-50 flex items-center border-0 border-b-[0.1rem] px-8 py-2.5 max-[864px]:px-4 gap-y-2 backdrop-blur-md app-font min-h-0",
+          "max-[864px]:fixed max-[864px]:w-full",
+          "will-change-transform transform-gpu backface-hidden"
         )}
       >
         <Button
@@ -206,9 +196,7 @@ export default function Header() {
             </Button>
           ))}
         </nav>
-
         <div className={cn("flex-grow")} />
-
         <section
           aria-label="Secondary Navigation - Search and themes"
           className={cn(
@@ -229,7 +217,7 @@ export default function Header() {
               <kbd
                 aria-label="Search Bar Shortcut"
                 className={cn(
-                  "text-xs min-[864px]:inline-block app-font-code border app-border px-2 py-0.5 rounded-md text-muted-foreground"
+                  "!text-xs min-[864px]:inline-block app-font-code border app-border px-2 py-0.5 rounded-md text-muted-foreground"
                 )}
               >
                 <span className="sr-only">
@@ -296,7 +284,11 @@ export default function Header() {
                   initial={{ rotate: 90, opacity: 1 }}
                   animate={{ rotate: 0, opacity: 1 }}
                   exit={{ rotate: -90, opacity: 1 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 30,
+                  }}
                 >
                   <X size="1.2rem" aria-label="Close Mobile Menu" />
                 </motion.div>
@@ -306,7 +298,11 @@ export default function Header() {
                   initial={{ rotate: -90, opacity: 1 }}
                   animate={{ rotate: 0, opacity: 1 }}
                   exit={{ rotate: 90, opacity: 1 }}
-                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 30,
+                  }}
                 >
                   <Menu size="1.2rem" aria-label="Open Mobile Menu" />
                 </motion.div>
@@ -314,7 +310,7 @@ export default function Header() {
             </AnimatePresence>
           </Button>
         </section>
-      </motion.header>
+      </header>
 
       {shouldRender && (
         <LazyMobileMenu

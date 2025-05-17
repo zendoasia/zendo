@@ -9,7 +9,11 @@ import {
 } from "@/components/ui/tooltip";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import { FooterLink } from "@/types";
+import { cn } from "@/lib/utils";
+import { openExternalLinkManually } from "@/components/externalLinkInterceptor";
+import { SiWakatime } from "react-icons/si";
 
 export default function Footer() {
   const footerLinks: FooterLink[] = [
@@ -36,7 +40,7 @@ export default function Footer() {
   ];
 
   return (
-    <div className="w-full relative rounded-[var(--radius)] p-[1px] z-50 ">
+    <div className={cn("w-full relative rounded-[var(--radius)] p-[1px] z-50")}>
       <GlowingEffect
         spread={30}
         glow={true}
@@ -45,18 +49,34 @@ export default function Footer() {
         inactiveZone={0.01}
       />
 
-      <footer className="relative z-[60] w-full px-4 py-2.5 rounded-[var(--radius)] app-font border border-[color:var(--jet)]">
-        <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full dark:bg-[color:var(--accent2)] bg-[color:var(--primary2)] blur-[100px] opacity-50 pointer-events-none" />
+      <footer
+        className={cn(
+          "relative z-[60] w-full px-4 py-2.5 rounded-[var(--radius)] app-font border border-[color:var(--jet)]"
+        )}
+      >
+        <span
+          aria-hidden={true}
+          className={cn(
+            "absolute bottom-0 left-0 w-48 h-48 rounded-full dark:bg-[color:var(--accent2)] bg-[color:var(--primary2)] blur-[100px] opacity-50 pointer-events-none"
+          )}
+        />
 
-        <div key="section-keys" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-8 gap-8 mb-10 z-[40] relative">
+        <div
+          key="section-keys"
+          className={cn(
+            "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-8 gap-8 mb-10 z-[40] relative"
+          )}
+        >
           {footerLinks.map((section) => (
             // Add key prop here
-            <div key={section.title.name} className="flex flex-col gap-2">
+            <div key={section.title.name} className={cn("flex flex-col gap-2")}>
               <h3>
                 <Link
                   key={section.title.name}
                   href={section.title.path}
-                  className="text-lg text-pretty hover:underline font-semibold app-font-space"
+                  className={cn(
+                    "text-lg text-pretty hover:underline font-semibold app-font-space"
+                  )}
                 >
                   {section.title.name}
                 </Link>
@@ -65,7 +85,9 @@ export default function Footer() {
                 <Link
                   key={link.path}
                   href={link.path}
-                  className="text-base text-[color:var(--slate-600)] dark:text-[color:var(--slate-300)] hover:underline"
+                  className={cn(
+                    "text-base text-[color:var(--slate-600)] dark:text-[color:var(--slate-300)] hover:underline"
+                  )}
                 >
                   {link.title}
                 </Link>
@@ -74,34 +96,76 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Bottom section */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 z-10 relative border-t pt-6 border-[color:var(--jet)]">
-          <div className="text-center sm:text-left">
+        <div
+          className={cn(
+            "flex flex-col sm:flex-row justify-between items-center gap-4 z-10 relative border-t pt-6 border-[color:var(--jet)]"
+          )}
+        >
+          <div className={cn("text-center sm:text-left")}>
             <Link
               href="/ownership"
-              className="inline-flex items-center gap-1 text-[color:var(--slate-700)] dark:text-[color:var(--slate-300)]"
+              className={cn(
+                "inline-flex items-center gap-1 text-lg text-[color:var(--slate-700)] dark:text-[color:var(--slate-300)]"
+              )}
             >
               <Copyright size="1.2rem" />
               2025 Zendo. All rights reserved.
             </Link>
-            <div className="text-sm text-[color:var(--slate-500)] dark:text-[color:var(--slate-500)]">
+            <div
+              className={cn(
+                "text-base text-[color:var(--slate-500)] dark:text-[color:var(--slate-500)]"
+              )}
+            >
               Built by Aarush Master.
             </div>
           </div>
 
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href="#top"
-                  className="p-2 rounded-md border border-[color:var(--jet)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] hover:text-[color:var(--text-light)] transition-colors duration-300"
-                >
-                  <ArrowUp size="1.2rem" />
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent className="text-sm">Back to Top</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <span className={cn("flex gap-2 px-2.5 justify-center sm:justify-end sm:ml-0 w-full sm:w-auto")}>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button size="icon" key="back-to-top-button" asChild>
+                    <Link
+                      key="back-to-top-link"
+                      aria-label="Go back to top"
+                      href="#top"
+                    >
+                      <ArrowUp size="2rem" />
+                    </Link>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent className={cn("text-base")}>
+                  Back to Top
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    key="wakatime-button"
+                    data-no-prompt
+                    size="icon"
+                    onClick={() => {
+                      setTimeout(() => {
+                        openExternalLinkManually({
+                          href: "https://wakatime.com/@aarush0101",
+                          target: "_blank",
+                        });
+                      }, 650);
+                    }}
+                  >
+                    <span className="sr-only">Wakatime Profile</span>
+                    <SiWakatime size="2rem" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent className={cn("text-base")}>
+                  Visit Wakatime Profile
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </span>
         </div>
       </footer>
     </div>

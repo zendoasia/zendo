@@ -66,9 +66,9 @@ export default function MobileMenu({
         aria-label="Mobile Menu"
         side="left"
         className={cn(
-          "top-0 left-0 z-50 border-r border-b border-t border-[color:var(--jet)] rounded-r-lg p-0 app-font flex flex-col h-full",
+          "z-50 border-r border-b border-t border-[color:var(--jet)] rounded-r-lg p-0 app-font flex flex-col h-full",
           "w-[85%] max-w-xs sm:w-[60%] md:w-[50%]",
-          "transition-all duration-300 ease-in-out transform"
+          "transition-all duration-300 ease-in-out transform-gpu will-change-transform backface-hidden"
         )}
       >
         <div className={cn("flex flex-col px-[1.2rem] pt-4 pb-3")}>
@@ -147,7 +147,7 @@ export default function MobileMenu({
             <span className={cn("text-sm")}>Search</span>
             <kbd
               className={cn(
-                "ml-auto text-xs min-[864px]:inline-block app-font-code border app-border px-2 py-0.5 rounded-md text-muted-foreground"
+                "ml-auto !text-xs min-[864px]:inline-block app-font-code border app-border px-2 py-0.5 rounded-md text-muted-foreground"
               )}
             >
               {strippedOS === "mac" ? (

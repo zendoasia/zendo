@@ -1,17 +1,34 @@
-version: "3.9"
-
 services:
   zendo:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: zendo
-    ports:
-      - "3000:3000"
+    expose:
+      - "3000" # Internal port only
     environment:
       - NODE_ENV=production
       - PORT=3000
+      - NODE_OPTIONS=--dns-result-order=ipv4first
     restart: unless-stopped
+    networks:
+      - zendo-network
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: zendo-proxy
+    ports:
+      - "3000:80"
+    volumes:
+      - ./nginx.conf.template:/etc/nginx/nginx.conf.template:ro
+      - ./nginx-entrypoint.sh:/docker-entrypoint.sh:ro
+    depends_on:
+      - zendo
+    environment:
+      - NGINX_URL=${NGINX_URL}  
     networks:
       - zendo-network
 

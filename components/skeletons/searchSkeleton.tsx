@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
-
+import { cn } from "@/lib/utils";
 
 export default function SearchSkeleton() {
   return (
@@ -11,7 +11,10 @@ export default function SearchSkeleton() {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.98, y: -10 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
-        className="w-full max-w-lg rounded-lg border border-border bg-background shadow-xl"
+        className={cn(
+          "w-full max-w-lg rounded-lg border border-border bg-background shadow-xl",
+          "will-change-transform transform-gpu backface-hidden"
+        )}
       >
         <div className="flex items-center px-4 py-3 border-b border-border gap-2">
           <Skeleton className="h-4 w-4 rounded" />

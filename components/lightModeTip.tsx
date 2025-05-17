@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useHandleThemeChange } from "@/hooks/useThemeChanger";
+import { cn } from "@/lib/utils";
 
 export default function LightModeTipAlert() {
   const { handleThemeChange, resolvedTheme, mounted } = useHandleThemeChange();
@@ -35,21 +36,31 @@ export default function LightModeTipAlert() {
     <AnimatePresence>
       {showAlert && (
         <motion.div
-          initial={{ y: "-100%", opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: "-100%", opacity: 0 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
-          className="fixed top-4 inset-x-4 z-[105] flex justify-center pointer-events-auto touch-none"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+          className={cn(
+            "fixed top-4 left-0 right-0 z-[105] flex justify-center items-center pointer-events-auto touch-none px-4"
+          )}
         >
-          <Alert className="max-w-xl w-full relative shadow-lg app-font flex items-start gap-3">
+          <Alert
+            className={cn(
+              "max-w-[90vw] mx-auto md:mx-0 w-full relative shadow-lg app-font flex items-start gap-3"
+            )}
+          >
             <FaCircleInfo
               size="1.5rem"
-              className="mt-1 text-slate-600 dark:text-slate-400 shrink-0"
+              className={cn("mt-1 text-slate-600 dark:text-slate-400 shrink-0")}
             />
-            <div className="flex flex-col">
-              <AlertTitle className="text-lg text-shadow-md">Tip!</AlertTitle>
-              <AlertDescription className="text-base">
-                <span className="inline-flex flex-wrap items-center gap-1">
+            <div className={cn("flex flex-col")}>
+              <AlertTitle className={cn("text-lg text-shadow-md")}>
+                Tip!
+              </AlertTitle>
+              <AlertDescription className={cn("text-base")}>
+                <span
+                  className={cn("inline-flex flex-wrap items-center gap-1")}
+                >
                   It is better to view the page in dark mode. Please switch to
                   <Button
                     size="sm"
@@ -69,7 +80,7 @@ export default function LightModeTipAlert() {
               onClick={() => setShowAlert(false)}
               size="icon"
               variant="ghost"
-              className="absolute top-2 right-2 nav-btn"
+              className={cn("absolute top-2 right-2 nav-btn")}
             >
               <X size="1.2rem" aria-label="Dismiss Tip Alert" />
             </Button>

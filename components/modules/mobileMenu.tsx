@@ -20,7 +20,7 @@ import type { NavGroups } from "@/types";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
-import { MobileMenuProps } from "@/types";
+import type { MobileMenuProps } from "@/types";
 
 export default function MobileMenu({
   setOpenAction,

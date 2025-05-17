@@ -23,6 +23,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { Info, Check, X, OctagonAlert, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export function openExternalLinkManually({
   href,
@@ -168,11 +169,23 @@ export default function ExternalLinkInterceptor() {
   const stat = () => {
     if (linkHref?.includes("https://")) {
       return (
-        <span className="flex items-center gap-[1rem] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)]">
-          <Check size="1.2rem" className="text-[color:var(--success)]" />
-          <span className="text-xs sm:text-sm flex flex-row items-center gap-2.5">
+        <span
+          className={cn(
+            "flex items-center gap-[1rem] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)]"
+          )}
+        >
+          <Check size="1.2rem" className={cn("text-[color:var(--success)]")} />
+          <span
+            className={cn(
+              "text-xs sm:text-sm flex flex-row items-center gap-2.5"
+            )}
+          >
             HTTPS <ArrowRight size="1.2rem" />
-            <span className="font-[family-name:var(--font-code)] break-all max-w-full overflow-hidden text-ellipsis">
+            <span
+              className={cn(
+                "font-[family-name:var(--font-code)] break-all max-w-full overflow-hidden text-ellipsis"
+              )}
+            >
               {linkHref}
             </span>
           </span>
@@ -180,11 +193,23 @@ export default function ExternalLinkInterceptor() {
       );
     } else if (linkHref?.includes("http://")) {
       return (
-        <span className="flex items-center gap-[1rem] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)]">
-          <X size="1.2rem" className="text-[color:var(--danger)]" />
-          <span className="text-xs sm:text-sm flex flex-row items-center gap-2.5">
+        <span
+          className={cn(
+            "flex items-center gap-[1rem] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)]"
+          )}
+        >
+          <X size="1.2rem" className={cn("text-[color:var(--danger)]")} />
+          <span
+            className={cn(
+              "text-xs sm:text-sm flex flex-row items-center gap-2.5"
+            )}
+          >
             HTTP <ArrowRight size="1.2rem" />
-            <span className="font-[family-name:var(--font-code)] break-all max-w-full overflow-hidden text-ellipsis">
+            <span
+              className={cn(
+                "font-[family-name:var(--font-code)] break-all max-w-full overflow-hidden text-ellipsis"
+              )}
+            >
               {linkHref}
             </span>
           </span>
@@ -192,11 +217,23 @@ export default function ExternalLinkInterceptor() {
       );
     } else {
       return (
-        <span className="flex items-center gap-[1rem] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)]">
-          <Info size="1.2rem" className="text-[color:var(--warning)]" />
-          <span className="text-xs sm:text-sm flex flex-row items-center gap-2.5">
+        <span
+          className={cn(
+            "flex items-center gap-[1rem] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)]"
+          )}
+        >
+          <Info size="1.2rem" className={cn("text-[color:var(--warning)]")} />
+          <span
+            className={cn(
+              "text-xs sm:text-sm flex flex-row items-center gap-2.5"
+            )}
+          >
             Unknown <ArrowRight size="1.2rem" />
-            <span className="font-[family-name:var(--font-code)] break-all max-w-full overflow-hidden text-ellipsis">
+            <span
+              className={cn(
+                "font-[family-name:var(--font-code)] break-all max-w-full overflow-hidden text-ellipsis"
+              )}
+            >
               {linkHref}
             </span>
           </span>
@@ -218,33 +255,52 @@ export default function ExternalLinkInterceptor() {
       aria-describedby="external-link-description"
     >
       <DrawerContent
-        className={`flex flex-col items-center justify-center rounded-[radius:var(--radius)] px-4 pt-4 pb-6 transition-transform font-[family-name:var(--font-text)]`}
+        className={cn(
+          "flex flex-col items-center justify-center rounded-[radius:var(--radius)] px-4 pt-4 pb-6 transition-transform font-[family-name:var(--font-text)]"
+        )}
       >
-        <DrawerHeader className="space-y-1">
-          <DrawerTitle className="flex items-center gap-[0.5rem] text-base font-[weight:var(--default-font-weight)]">
+        <DrawerHeader className={cn("space-y-1")}>
+          <DrawerTitle
+            className={cn(
+              "flex items-center gap-[0.5rem] text-base font-[weight:var(--default-font-weight)]"
+            )}
+          >
             <OctagonAlert
               size="1.2rem"
-              className="text-destructive"
+              className={cn("text-destructive")}
               id="external-link-alert"
             />
             You&#39;re leaving our site
           </DrawerTitle>
-          <DrawerDescription className="text-md" id="external-link-description">
+          <DrawerDescription
+            className={cn("text-md")}
+            id="external-link-description"
+          >
             You&#39;re about to visit an external website not affiliated with
             us. Proceed only if you trust it.
           </DrawerDescription>
         </DrawerHeader>
-        <div className="bg-muted p-[1.2rem] rounded-[radius:var(--radius)] text-foreground text-sm flex items-center gap-2 mt-2 max-w-full sm:max-w-[calc(100%-2rem)] md:max-w-[calc(100%-3rem)]">
+        <div
+          className={cn(
+            "bg-muted p-[1.2rem] rounded-[radius:var(--radius)] text-foreground text-sm flex items-center gap-2 mt-2 max-w-full sm:max-w-[calc(100%-2rem)] md:max-w-[calc(100%-3rem)]"
+          )}
+        >
           {stat()}
         </div>
 
-        <DrawerFooter className="pt-4 flex flex-col sm:flex-row gap-[0.5rem]">
+        <DrawerFooter
+          className={cn("pt-4 flex flex-col sm:flex-row gap-[0.5rem]")}
+        >
           <DrawerClose asChild>
-            <Button variant="secondary" className="w-full sm:w-auto">
+            <Button variant="secondary" className={cn("w-full sm:w-auto")}>
               Cancel
             </Button>
           </DrawerClose>
-          <Button type="button" onClick={proceed} className="w-full sm:w-auto">
+          <Button
+            type="button"
+            onClick={proceed}
+            className={cn("w-full sm:w-auto")}
+          >
             Proceed
           </Button>
         </DrawerFooter>
@@ -258,24 +314,32 @@ export default function ExternalLinkInterceptor() {
       aria-describedby="external-link-description"
     >
       <AlertDialogContent
-        className="rounded-[radius:var(--radius)] space-y-4 transition-transform font-[family-name:var(--font-text)]"
-        aria-describedby="external-link-description" // Explicitly link it to the description
+        className={cn(
+          "rounded-[radius:var(--radius)] space-y-4 transition-transform font-[family-name:var(--font-text)]"
+        )}
+        aria-describedby="external-link-description"
       >
         <AlertDialogHeader id="external-link-alert">
-          <AlertDialogTitle className="flex items-center gap-[0.5rem] text-lg font-[weight:var(--default-font-weight)] text-foreground">
-            <OctagonAlert size="1.2rem" className="text-destructive" />
+          <AlertDialogTitle
+            className={cn(
+              "flex items-center gap-[0.5rem] text-lg font-[weight:var(--default-font-weight)] text-foreground"
+            )}
+          >
+            <OctagonAlert size="1.2rem" className={cn("text-destructive")} />
             You&#39;re leaving our site
           </AlertDialogTitle>
           <AlertDialogDescription
-            className="text-md"
-            id="external-link-description" // This ID matches the aria-describedby above
+            className={cn("text-md")}
+            id="external-link-description"
           >
             You&#39;re about to visit an external website. This link is not
             affiliated with or controlled by us. Continue only if you trust the
             source.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <div className="bg-muted p-[1.2rem] rounded-[radius:var(--radius)]">
+        <div
+          className={cn("bg-muted p-[1.2rem] rounded-[radius:var(--radius)]")}
+        >
           {stat()}
         </div>
         <AlertDialogFooter>

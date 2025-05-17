@@ -1,6 +1,0 @@
-{
-  "links": [{ "label": "About", "icon": "Info", "path": "/about" }],
-  "projects": [
-    { "label": "Pixelite", "icon": "Bot", "path": "/projects/pixelite" }
-  ]
-}

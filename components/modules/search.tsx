@@ -66,7 +66,7 @@ export default function SearchBar({
           <div key={sectionKey}>
             <CommandGroup
               heading={
-                <span className="app-font-mono text-xs text-muted-foreground">
+                <span className={cn("app-font-mono text-xs text-muted-foreground")}>
                   {sectionKey.toUpperCase()}
                 </span>
               }
@@ -84,7 +84,7 @@ export default function SearchBar({
             </CommandGroup>
 
             {/* Add separator unless it's the last group */}
-            {index < sectionKeys.length - 1 && <Separator className="my-1" />}
+            {index < sectionKeys.length - 1 && <Separator className={cn("my-1")} />}
           </div>
         ))}
       </CommandList>

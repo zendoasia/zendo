@@ -1,6 +1,7 @@
 import { toast } from "sonner";
 import { DurableObjectNamespace, DurableObjectStorage, Request as CloudflareRequest } from '@cloudflare/workers-types';
 import type { Dispatch, SetStateAction } from "react"
+import { motion } from "framer-motion";
 
 export interface RateLimiterEnv {
   RATE_LIMITER: DurableObjectNamespace;
@@ -95,4 +96,19 @@ export interface RateLimitCheckProps {
 export interface ToasterProps {
   type: "neutral" | "success" | "error" | "warning"
   message: string,
+}
+
+export type TagType = "div" | "section" | "article" | "main";
+
+export const motionTags = {
+  div: motion.div,
+  section: motion.section,
+  article: motion.article,
+  main: motion.main,
+};
+
+export interface AnimatedSectionProps {
+  children: React.ReactNode;
+  className?: string;
+  as?: TagType;
 }

@@ -18,17 +18,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 import SearchSkeleton from "@/components/skeletons/searchSkeleton";
 import MobileMenuSkeleton from "@/components/skeletons/mobileMenuSkeleton";
 
-
 const LazyMobileMenu = dynamic(
   () => import("@/components/modules/mobileMenu"),
   {
-    loading: () => <MobileMenuSkeleton/>,
+    loading: () => <MobileMenuSkeleton />,
     ssr: false,
   }
 );
 
 const LazySearchBar = dynamic(() => import("@/components/modules/search"), {
-  loading: () => <SearchSkeleton/>,
+  loading: () => <SearchSkeleton />,
   ssr: false,
 });
 
@@ -115,7 +114,7 @@ export default function Header() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
         className={cn(
-          "sticky top-0 z-50 flex flex-wrap items-center border-0 border-b-[0.1rem] px-4 py-2.5 gap-y-2 backdrop-blur-md app-font"
+          "sticky top-0 z-50 flex flex-wrap items-center border-0 border-b-[0.1rem] px-8 py-2.5 max-[864px]:px-4 gap-y-2 backdrop-blur-md app-font"
         )}
       >
         <Button
@@ -274,7 +273,9 @@ export default function Header() {
         </section>
 
         <section
-          className={cn("flex flex-col justify-center items-center ml-2 mr-2")}
+          className={cn(
+            "flex flex-col justify-center items-center ml-auto min-[864px]:hidden"
+          )}
         >
           <Button
             aria-label="Mobile Menu Button"
@@ -285,7 +286,7 @@ export default function Header() {
             variant="ghost"
             size="icon"
             className={cn(
-              "flex justify-center items-center p-2 gap-[0.5rem] nav-btn min-[864px]:hidden"
+              "flex justify-center items-center gap-[0.5rem] nav-btn min-[864px]:hidden"
             )}
           >
             <AnimatePresence mode="wait" initial={false}>
@@ -297,7 +298,7 @@ export default function Header() {
                   exit={{ rotate: -90, opacity: 1 }}
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 >
-                  <X size="1.2rem" aria-label="Close Mobile Menu Icon" />
+                  <X size="1.2rem" aria-label="Close Mobile Menu" />
                 </motion.div>
               ) : (
                 <motion.div
@@ -307,7 +308,7 @@ export default function Header() {
                   exit={{ rotate: 90, opacity: 1 }}
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 >
-                  <Menu size="1.2rem" aria-label="Open Mobile Menu Icon" />
+                  <Menu size="1.2rem" aria-label="Open Mobile Menu" />
                 </motion.div>
               )}
             </AnimatePresence>

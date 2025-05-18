@@ -1,4 +1,4 @@
-events { }
+events {}
 
 http {
   include       mime.types;
@@ -6,7 +6,6 @@ http {
 
   server {
     listen 80;
-
     server_name ${NGINX_URL:-_};
 
     location / {
@@ -18,6 +17,7 @@ http {
       proxy_set_header X-Forwarded-For $remote_addr;
       proxy_set_header X-Forwarded-Proto $scheme;
       proxy_cache_bypass $http_upgrade;
+      add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
     }
   }
 }

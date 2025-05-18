@@ -134,3 +134,18 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# custom
+.gitignore
+.nvmrc
+CREDITS.md
+README.md
+eslint.config.mjs
+LICENSE
+next-env.d.ts
+renovate.json
+.github
+wrangler.json
+types.ts
+tsconfig.json
+.vscode

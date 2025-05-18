@@ -147,7 +147,7 @@ export default function MobileMenu({
             <span className={cn("text-sm")}>Search</span>
             <kbd
               className={cn(
-                "ml-auto !text-xs min-[864px]:inline-block app-font-code border app-border px-2 py-0.5 rounded-md text-muted-foreground"
+                "ml-auto !text-xs br:inline-block app-font-code border app-border px-2 py-0.5 rounded-md text-muted-foreground"
               )}
             >
               {strippedOS === "mac" ? (

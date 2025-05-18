@@ -102,214 +102,220 @@ export default function Header() {
       <header
         aria-label="Primary Header"
         className={cn(
-          "sticky top-0 left-0 right-0 z-50 flex items-center border-0 border-b-[0.1rem] px-8 py-2.5 max-[864px]:px-4 gap-y-2 backdrop-blur-md app-font min-h-0",
+          "sticky top-0 left-0 right-0 z-50 flex items-center border-0 border-b-[0.1rem] gap-y-2 backdrop-blur-md app-font min-h-0",
           "max-[864px]:fixed max-[864px]:w-full",
           "will-change-transform transform-gpu backface-hidden"
         )}
       >
-        <Button
-          aria-label="Skip Navigation"
-          variant="ghost"
-          asChild
+        <div
           className={cn(
-            "sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 z-50 nav-btn px-4 py-2.5 rounded-[var(--radius)]"
-          )}
-        >
-          <Link
-            aria-label="Skip to main content"
-            href="#main"
-            onClick={(e) => {
-              e.preventDefault();
-              const main = document.getElementById("main");
-              if (main) {
-                main.scrollIntoView({ behavior: "smooth" });
-                main.focus();
-              } else {
-                console.error(
-                  "Failed to find the main element on the page. Are you sure there is a main tag with id='main'?"
-                );
-              }
-            }}
-            className={cn("w-full h-full flex items-center justify-center")}
-          >
-            Skip Navigation
-          </Link>
-        </Button>
-
-        <Button
-          variant="ghost"
-          asChild
-          className={cn(
-            "flex items-center transition-colors bg-transparent duration-400"
-          )}
-        >
-          {/* Preload both logos at once to prevent network requests */}
-          <Link
-            key="logo-link"
-            href="/"
-            className="relative w-[140px] aspect-[140/30]"
-          >
-            {!imageLoaded && (
-              <Skeleton className="absolute inset-0 w-full h-full rounded-full" />
-            )}
-
-            <Image
-              src={Logo}
-              alt="Zendo Logo Light"
-              fill
-              loading="lazy"
-              onLoad={() => setImageLoaded(true)}
-              className={cn(
-                "absolute inset-0 object-contain transition-opacity duration-300",
-                currentTheme === "light" ? "opacity-100" : "opacity-0"
-              )}
-            />
-            <Image
-              src={LogoDark}
-              alt="Zendo Logo Dark"
-              fill
-              loading="lazy"
-              onLoad={() => setImageLoaded(true)}
-              className={cn(
-                "absolute inset-0 object-contain transition-opacity duration-300",
-                currentTheme === "dark" ? "opacity-100" : "opacity-0"
-              )}
-            />
-          </Link>
-        </Button>
-
-        <nav
-          aria-label="Primary Navigation and Inter-Links"
-          className={cn(
-            "hidden min-[864px]:flex items-center gap-[0.5rem] ml-7"
-          )}
-        >
-          {["About", "Portfolio", "Projects", "Contact"].map((label) => (
-            <Button
-              size="lg"
-              key={label}
-              variant="ghost"
-              className={cn("nav-btn")}
-              asChild
-            >
-              <Link href={`/${label.toLowerCase()}`}>{label}</Link>
-            </Button>
-          ))}
-        </nav>
-        <div className={cn("flex-grow")} />
-        <section
-          aria-label="Secondary Navigation - Search and themes"
-          className={cn(
-            "hidden min-[864px]:flex items-center app-gap min-[866px]:ml-auto w-full min-[864px]:w-auto justify-center min-[866px]:justify-end"
+            "px-8 py-2.5 max-[864px]:px-4 w-full flex items-center"
           )}
         >
           <Button
-            size="lg"
+            aria-label="Skip Navigation"
             variant="ghost"
-            onClick={() => setOpenS(true)}
-            className={cn(
-              "ml-6 group inline-flex items-center justify-center gap-3 nav-btn"
-            )}
-          >
-            <Search size="1.2rem" />
-            <span className={cn("flex items-center gap-5")}>
-              <span className={cn("text-sm")}>Search</span>
-              <kbd
-                aria-label="Search Bar Shortcut"
-                className={cn(
-                  "!text-xs min-[864px]:inline-block app-font-code border app-border px-2 py-0.5 rounded-md text-muted-foreground"
-                )}
-              >
-                <span className="sr-only">
-                  {strippedOS === "mac"
-                    ? "Command key plus K"
-                    : strippedOS === "windows"
-                    ? "Control key plus K"
-                    : strippedOS === "phone"
-                    ? "Press to search"
-                    : "Press to refresh"}
-                </span>
-                {strippedOS === "mac" ? (
-                  <>{"\u2318"} K</>
-                ) : strippedOS === "windows" ? (
-                  <>CTRL K</>
-                ) : strippedOS === "phone" ? (
-                  <>PRESS</>
-                ) : !strippedOS ? (
-                  <>REFRESH</>
-                ) : null}
-              </kbd>
-            </span>
-          </Button>
-
-          <Button
-            variant="ghost"
-            size="icon"
-            className={cn("nav-btn")}
             asChild
-            key="github-repository"
+            className={cn(
+              "sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 z-50 nav-btn px-4 py-2.5 rounded-[var(--radius)]"
+            )}
           >
-            <Link href="https://github.com/aarush0101/zendo" target="_blank">
-              <span className="flex items-center justify-center">
-                <span className="sr-only">GitHub Repository</span>
-                <SiGithub size="1.2rem" />
-              </span>
+            <Link
+              aria-label="Skip to main content"
+              href="#main"
+              onClick={(e) => {
+                e.preventDefault();
+                const main = document.getElementById("main");
+                if (main) {
+                  main.scrollIntoView({ behavior: "smooth" });
+                  main.focus();
+                } else {
+                  console.error(
+                    "Failed to find the main element on the page. Are you sure there is a main tag with id='main'?"
+                  );
+                }
+              }}
+              className={cn("w-full h-full flex items-center justify-center")}
+            >
+              Skip Navigation
             </Link>
           </Button>
 
-          <ModeToggle />
-        </section>
-
-        <section
-          className={cn(
-            "flex flex-col justify-center items-center ml-auto min-[864px]:hidden"
-          )}
-        >
           <Button
-            aria-label="Mobile Menu Button"
-            key="mobile-menu"
-            onClick={() => {
-              setOpen(!open);
-            }}
             variant="ghost"
-            size="icon"
+            asChild
             className={cn(
-              "flex justify-center items-center gap-[0.5rem] nav-btn min-[864px]:hidden"
+              "flex items-center transition-colors bg-transparent duration-400"
             )}
           >
-            <AnimatePresence mode="wait" initial={false}>
-              {open ? (
-                <motion.div
-                  key="open"
-                  initial={{ rotate: 90, opacity: 1 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: -90, opacity: 1 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 400,
-                    damping: 30,
-                  }}
-                >
-                  <X size="1.2rem" aria-label="Close Mobile Menu" />
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="closed"
-                  initial={{ rotate: -90, opacity: 1 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: 90, opacity: 1 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 400,
-                    damping: 30,
-                  }}
-                >
-                  <Menu size="1.2rem" aria-label="Open Mobile Menu" />
-                </motion.div>
+            {/* Preload both logos at once to prevent network requests */}
+            <Link
+              key="logo-link"
+              href="/"
+              className="relative w-[140px] aspect-[140/30]"
+            >
+              {!imageLoaded && (
+                <Skeleton className="absolute inset-0 w-full h-full rounded-full" />
               )}
-            </AnimatePresence>
+
+              <Image
+                src={Logo}
+                alt="Zendo Logo Light"
+                fill
+                loading="lazy"
+                onLoad={() => setImageLoaded(true)}
+                className={cn(
+                  "absolute inset-0 object-contain transition-opacity duration-300",
+                  currentTheme === "light" ? "opacity-100" : "opacity-0"
+                )}
+              />
+              <Image
+                src={LogoDark}
+                alt="Zendo Logo Dark"
+                fill
+                loading="lazy"
+                onLoad={() => setImageLoaded(true)}
+                className={cn(
+                  "absolute inset-0 object-contain transition-opacity duration-300",
+                  currentTheme === "dark" ? "opacity-100" : "opacity-0"
+                )}
+              />
+            </Link>
           </Button>
-        </section>
+
+          <nav
+            aria-label="Primary Navigation and Inter-Links"
+            className={cn(
+              "hidden min-[864px]:flex items-center gap-[0.5rem] ml-7"
+            )}
+          >
+            {["About", "Portfolio", "Projects", "Contact"].map((label) => (
+              <Button
+                size="lg"
+                key={label}
+                variant="ghost"
+                className={cn("nav-btn")}
+                asChild
+              >
+                <Link href={`/${label.toLowerCase()}`}>{label}</Link>
+              </Button>
+            ))}
+          </nav>
+          <div className={cn("flex-grow")} />
+          <section
+            aria-label="Secondary Navigation - Search and themes"
+            className={cn(
+              "hidden min-[864px]:flex items-center app-gap min-[866px]:ml-auto w-full min-[864px]:w-auto justify-center min-[866px]:justify-end"
+            )}
+          >
+            <Button
+              size="lg"
+              variant="ghost"
+              onClick={() => setOpenS(true)}
+              className={cn(
+                "ml-6 group inline-flex items-center justify-center gap-3 nav-btn"
+              )}
+            >
+              <Search size="1.2rem" />
+              <span className={cn("flex items-center gap-5")}>
+                <span className={cn("text-sm")}>Search</span>
+                <kbd
+                  aria-label="Search Bar Shortcut"
+                  className={cn(
+                    "!text-xs min-[864px]:inline-block app-font-code border app-border px-2 py-0.5 rounded-md text-muted-foreground"
+                  )}
+                >
+                  <span className="sr-only">
+                    {strippedOS === "mac"
+                      ? "Command key plus K"
+                      : strippedOS === "windows"
+                      ? "Control key plus K"
+                      : strippedOS === "phone"
+                      ? "Press to search"
+                      : "Press to refresh"}
+                  </span>
+                  {strippedOS === "mac" ? (
+                    <>{"\u2318"} K</>
+                  ) : strippedOS === "windows" ? (
+                    <>CTRL K</>
+                  ) : strippedOS === "phone" ? (
+                    <>PRESS</>
+                  ) : !strippedOS ? (
+                    <>REFRESH</>
+                  ) : null}
+                </kbd>
+              </span>
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn("nav-btn")}
+              asChild
+              key="github-repository"
+            >
+              <Link href="https://github.com/aarush0101/zendo" target="_blank">
+                <span className="flex items-center justify-center">
+                  <span className="sr-only">GitHub Repository</span>
+                  <SiGithub size="1.2rem" />
+                </span>
+              </Link>
+            </Button>
+
+            <ModeToggle />
+          </section>
+
+          <section
+            className={cn(
+              "flex flex-col justify-center items-center ml-auto min-[864px]:hidden"
+            )}
+          >
+            <Button
+              aria-label="Mobile Menu Button"
+              key="mobile-menu"
+              onClick={() => {
+                setOpen(!open);
+              }}
+              variant="ghost"
+              size="icon"
+              className={cn(
+                "flex justify-center items-center gap-[0.5rem] nav-btn min-[864px]:hidden"
+              )}
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                {open ? (
+                  <motion.div
+                    key="open"
+                    initial={{ rotate: 90, opacity: 1 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: -90, opacity: 1 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 30,
+                    }}
+                  >
+                    <X size="1.2rem" aria-label="Close Mobile Menu" />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="closed"
+                    initial={{ rotate: -90, opacity: 1 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: 90, opacity: 1 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 30,
+                    }}
+                  >
+                    <Menu size="1.2rem" aria-label="Open Mobile Menu" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </Button>
+          </section>
+        </div>
       </header>
 
       {shouldRender && (

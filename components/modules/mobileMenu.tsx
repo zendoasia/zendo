@@ -99,7 +99,7 @@ export default function MobileMenu({
               <AccordionItem key={sectionKey} value={sectionKey}>
                 <AccordionTrigger
                   className={cn(
-                    "app-font-mono text-xs text-muted-foreground tracking-widest font-semibold px-1 py-[0.7rem] flex items-center hover:bg-emerald-100 dark:hover:bg-emerald-800 rounded-lg transition-all"
+                    "!app-font-mono !text-xs text-muted-foreground tracking-widest !font-semibold px-1 py-[0.7rem] flex items-center hover:bg-emerald-100 dark:hover:bg-emerald-800 rounded-lg transition-all"
                   )}
                 >
                   {sectionKey.toUpperCase()}
@@ -113,7 +113,7 @@ export default function MobileMenu({
                       size="lg"
                       variant="ghost"
                       className={cn(
-                        "justify-start flex-row nav-btn overflow-hidden transition-all rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-800"
+                        "justify-start text-base flex-row nav-btn overflow-hidden transition-all rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-800"
                       )}
                       onClick={() => handleNavigate(path)}
                     >

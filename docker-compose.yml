@@ -5,17 +5,13 @@ services:
       dockerfile: Dockerfile
     container_name: zendo
     expose:
-      - "3000" # Internal port only
+      - "3000"
     environment:
       - NODE_ENV=production
       - PORT=3000
-      - NODE_OPTIONS=--dns-result-order=ipv4first
     restart: unless-stopped
     networks:
       - zendo-network
-    dns:
-      - 8.8.8.8
-      - 1.1.1.1
 
   nginx:
     image: nginx:stable-alpine
@@ -28,7 +24,7 @@ services:
     depends_on:
       - zendo
     environment:
-      - NGINX_URL=${NGINX_URL}  
+      - NGINX_URL=${NGINX_URL}
     networks:
       - zendo-network
 

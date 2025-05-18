@@ -28,11 +28,11 @@ export default function NotFound() {
   return (
     <div
       className={cn(
-        "relative isolate w-full min-h-screen flex flex-col min-[864px]:flex-row justify-center items-center gap-[8rem] px-4 py-8.5 text-center min-[864px]:text-left"
+        "relative isolate w-full min-h-screen flex flex-col br:flex-row justify-center items-center gap-[8rem] px-4 py-8.5 text-center br:text-left"
       )}
     >
       <motion.div
-        className={cn("flex justify-center items-center min-[864px]:order-1")}
+        className={cn("flex justify-center items-center br:order-1")}
         animate={{ y: ["0%", "-10%", "0%"] }}
         transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
       >
@@ -56,7 +56,7 @@ export default function NotFound() {
 
       <div
         className={cn(
-          "flex flex-col items-center min-[864px]:items-start gap-[2rem] max-w-xl"
+          "flex flex-col items-center br:items-start gap-[2rem] max-w-xl"
         )}
       >
         <div className="flex items-center gap-[0.3rem]">
@@ -81,7 +81,7 @@ export default function NotFound() {
           </span>
         </section>
 
-        <section className="hidden min-[864px]:block">
+        <section className="hidden br:block">
           <HoverCard>
             <HoverCardTrigger asChild>
               <Button className="px-4 py-2.5 text-md border border-[color:var(--jet)] transition-colors duration-400">
@@ -95,7 +95,7 @@ export default function NotFound() {
           </HoverCard>
         </section>
 
-        <section className="block min-[864px]:hidden w-full">
+        <section className="block br:hidden w-full">
           <Accordion type="single" collapsible>
             <AccordionItem value="info">
               <AccordionTrigger className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 text-md rounded-[radius:var(--radius)] border border-[color:var(--jet)] transition-colors duration-400 [&>svg]:text-[var(--primary2)] [&>svg]:w-[1.2rem] [&>svg]:h-[1.2rem]">

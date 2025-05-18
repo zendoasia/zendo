@@ -103,7 +103,7 @@ export default function Header() {
         aria-label="Primary Header"
         className={cn(
           "sticky top-0 left-0 right-0 z-50 flex items-center border-0 border-b-[0.1rem] gap-y-2 backdrop-blur-md app-font min-h-0",
-          "max-[864px]:fixed max-[864px]:w-full",
+          "fixed br:w-full",
           "will-change-transform transform-gpu backface-hidden"
         )}
       >
@@ -182,7 +182,7 @@ export default function Header() {
           <nav
             aria-label="Primary Navigation and Inter-Links"
             className={cn(
-              "hidden min-[864px]:flex items-center gap-[0.5rem] ml-7"
+              "hidden br:flex items-center gap-[0.5rem] ml-7"
             )}
           >
             {["About", "Portfolio", "Projects", "Contact"].map((label) => (
@@ -201,7 +201,7 @@ export default function Header() {
           <section
             aria-label="Secondary Navigation - Search and themes"
             className={cn(
-              "hidden min-[864px]:flex items-center app-gap min-[866px]:ml-auto w-full min-[864px]:w-auto justify-center min-[866px]:justify-end"
+              "hidden br:flex items-center app-gap br:ml-auto w-full br:w-auto justify-center br:justify-end"
             )}
           >
             <Button
@@ -218,7 +218,7 @@ export default function Header() {
                 <kbd
                   aria-label="Search Bar Shortcut"
                   className={cn(
-                    "!text-xs min-[864px]:inline-block app-font-code border app-border px-2 py-0.5 rounded-md text-muted-foreground"
+                    "!text-xs br:inline-block app-font-code border app-border px-2 py-0.5 rounded-md text-muted-foreground"
                   )}
                 >
                   <span className="sr-only">
@@ -263,7 +263,7 @@ export default function Header() {
 
           <section
             className={cn(
-              "flex flex-col justify-center items-center ml-auto min-[864px]:hidden"
+              "flex flex-col justify-center items-center ml-auto br:hidden"
             )}
           >
             <Button
@@ -275,7 +275,7 @@ export default function Header() {
               variant="ghost"
               size="icon"
               className={cn(
-                "flex justify-center items-center gap-[0.5rem] nav-btn min-[864px]:hidden"
+                "flex justify-center items-center gap-[0.5rem] nav-btn br:hidden"
               )}
             >
               <AnimatePresence mode="wait" initial={false}>

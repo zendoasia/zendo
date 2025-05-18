@@ -1,0 +1,36 @@
+
+# GitHub Workflow Composer Guide
+# This compressor is used to automatically create a new release for your repository.
+#
+# You can use the following placeholders in the config:
+# ${COMMIT_HASH}       - The commit hash of the release
+# ${REPO_NAME}         - The name of the repository
+# ${CONTRIBUTORS_SINCE} - Number of contributors since the last release
+# ${WHATS_CHANGED_URL} - URL to the commit history for this release
+# ${README_MD}         - Contents of README.md (auto-included)
+# ${CHANGELOG_MD}      - Contents of CHANGELOG.md (auto-included)
+#
+# Important Notes:
+# 1. All placeholders (e.g., ${COMMIT_HASH}) are case-sensitive.
+# 2. Only one TITLE, DESCRIPTION, and TAG is allowed in the config.
+# 3. Each section (TITLE, DESCRIPTION, TAG) must end with "//ASYNC_END".
+#
+# Example Configuration:
+#
+# TITLE: Release ${COMMIT_HASH}//ASYNC_END
+# DESCRIPTION: Release Notes ${CHANGELOG_MD}//ASYNC_END
+# TAG: v${COMMIT_HASH}//ASYNC_END
+
+# Below is some config already set for you:
+
+# IMPORTANT NOTE: TAG CANNOT HAVE SPACES
+
+
+TITLE: Zendo Release ${COMMIT_HASH}//ASYNC_END
+DESCRIPTION: This is the latest release for the Zendo website with everything packed and ready to go.
+``PLEASE NOTE: ``
+This is an automated release. Means no human is involved during the release of this package.
+COMMIT ID: ${COMMIT_HASH}
+REPO: ${REPO_NAME}
+WHAT IS CHANGED: ${WHATS_CHANGED_URL}//ASYNC_END
+TAG: v${COMMIT_HASH}_AUTO//ASYNC_END

@@ -42,13 +42,13 @@ jobs:
       - name: Prepare config for release
         run: |
           pip install orjson
-          python ./schema/compressor/compressor.py --commit_hash "${{ env.COMMIT_HASH }}" --repo_name "${{ env.REPO_NAME }}" --contributors_since "${{ env.CONTRIBUTORS_SINCE }}" --whats_changed_url "${{ env.WHATS_CHANGED_URL }}"
+          python ./resources/compressor.py --commit_hash "${{ env.COMMIT_HASH }}" --repo_name "${{ env.REPO_NAME }}" --contributors_since "${{ env.CONTRIBUTORS_SINCE }}" --whats_changed_url "${{ env.WHATS_CHANGED_URL }}"
           sleep 5
 
       - name: Parse schema.json
         run: |
           if [[ -f ./temp/schema.json ]]; then
-            python ./schema/compressor/parse.py
+            python ./resources/parse.py
           fi
         id: prepare_config
 

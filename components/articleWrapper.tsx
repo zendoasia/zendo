@@ -5,7 +5,7 @@ export default function ArticleWrapper({ children, className = "" }: ArticleWrap
   return (
     <div
       className={cn(
-        "items-center justify-center min-h-screen text-base app-font",
+        "items-center justify-center min-h-screen app-font",
         className
       )}
     >

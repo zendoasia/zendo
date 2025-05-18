@@ -86,6 +86,10 @@
   }
 }
 
+@theme {
+  --breakpoint-br: 54rem
+}
+
 @layer utilities {
 
   /* Hide scrollbar for Chrome, Safari and Opera */

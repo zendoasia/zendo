@@ -110,7 +110,7 @@ export default function RootLayout({
             id="main"
             className={cn(
               "text-base outline-none app-font",
-              "max-[864px]:pt-[3.5rem]"
+              "pt-[3.5rem]"
             )}
           >
             {children}

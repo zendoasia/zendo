@@ -66,7 +66,7 @@ export default function SearchBar({
           <div key={sectionKey}>
             <CommandGroup
               heading={
-                <span className={cn("app-font-mono text-xs text-muted-foreground")}>
+                <span className={cn("!app-font-mono !text-xs !font-semibold text-muted-foreground")}>
                   {sectionKey.toUpperCase()}
                 </span>
               }

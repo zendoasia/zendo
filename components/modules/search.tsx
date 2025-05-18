@@ -18,8 +18,10 @@ import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 
 export default function SearchBar({
+  setOpenAction,
   setOpenSAction,
   openS = true, // Default to true for backward compatibility
+  open, 
   onCloseComplete,
 }: SearchProps) {
   const [search, setSearch] = useState("");
@@ -45,6 +47,7 @@ export default function SearchBar({
   }, [openS, isClosing, onCloseComplete]);
 
   const handleNavigate = (path: string) => {
+    if (open) setOpenAction(false);
     setOpenSAction(false);
     setTimeout(() => router.push(path), 250);
   };

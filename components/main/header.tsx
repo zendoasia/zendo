@@ -107,11 +107,7 @@ export default function Header() {
           "will-change-transform transform-gpu backface-hidden"
         )}
       >
-        <div
-          className={cn(
-            "px-8 py-2.5 max-[864px]:px-4 w-full flex items-center"
-          )}
-        >
+        <div className={cn("py-2.5 w-full flex items-center")}>
           <Button
             aria-label="Skip Navigation"
             variant="ghost"
@@ -332,6 +328,8 @@ export default function Header() {
 
       {shouldRenderS && (
         <LazySearchBar
+          open={open}
+          setOpenAction={setOpen}
           openS={openS}
           setOpenSAction={setOpenS}
           onCloseComplete={() => {

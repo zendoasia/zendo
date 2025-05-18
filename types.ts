@@ -62,7 +62,9 @@ export type NavGroups = {
 };
 
 export interface SearchProps {
+  setOpenAction: Dispatch<SetStateAction<boolean>>;
   setOpenSAction: Dispatch<SetStateAction<boolean>>;
+  open?: boolean;
   openS?: boolean;
   onCloseComplete?: () => void;
 }

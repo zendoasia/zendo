@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { FooterLink } from "@/types";
 import { cn } from "@/lib/utils";
 import { openExternalLinkManually } from "@/components/externalLinkInterceptor";
-import { SiWakatime } from "@icons-pack/react-simple-icons";
+import { SiWakatime, SiX } from "@icons-pack/react-simple-icons";
 
 export default function Footer() {
   const footerLinks: FooterLink[] = [
@@ -51,7 +51,7 @@ export default function Footer() {
 
       <footer
         className={cn(
-          "relative z-[60] w-full rounded-[var(--radius)] app-font border border-[color:var(--jet)]"
+          "relative z-[60] w-full py-2.5 rounded-[var(--radius)] app-font border border-[color:var(--jet)]"
         )}
       >
         <span
@@ -169,6 +169,31 @@ export default function Footer() {
                   </TooltipTrigger>
                   <TooltipContent className={cn("text-base")}>
                     Visit Wakatime Profile
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      key="twitter-button"
+                      data-no-prompt
+                      size="icon"
+                      onClick={() => {
+                        setTimeout(() => {
+                          openExternalLinkManually({
+                            href: "https://x.com/aarush01111",
+                            target: "_blank",
+                          });
+                        }, 650);
+                      }}
+                    >
+                      <span className="sr-only">Twitter Profile</span>
+                      <SiX size="2rem" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className={cn("text-base")}>
+                    Visit Twitter Profile
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>

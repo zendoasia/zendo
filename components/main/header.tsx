@@ -4,7 +4,6 @@ import { useEffect, useState, useMemo } from "react";
 import { ModeToggle } from "@/components/modules/modes";
 import { Menu, X, Search } from "lucide-react";
 import Image from "next/image";
-import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import LogoDark from "@/public/assets/LogoDark.svg";
@@ -14,7 +13,6 @@ import { SiGithub } from "@icons-pack/react-simple-icons";
 import { detectOS, stripOS } from "@/lib/utils";
 import dynamic from "next/dynamic";
 import { cn } from "@/lib/utils";
-import { Skeleton } from "@/components/ui/skeleton";
 import SearchSkeleton from "@/components/skeletons/searchSkeleton";
 import MobileMenuSkeleton from "@/components/skeletons/mobileMenuSkeleton";
 
@@ -37,11 +35,9 @@ export default function Header() {
     return stripOS(os);
   }, [os]);
 
-  const { theme, systemTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
   const [openS, setOpenS] = useState(false);
-  const [imageLoaded, setImageLoaded] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
   const [shouldRenderS, setShouldRenderS] = useState(false);
 
@@ -95,7 +91,6 @@ export default function Header() {
   }, [open, openS]);
 
   if (!mounted) return null;
-  const currentTheme = theme === "system" ? systemTheme : theme;
 
   return (
     <>
@@ -140,50 +135,34 @@ export default function Header() {
           <Button
             variant="ghost"
             asChild
-            className={cn(
-              "flex items-center transition-colors bg-transparent duration-400"
-            )}
+            className={cn("flex items-center transition-none bg-transparent")}
           >
-            {/* Preload both logos at once to prevent network requests */}
             <Link
-              key="logo-link"
               href="/"
-              className="relative w-[140px] aspect-[140/30]"
+              className="relative w-[140px] h-[30px]" 
             >
-              {!imageLoaded && (
-                <Skeleton className="absolute inset-0 w-full h-full rounded-full" />
-              )}
-
               <Image
                 src={Logo}
-                alt="Zendo Logo Light"
-                fill
-                loading="lazy"
-                onLoad={() => setImageLoaded(true)}
-                className={cn(
-                  "absolute inset-0 object-contain transition-opacity duration-300",
-                  currentTheme === "light" ? "opacity-100" : "opacity-0"
-                )}
+                alt="Zendo Logo"
+                width={140}
+                height={30}
+                priority
+                className="object-contain dark:hidden"
               />
               <Image
                 src={LogoDark}
                 alt="Zendo Logo Dark"
-                fill
-                loading="lazy"
-                onLoad={() => setImageLoaded(true)}
-                className={cn(
-                  "absolute inset-0 object-contain transition-opacity duration-300",
-                  currentTheme === "dark" ? "opacity-100" : "opacity-0"
-                )}
+                width={140}
+                height={30}
+                priority
+                className="object-contain hidden dark:block"
               />
             </Link>
           </Button>
 
           <nav
             aria-label="Primary Navigation and Inter-Links"
-            className={cn(
-              "hidden br:flex items-center gap-[0.5rem] ml-7"
-            )}
+            className={cn("hidden br:flex items-center gap-[0.5rem] ml-7")}
           >
             {["About", "Portfolio", "Projects", "Contact"].map((label) => (
               <Button

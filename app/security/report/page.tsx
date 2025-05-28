@@ -1,7 +1,6 @@
 "use client";
 
 import ArticleWrapper from "@/components/articleWrapper";
-import { cn } from "@/lib/utils";
 import { Spotlight } from "@/components/ui/spotlight-new";
 
 export default function SecurityReport() {

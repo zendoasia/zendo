@@ -2,8 +2,7 @@
 
 import ArticleWrapper from "@/components/articleWrapper";
 import { cn } from "@/lib/utils";
-import { ContainerTextFlip } from "@/components/ui/container-text-flip";
-// import { LampContainer } from "@/components/ui/lamp";
+import { SparklesHero } from "@/components/ui/sparkles";
 
 export default function Home() {
   return (
@@ -14,27 +13,9 @@ export default function Home() {
       )}
       style={{ paddingTop: "20vh" }}
     >
-      {/* <LampContainer>
-        <h1 className="text-[32px] br:text-[48px] font-semibold text-center">
-          Zendo - The home for{" "}
-          <span className="inline-block text-md mr-4 ml-4">
-            <ContainerTextFlip
-              words={["Pixelite", "Portfolio"]}
-              aria-label="Projects I've worked on"
-            />
-          </span>
-        </h1>
-      </LampContainer> */}
-      {/* Temporary */}
-      <h1 className="text-[32px] br:text-[48px] font-semibold text-center">
-        Zendo - The home for{" "}
-        <span className="inline-block text-md mr-4 ml-4">
-          <ContainerTextFlip
-            words={["Pixelite", "Portfolio"]}
-            aria-label="Projects I've worked on"
-          />
-        </span>
-      </h1>
+    <span className="w-full min-h-screen flex items-center justify-center">
+      <SparklesHero words="Zendo" />
+    </span>
     </ArticleWrapper>
   );
 }

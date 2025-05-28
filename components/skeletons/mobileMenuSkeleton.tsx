@@ -13,7 +13,7 @@ export default function MobileMenuSkeleton() {
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
       aria-label="Mobile Menu"
       className={cn(
-        "top-0 left-0 z-[105] border-r border-b border-t border-[color:var(--jet)] rounded-right flex flex-col p-0 app-font overflow-hidden",
+        "top-0 left-0 z-100 border-r border-b border-t border-[color:var(--jet)] rounded-right flex flex-col p-0 app-font overflow-hidden",
         "w-[85%] max-w-xs sm:w-[60%] md:w-[50%]",
         "will-change-transform transform-gpu backface-hidden"
       )}

@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 export interface ArticleWrapperProps {
   children: React.ReactNode;
   className?: string;
+  style?: any;
 }
 
 export interface RateLimiterEnv {

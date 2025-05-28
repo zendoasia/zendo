@@ -179,7 +179,7 @@ def saveSchema(dataDict: dict, path: Path) -> None:
         print(f"FATAL: Failed to write to schema.json due to exception: {e}")
 
 
-base = Path(__file__).parent.parent.parent
+base = Path(__file__).parent.parent
 compressor = base / "compressor.settings.txt"
 temp = base / "temp"
 temp.mkdir(parents=True, exist_ok=True)

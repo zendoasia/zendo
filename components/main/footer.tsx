@@ -13,7 +13,12 @@ import { Button } from "@/components/ui/button";
 import { FooterLink } from "@/types";
 import { cn } from "@/lib/utils";
 import { openExternalLinkManually } from "@/components/externalLinkInterceptor";
-import { SiWakatime, SiX } from "@icons-pack/react-simple-icons";
+import {
+  SiWakatime,
+  SiX,
+  SiDiscord,
+  SiGithub,
+} from "@icons-pack/react-simple-icons";
 
 export default function Footer() {
   const footerLinks: FooterLink[] = [
@@ -68,7 +73,6 @@ export default function Footer() {
             )}
           >
             {footerLinks.map((section) => (
-              // Add key prop here
               <div
                 key={section.title.name}
                 className={cn("flex flex-col gap-2")}
@@ -78,7 +82,7 @@ export default function Footer() {
                     key={section.title.name}
                     href={section.title.path}
                     className={cn(
-                      "text-lg text-pretty hover:underline font-semibold app-font-space"
+                      "text-lg text-pretty hover:underline font-semibold app-font"
                     )}
                   >
                     {section.title.name}
@@ -89,7 +93,7 @@ export default function Footer() {
                     key={link.path}
                     href={link.path}
                     className={cn(
-                      "text-base text-[color:var(--slate-600)] dark:text-[color:var(--slate-300)] hover:underline"
+                      "text-base text-[color:var(--slate-700)] dark:text-[color:var(--slate-300)] hover:underline"
                     )}
                   >
                     {link.title}
@@ -146,7 +150,6 @@ export default function Footer() {
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -194,6 +197,56 @@ export default function Footer() {
                   </TooltipTrigger>
                   <TooltipContent className={cn("text-base")}>
                     Visit Twitter Profile
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>{" "}
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      key="discord-button"
+                      data-no-prompt
+                      size="icon"
+                      onClick={() => {
+                        setTimeout(() => {
+                          openExternalLinkManually({
+                            href: "https://discord.com/users/906543610269401148",
+                            target: "_blank",
+                          });
+                        }, 650);
+                      }}
+                    >
+                      <span className="sr-only">Discord Profile</span>
+                      <SiDiscord size="2rem" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className={cn("text-base")}>
+                    Visit Discord Profile
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>{" "}
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      key="github-button"
+                      data-no-prompt
+                      size="icon"
+                      onClick={() => {
+                        setTimeout(() => {
+                          openExternalLinkManually({
+                            href: "https://github.com/aarush0101",
+                            target: "_blank",
+                          });
+                        }, 650);
+                      }}
+                    >
+                      <span className="sr-only">GitHub Profile</span>
+                      <SiGithub size="2rem" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className={cn("text-base")}>
+                    Visit GitHub Profile
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>

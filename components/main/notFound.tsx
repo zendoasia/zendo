@@ -21,12 +21,13 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import ArticleWrapper from "@/components/articleWrapper";
 
 export default function NotFound() {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
-    <div
+    <ArticleWrapper
       className={cn(
         "relative isolate w-full min-h-screen flex flex-col br:flex-row justify-center items-center gap-[8rem] px-4 py-8.5 text-center br:text-left"
       )}
@@ -109,6 +110,6 @@ export default function NotFound() {
           </Accordion>
         </section>
       </div>
-    </div>
+    </ArticleWrapper>
   );
 }

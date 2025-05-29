@@ -4,7 +4,7 @@ import ArticleWrapper from "@/components/articleWrapper";
 import { cn } from "@/lib/utils";
 import { SparklesHero } from "@/components/ui/sparkles";
 
-export default function About() {
+export default function Pixelite() {
   return (
     <ArticleWrapper
       className={cn(
@@ -14,7 +14,7 @@ export default function About() {
     >
       <span className="flex flex-col items-center justify-center">
         <SparklesHero
-          words="About"
+          words="Pixelite"
           textClassName="text-3xl md:text-7xl lg:text-9xl"
         />
       </span>

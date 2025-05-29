@@ -1,7 +1,7 @@
 # --- Dependencies Layer ---
 FROM node:20-slim AS deps
 WORKDIR /app
-COPY package.json package-lock.json* ./
+COPY ./package.json ./package-lock.json ./
 RUN npm install --frozen-lockfile
 
 # --- Builder Layer ---

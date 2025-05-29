@@ -1,7 +1,7 @@
 # Test: Dockerfile structure and build process
 
 # 1. Test that the Dockerfile builds successfully
-docker build -t zendo-app-test -f ../Dockerfile .
+docker build -t zendo-app-test -f ./Dockerfile .
 
 # 2. Test that the image exposes port 3000
 test "$(docker inspect --format='{{(index (index .Config.ExposedPorts "3000/tcp")}}' zendo-app-test)" = "map[]"

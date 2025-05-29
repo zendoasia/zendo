@@ -1,11 +1,11 @@
 # --- Dependencies Layer ---
-FROM node:20.19.2-slim AS deps
+FROM node:22.16.0-slim AS deps
 WORKDIR /app
 COPY ./package.json ./package-lock.json ./
 RUN npm install --frozen-lockfile
 
 # --- Builder Layer ---
-FROM node:20.19.2-slim AS builder
+FROM node:22.16.0-slim AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -13,7 +13,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
 # --- Runtime Layer ---
-FROM node:20.19.2-slim AS runner
+FROM node:22.16.0-slim AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000

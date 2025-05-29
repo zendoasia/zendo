@@ -20,6 +20,7 @@ import LogoDark from "@/public/assets/LogoDark.svg";
 import Logo from "@/public/assets/Logo.svg";
 import { cn } from "@/lib/utils";
 import ThemeSanitizer from "@/hooks/themeSanitizer";
+import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google'
 
 export const metadata: Metadata = {
   title: "Zendo - Intuition",
@@ -90,21 +91,6 @@ export default function RootLayout({
       <Head>
         <link rel="preload" href={Logo.src} as="image" />
         <link rel="preload" href={LogoDark.src} as="image" />
-        {/* Google tag (gtag.js) */}
-        <script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-RNN756TW7T"
-        ></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-RNN756TW7T');
-      `,
-          }}
-        />
       </Head>
       <body
         className={cn(
@@ -152,7 +138,8 @@ export default function RootLayout({
             </div>
           </div>
         </noscript>
-
+        <GoogleAnalytics gaId="G-RNN756TW7T" />
+        <GoogleTagManager gtmId="GTM-P3K2KXRM" />
         <div id="c301e48c-ae4c-4061-b1f9-d4f64d85d4dc">
           <ThemeProvider
             attribute="class"

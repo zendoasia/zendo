@@ -1,14 +1,23 @@
 "use client";
 
+import ArticleWrapper from "@/components/articleWrapper";
+import { cn } from "@/lib/utils";
+import { SparklesHero } from "@/components/ui/sparkles";
+
 export default function Portfolio() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-text)]">
-      <h1 className="font-[family-name:var(--font-text-mono)] justify-center">
-        Portfolio
-      </h1>
-      <p className="text-lg justify-center">
-        Coming soon.
-      </p>
-    </div>
+    <ArticleWrapper
+      className={cn(
+        "max-w-screen-xl mx-auto px-6 md:px-12 lg:px-24 flex flex-col",
+        "min-h-screen"
+      )}
+    >
+      <span className="flex flex-col items-center justify-center">
+        <SparklesHero
+          words="Portfolio"
+          textClassName="text-3xl md:text-7xl lg:text-9xl"
+        />
+      </span>
+    </ArticleWrapper>
   );
 }

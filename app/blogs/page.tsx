@@ -4,7 +4,7 @@ import ArticleWrapper from "@/components/articleWrapper";
 import { cn } from "@/lib/utils";
 import { SparklesHero } from "@/components/ui/sparkles";
 
-export default function About() {
+export default function Blogs() {
   return (
     <ArticleWrapper
       className={cn(
@@ -12,12 +12,16 @@ export default function About() {
         "min-h-screen"
       )}
     >
-      <span className="flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center">
         <SparklesHero
-          words="About"
+          words="Blogs"
           textClassName="text-3xl md:text-7xl lg:text-9xl"
         />
-      </span>
+        <br />
+        <br />
+        <h3 className="mt-6 app-font-space">Coming soon.</h3>
+        <h4 className="app-font-space">Use /xyz to go to a random page.</h4>
+      </div>
     </ArticleWrapper>
   );
 }

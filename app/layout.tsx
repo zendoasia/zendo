@@ -119,9 +119,7 @@ export default function RootLayout({
             #noscript-dialog > div {
               background: #111;
               padding: 2rem;
-              border-radius: 1rem;
               max-width: 400px;
-              box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
             }
           `}
           </style>

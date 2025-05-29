@@ -1,5 +1,5 @@
 "use client"
-import { useId, useMemo, useRef, useEffect, useState, useCallback } from "react"
+import { useId, useRef, useEffect, useState, useCallback } from "react"
 import Particles, { initParticlesEngine } from "@tsparticles/react"
 import type { Container } from "@tsparticles/engine"
 import { loadSlim } from "@tsparticles/slim"
@@ -91,15 +91,6 @@ export const SparklesHero = (props: SparklesHeroProps) => {
 
   const generatedId = useId()
 
-  // Split text into individual characters for span wrapping
-  const textChars = useMemo(() => {
-    return words.split("").map((char, index) => (
-      <span key={index} className="inline-block">
-        {char === " " ? "\u00A0" : char}
-      </span>
-    ))
-  }, [words])
-
   // Calculate sparkle area dimensions based on text
   const sparkleHeight = Math.max(textDimensions.height * 0.3, 32) // 30% of text height, minimum 32px
   const sparkleWidth = textDimensions.width || 0 // Use exact text width, no minimum
@@ -109,12 +100,13 @@ export const SparklesHero = (props: SparklesHeroProps) => {
 
   return (
     <span className={cn("relative inline-block", className)}>
-      {/* Text */}
+      {/* Text for SEO & accessibility */}
       <h1
         ref={textRef}
         className={cn("md:text-7xl text-3xl lg:text-9xl font-bold text-center text-black dark:text-white relative z-20", textClassName)}
+        style={{ position: "relative" }}
       >
-        {textChars}
+        {words}
       </h1>
 
       {/* Sparkles and Gradient Container - positioned absolutely below text with gap */}
@@ -122,7 +114,7 @@ export const SparklesHero = (props: SparklesHeroProps) => {
         <span
           className="absolute left-1/2 transform -translate-x-1/2 pointer-events-none will-change-transform"
           style={{
-            top: `${textDimensions.height + 8}px`, // Added 8px gap (size-2)
+            top: `${textDimensions.height + 8}px`,
             width: `${sparkleWidth}px`,
             height: `${sparkleHeight}px`,
             contain: "layout style paint",
@@ -179,11 +171,11 @@ export const SparklesHero = (props: SparklesHeroProps) => {
                     enable: false,
                     zIndex: 1,
                   },
-                  fpsLimit: 60, // Reduced for better performance on low-end devices
+                  fpsLimit: 60,
                   interactivity: {
                     events: {
                       onClick: {
-                        enable: false, // Disabled for performance
+                        enable: false,
                       },
                       onHover: {
                         enable: false,
@@ -201,7 +193,7 @@ export const SparklesHero = (props: SparklesHeroProps) => {
                       },
                     },
                     collisions: {
-                      enable: false, // Disabled for performance
+                      enable: false,
                     },
                     color: {
                       value: computedParticleColor,
@@ -215,7 +207,7 @@ export const SparklesHero = (props: SparklesHeroProps) => {
                       random: true,
                       speed: {
                         min: 0.1,
-                        max: 0.8, // Slightly reduced for performance
+                        max: 0.8,
                       },
                       straight: false,
                     },
@@ -225,7 +217,7 @@ export const SparklesHero = (props: SparklesHeroProps) => {
                         width: 400,
                         height: 400,
                       },
-                      value: particleCount, // Fixed count independent of text size
+                      value: particleCount,
                     },
                     opacity: {
                       value: {
@@ -234,13 +226,13 @@ export const SparklesHero = (props: SparklesHeroProps) => {
                       },
                       animation: {
                         enable: true,
-                        speed: 3, // Slightly reduced for performance
+                        speed: 3,
                         sync: false,
                         mode: "auto",
                         startValue: "random",
                       },
                     },
-                    reduceDuplicates: true, // Performance optimization
+                    reduceDuplicates: true,
                     shape: {
                       type: "circle",
                     },
@@ -250,13 +242,12 @@ export const SparklesHero = (props: SparklesHeroProps) => {
                         max: 1,
                       },
                       animation: {
-                        enable: false, // Disabled for performance
+                        enable: false,
                       },
                     },
                     stroke: {
-                      width: 0, // No stroke for performance
+                      width: 0,
                     },
-                    // Simplified particle configuration for performance
                     life: {
                       count: 0,
                       delay: {
@@ -270,7 +261,6 @@ export const SparklesHero = (props: SparklesHeroProps) => {
                     },
                   },
                   detectRetina: true,
-                  // Performance optimizations
                   smooth: true,
                   style: {
                     position: "absolute",

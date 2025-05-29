@@ -1,3 +1,4 @@
 git add .
 git stage .
 npm run lint
+git push origin master

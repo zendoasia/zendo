@@ -112,7 +112,7 @@ export const SparklesHero = (props: SparklesHeroProps) => {
       {/* Text */}
       <h1
         ref={textRef}
-        className={cn("md:text-7xl text-3xl lg:text-9xl font-bold text-center text-white relative z-20", textClassName)}
+        className={cn("md:text-7xl text-3xl lg:text-9xl font-bold text-center text-black dark:text-white relative z-20", textClassName)}
       >
         {textChars}
       </h1>

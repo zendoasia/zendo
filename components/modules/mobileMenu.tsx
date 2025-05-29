@@ -16,11 +16,10 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "@/components/ui/accordion";
-import type { NavGroups } from "@/types";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 import { useEffect, useState } from "react";
-import type { MobileMenuProps } from "@/types";
+import type { MobileMenuProps, NavGroups } from "@/types";
 
 export default function MobileMenu({
   setOpenAction,

@@ -4,9 +4,8 @@ import { toast } from "sonner";
 import { X } from "lucide-react";
 import { FaCircleInfo } from "react-icons/fa6";
 import React from "react";
-import { ToastStyle } from "@/types";
 import { cn } from "@/lib/utils";
-import { ToasterProps } from "@/types";
+import { ToasterProps, ToastStyle } from "@/types";
 
 export default function sendToast({ type, message }: ToasterProps): void {
   const toastTypes = ["error", "success", "neutral", "warning"];

@@ -56,6 +56,10 @@
   @apply rounded-tr-[var(--radius)] rounded-br-[var(--radius)];
 }
 
+.rounded-top {
+  @apply rounded-tl-[var(--radius)] rounded-tr-[var(--radius)];
+}
+
 .nav-btn {
   @apply bg-transparent cursor-pointer py-0 px-2 text-base rounded-[var(--radius)] border border-[color:var(--jet)] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] transition-colors duration-400;
 }

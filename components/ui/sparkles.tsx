@@ -1,8 +1,7 @@
 "use client"
-import { useId, useMemo } from "react"
-import { useEffect, useState } from "react"
+import { useId, useMemo, useRef, useEffect, useState, useCallback } from "react"
 import Particles, { initParticlesEngine } from "@tsparticles/react"
-import type { Container, SingleOrMultiple } from "@tsparticles/engine"
+import type { Container } from "@tsparticles/engine"
 import { loadSlim } from "@tsparticles/slim"
 import { cn } from "@/lib/utils"
 import { motion, useAnimation } from "motion/react"
@@ -16,9 +15,34 @@ type SparklesHeroProps = {
 }
 
 export const SparklesHero = (props: SparklesHeroProps) => {
-  const { words, id, className, particleColor = "#FFFFFF", textClassName } = props
+  const { words, id, className, particleColor, textClassName } = props
 
   const [init, setInit] = useState(false)
+  const [textDimensions, setTextDimensions] = useState({ width: 0, height: 0 })
+  const textRef = useRef<HTMLHeadingElement>(null)
+
+  const [theme, setTheme] = useState<"light" | "dark">("dark")
+
+  useEffect(() => {
+    const detectTheme = () => {
+      const isDark = document.documentElement.classList.contains("dark")
+      setTheme(isDark ? "dark" : "light")
+    }
+
+    detectTheme()
+
+    // Watch for theme changes
+    const observer = new MutationObserver(detectTheme)
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    })
+
+    return () => observer.disconnect()
+  }, [])
+
+  // Compute particle color based on theme
+  const computedParticleColor = particleColor || (theme === "dark" ? "#FFFFFF" : "#000000")
 
   useEffect(() => {
     initParticlesEngine(async (engine) => {
@@ -27,6 +51,30 @@ export const SparklesHero = (props: SparklesHeroProps) => {
       setInit(true)
     })
   }, [])
+
+  // Debounced resize handler for better performance
+  const measureText = useCallback(() => {
+    if (textRef.current) {
+      const rect = textRef.current.getBoundingClientRect()
+      setTextDimensions({ width: rect.width, height: rect.height })
+    }
+  }, [])
+
+  useEffect(() => {
+    measureText()
+
+    let timeoutId: NodeJS.Timeout
+    const debouncedResize = () => {
+      clearTimeout(timeoutId)
+      timeoutId = setTimeout(measureText, 100)
+    }
+
+    window.addEventListener("resize", debouncedResize)
+    return () => {
+      window.removeEventListener("resize", debouncedResize)
+      clearTimeout(timeoutId)
+    }
+  }, [words, measureText])
 
   const controls = useAnimation()
 
@@ -52,79 +100,98 @@ export const SparklesHero = (props: SparklesHeroProps) => {
     ))
   }, [words])
 
+  // Calculate sparkle area dimensions based on text
+  const sparkleHeight = Math.max(textDimensions.height * 0.3, 32) // 30% of text height, minimum 32px
+  const sparkleWidth = textDimensions.width || 0 // Use exact text width, no minimum
+
+  // Fixed particle count independent of text size - more particles for better effect
+  const particleCount = 400
+
   return (
-    <div className={cn("flex flex-col items-center justify-center", className)}>
+    <span className={cn("relative inline-block", className)}>
       {/* Text */}
       <h1
-        className={cn(
-          "md:text-7xl text-3xl lg:text-9xl font-bold text-center text-white relative z-20 mb-4",
-          textClassName,
-        )}
+        ref={textRef}
+        className={cn("md:text-7xl text-3xl lg:text-9xl font-bold text-center text-white relative z-20", textClassName)}
       >
         {textChars}
       </h1>
 
-      {/* Sparkles and Gradient Container */}
-      <div className="w-full h-12 relative">
-        {/* Gradient Effects */}
-        <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-[2px] w-3/4 blur-sm" />
-        <div className="absolute inset-x-20 top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-px w-3/4" />
-        <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-[5px] w-1/4 blur-sm" />
-        <div className="absolute inset-x-60 top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-px w-1/4" />
+      {/* Sparkles and Gradient Container - positioned absolutely below text with gap */}
+      {textDimensions.width > 0 && textDimensions.height > 0 && (
+        <span
+          className="absolute left-1/2 transform -translate-x-1/2 pointer-events-none will-change-transform"
+          style={{
+            top: `${textDimensions.height + 8}px`, // Added 8px gap (size-2)
+            width: `${sparkleWidth}px`,
+            height: `${sparkleHeight}px`,
+            contain: "layout style paint",
+          }}
+        >
+          {/* Gradient Effects - constrained to exact text width */}
+          <span
+            className="absolute top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-[2px] blur-sm transform-gpu"
+            style={{
+              left: `${sparkleWidth * 0.15}px`,
+              width: `${sparkleWidth * 0.7}px`,
+            }}
+          />
+          <span
+            className="absolute top-0 bg-gradient-to-r from-transparent via-indigo-500 to-transparent h-px transform-gpu"
+            style={{
+              left: `${sparkleWidth * 0.15}px`,
+              width: `${sparkleWidth * 0.7}px`,
+            }}
+          />
+          <span
+            className="absolute top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-[5px] blur-sm transform-gpu"
+            style={{
+              left: `${sparkleWidth * 0.35}px`,
+              width: `${sparkleWidth * 0.3}px`,
+            }}
+          />
+          <span
+            className="absolute top-0 bg-gradient-to-r from-transparent via-sky-500 to-transparent h-px transform-gpu"
+            style={{
+              left: `${sparkleWidth * 0.35}px`,
+              width: `${sparkleWidth * 0.3}px`,
+            }}
+          />
 
-        {/* Sparkles Layer */}
-        <motion.div animate={controls} className="absolute inset-0 opacity-0">
-          {init && (
-            <Particles
-              id={id || generatedId}
-              className="w-full h-full"
-              particlesLoaded={particlesLoaded}
-              options={{
-                background: {
-                  color: {
-                    value: "transparent",
-                  },
-                },
-                fullScreen: {
-                  enable: false,
-                  zIndex: 1,
-                },
-                fpsLimit: 120,
-                interactivity: {
-                  events: {
-                    onClick: {
-                      enable: true,
-                      mode: "push",
-                    },
-                    onHover: {
-                      enable: false,
-                      mode: "repulse",
-                    },
-                    resize: { enable: true },
-                  },
-                  modes: {
-                    push: {
-                      quantity: 4,
-                    },
-                    repulse: {
-                      distance: 200,
-                      duration: 0.4,
+          {/* Sparkles Layer */}
+          <motion.span
+            animate={controls}
+            className="absolute inset-0 opacity-0 block transform-gpu will-change-transform"
+            style={{ contain: "layout style paint" }}
+          >
+            {init && (
+              <Particles
+                id={id || generatedId}
+                className="w-full h-full transform-gpu"
+                particlesLoaded={particlesLoaded}
+                options={{
+                  background: {
+                    color: {
+                      value: "transparent",
                     },
                   },
-                },
-                particles: {
-                  bounce: {
-                    horizontal: {
-                      value: 1,
-                    },
-                    vertical: {
-                      value: 1,
+                  fullScreen: {
+                    enable: false,
+                    zIndex: 1,
+                  },
+                  fpsLimit: 60, // Reduced for better performance on low-end devices
+                  interactivity: {
+                    events: {
+                      onClick: {
+                        enable: false, // Disabled for performance
+                      },
+                      onHover: {
+                        enable: false,
+                      },
+                      resize: { enable: true },
                     },
                   },
-                  collisions: {
-                    absorb: {
-                      speed: 2,
-                    },
+                  particles: {
                     bounce: {
                       horizontal: {
                         value: 1,
@@ -133,330 +200,91 @@ export const SparklesHero = (props: SparklesHeroProps) => {
                         value: 1,
                       },
                     },
-                    enable: false,
-                    maxSpeed: 50,
-                    mode: "bounce",
-                    overlap: {
+                    collisions: {
+                      enable: false, // Disabled for performance
+                    },
+                    color: {
+                      value: computedParticleColor,
+                    },
+                    move: {
+                      direction: "none",
                       enable: true,
-                      retries: 0,
+                      outModes: {
+                        default: "out",
+                      },
+                      random: true,
+                      speed: {
+                        min: 0.1,
+                        max: 0.8, // Slightly reduced for performance
+                      },
+                      straight: false,
                     },
-                  },
-                  color: {
-                    value: particleColor,
-                    animation: {
-                      h: {
-                        count: 0,
-                        enable: false,
-                        speed: 1,
-                        decay: 0,
-                        delay: 0,
-                        sync: true,
-                        offset: 0,
+                    number: {
+                      density: {
+                        enable: true,
+                        width: 400,
+                        height: 400,
                       },
-                      s: {
-                        count: 0,
-                        enable: false,
-                        speed: 1,
-                        decay: 0,
-                        delay: 0,
-                        sync: true,
-                        offset: 0,
+                      value: particleCount, // Fixed count independent of text size
+                    },
+                    opacity: {
+                      value: {
+                        min: 0.1,
+                        max: 1,
                       },
-                      l: {
-                        count: 0,
-                        enable: false,
-                        speed: 1,
-                        decay: 0,
-                        delay: 0,
-                        sync: true,
-                        offset: 0,
+                      animation: {
+                        enable: true,
+                        speed: 3, // Slightly reduced for performance
+                        sync: false,
+                        mode: "auto",
+                        startValue: "random",
                       },
                     },
-                  },
-                  effect: {
-                    close: true,
-                    fill: true,
-                    options: {},
-                    type: {} as SingleOrMultiple<string> | undefined,
-                  },
-                  groups: {},
-                  move: {
-                    angle: {
-                      offset: 0,
-                      value: 90,
+                    reduceDuplicates: true, // Performance optimization
+                    shape: {
+                      type: "circle",
                     },
-                    attract: {
-                      distance: 200,
-                      enable: false,
-                      rotate: {
-                        x: 3000,
-                        y: 3000,
+                    size: {
+                      value: {
+                        min: 0.4,
+                        max: 1,
+                      },
+                      animation: {
+                        enable: false, // Disabled for performance
                       },
                     },
-                    center: {
-                      x: 50,
-                      y: 50,
-                      mode: "percent",
-                      radius: 0,
+                    stroke: {
+                      width: 0, // No stroke for performance
                     },
-                    decay: 0,
-                    distance: {},
-                    direction: "none",
-                    drift: 0,
-                    enable: true,
-                    gravity: {
-                      acceleration: 9.81,
-                      enable: false,
-                      inverse: false,
-                      maxSpeed: 50,
-                    },
-                    path: {
-                      clamp: true,
+                    // Simplified particle configuration for performance
+                    life: {
+                      count: 0,
                       delay: {
                         value: 0,
+                        sync: false,
                       },
-                      enable: false,
-                      options: {},
-                    },
-                    outModes: {
-                      default: "out",
-                    },
-                    random: false,
-                    size: false,
-                    speed: {
-                      min: 0.1,
-                      max: 1,
-                    },
-                    spin: {
-                      acceleration: 0,
-                      enable: false,
-                    },
-                    straight: false,
-                    trail: {
-                      enable: false,
-                      length: 10,
-                      fill: {},
-                    },
-                    vibrate: false,
-                    warp: false,
-                  },
-                  number: {
-                    density: {
-                      enable: true,
-                      width: 400,
-                      height: 400,
-                    },
-                    limit: {
-                      mode: "delete",
-                      value: 0,
-                    },
-                    value: 800,
-                  },
-                  opacity: {
-                    value: {
-                      min: 0.1,
-                      max: 1,
-                    },
-                    animation: {
-                      count: 0,
-                      enable: true,
-                      speed: 4,
-                      decay: 0,
-                      delay: 0,
-                      sync: false,
-                      mode: "auto",
-                      startValue: "random",
-                      destroy: "none",
-                    },
-                  },
-                  reduceDuplicates: false,
-                  shadow: {
-                    blur: 0,
-                    color: {
-                      value: "#000",
-                    },
-                    enable: false,
-                    offset: {
-                      x: 0,
-                      y: 0,
-                    },
-                  },
-                  shape: {
-                    close: true,
-                    fill: true,
-                    options: {},
-                    type: "circle",
-                  },
-                  size: {
-                    value: {
-                      min: 0.4,
-                      max: 1,
-                    },
-                    animation: {
-                      count: 0,
-                      enable: false,
-                      speed: 5,
-                      decay: 0,
-                      delay: 0,
-                      sync: false,
-                      mode: "auto",
-                      startValue: "random",
-                      destroy: "none",
-                    },
-                  },
-                  stroke: {
-                    width: 0,
-                  },
-                  zIndex: {
-                    value: 0,
-                    opacityRate: 1,
-                    sizeRate: 1,
-                    velocityRate: 1,
-                  },
-                  destroy: {
-                    bounds: {},
-                    mode: "none",
-                    split: {
-                      count: 1,
-                      factor: {
-                        value: 3,
+                      duration: {
+                        value: 0,
+                        sync: false,
                       },
-                      rate: {
-                        value: {
-                          min: 4,
-                          max: 9,
-                        },
-                      },
-                      sizeOffset: true,
                     },
                   },
-                  roll: {
-                    darken: {
-                      enable: false,
-                      value: 0,
-                    },
-                    enable: false,
-                    enlighten: {
-                      enable: false,
-                      value: 0,
-                    },
-                    mode: "vertical",
-                    speed: 25,
+                  detectRetina: true,
+                  // Performance optimizations
+                  smooth: true,
+                  style: {
+                    position: "absolute",
                   },
-                  tilt: {
-                    value: 0,
-                    animation: {
-                      enable: false,
-                      speed: 0,
-                      decay: 0,
-                      sync: false,
-                    },
-                    direction: "clockwise",
-                    enable: false,
-                  },
-                  twinkle: {
-                    lines: {
-                      enable: false,
-                      frequency: 0.05,
-                      opacity: 1,
-                    },
-                    particles: {
-                      enable: false,
-                      frequency: 0.05,
-                      opacity: 1,
-                    },
-                  },
-                  wobble: {
-                    distance: 5,
-                    enable: false,
-                    speed: {
-                      angle: 50,
-                      move: 10,
-                    },
-                  },
-                  life: {
-                    count: 0,
-                    delay: {
-                      value: 0,
-                      sync: false,
-                    },
-                    duration: {
-                      value: 0,
-                      sync: false,
-                    },
-                  },
-                  rotate: {
-                    value: 0,
-                    animation: {
-                      enable: false,
-                      speed: 0,
-                      decay: 0,
-                      sync: false,
-                    },
-                    direction: "clockwise",
-                    path: false,
-                  },
-                  orbit: {
-                    animation: {
-                      count: 0,
-                      enable: false,
-                      speed: 1,
-                      decay: 0,
-                      delay: 0,
-                      sync: false,
-                    },
-                    enable: false,
-                    opacity: 1,
-                    rotation: {
-                      value: 45,
-                    },
-                    width: 1,
-                  },
-                  links: {
-                    blink: false,
-                    color: {
-                      value: "#fff",
-                    },
-                    consent: false,
-                    distance: 100,
-                    enable: false,
-                    frequency: 1,
-                    opacity: 1,
-                    shadow: {
-                      blur: 5,
-                      color: {
-                        value: "#000",
-                      },
-                      enable: false,
-                    },
-                    triangles: {
-                      enable: false,
-                      frequency: 1,
-                    },
-                    width: 1,
-                    warp: false,
-                  },
-                  repulse: {
-                    value: 0,
-                    enabled: false,
-                    distance: 1,
-                    duration: 1,
-                    factor: 1,
-                    speed: 1,
-                  },
-                },
-                detectRetina: true,
-              }}
-            />
-          )}
-        </motion.div>
+                }}
+              />
+            )}
+          </motion.span>
 
-        {/* Triangular/Pyramid Gradient Mask for smooth fade-out */}
-        <div className="absolute inset-0 w-full h-full [mask-image:linear-gradient(to_bottom,white_0%,white_20%,transparent_100%)]"></div>
-
-        {/* Additional side fade for pyramid effect */}
-        <div className="absolute inset-0 w-full h-full [mask-image:radial-gradient(ellipse_80%_100%_at_center_top,white_0%,white_40%,transparent_80%)]"></div>
-      </div>
-    </div>
+          {/* Pyramid Gradient Masks with GPU acceleration */}
+          <span className="absolute inset-0 w-full h-full [mask-image:linear-gradient(to_bottom,white_0%,white_20%,transparent_100%)] pointer-events-none transform-gpu" />
+          <span className="absolute inset-0 w-full h-full [mask-image:radial-gradient(ellipse_80%_100%_at_center_top,white_0%,white_40%,transparent_80%)] pointer-events-none transform-gpu" />
+        </span>
+      )}
+    </span>
   )
 }

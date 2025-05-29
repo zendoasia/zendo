@@ -7,31 +7,66 @@ import {
 import type { Dispatch, SetStateAction } from "react";
 import { motion } from "framer-motion";
 
+/**
+ * Props for a wrapper component around an article.
+ */
 export interface ArticleWrapperProps {
   children: React.ReactNode;
   className?: string;
   style?: any;
 }
 
+/**
+ * Props for the SparklesHero component.
+ */
+export type SparklesHeroProps = {
+  /** The text to display with sparkles effect */
+  words: string;
+  /** Optional id for the element */
+  id?: string;
+  /** Optional class name for the container */
+  className?: string;
+  /** Optional color for the particles */
+  particleColor?: string;
+  /** Optional class name for the text */
+  textClassName?: string;
+};
+
+/**
+ * Environment variables for the rate limiter.
+ */
 export interface RateLimiterEnv {
   RATE_LIMITER: DurableObjectNamespace;
   TURNSTILE_SECRET_KEY: string;
   NEXT_ORIGIN: string;
 }
 
+/**
+ * Represents a group of footer links.
+ */
 export interface FooterLinkItem {
+  /** Name of the link group */
   name: string;
+  /** Path for the link group */
   path: string;
+  /** Array of link items */
   items: {
     title: string;
     path: string;
   }[];
 }
 
+/**
+ * Represents a footer link.
+ */
 export interface FooterLink {
+  /** Title and items for the footer link */
   title: FooterLinkItem;
 }
 
+/**
+ * Response from Turnstile verification.
+ */
 export interface TurnstileResponse {
   success: boolean;
   challenge_ts: string;
@@ -39,11 +74,17 @@ export interface TurnstileResponse {
   "error-codes"?: string[];
 }
 
+/**
+ * State object for the RateLimiter Durable Object.
+ */
 export interface RateLimiterState {
   storage: DurableObjectStorage;
   blockConcurrencyWhile: (cb: () => Promise<void>) => void;
 }
 
+/**
+ * Props for the mobile menu component.
+ */
 export interface MobileMenuProps {
   setOpenAction: Dispatch<SetStateAction<boolean>>;
   setOpenSAction: Dispatch<SetStateAction<boolean>>;
@@ -52,16 +93,28 @@ export interface MobileMenuProps {
   onCloseComplete?: () => void;
 }
 
+/**
+ * Represents a navigation item.
+ */
 export type NavItem = {
+  /** Label for the navigation item */
   label: string;
+  /** Icon component for the navigation item */
   icon: React.ElementType;
+  /** Path for the navigation item */
   path: string;
 };
 
+/**
+ * Represents groups of navigation items.
+ */
 export type NavGroups = {
   [key: string]: NavItem[];
 };
 
+/**
+ * Props for the search component.
+ */
 export interface SearchProps {
   setOpenAction: Dispatch<SetStateAction<boolean>>;
   setOpenSAction: Dispatch<SetStateAction<boolean>>;
@@ -70,11 +123,19 @@ export interface SearchProps {
   onCloseComplete?: () => void;
 }
 
+/**
+ * Style and function for displaying a toast notification.
+ */
 export interface ToastStyle {
+  /** CSS class for the toast container */
   container: string;
+  /** CSS class for hover and focus states */
   hoverAndFocus: string;
+  /** Color for the toast icon */
   iconColor: string;
+  /** Optional icon element */
   icon?: React.JSX.Element;
+  /** Toast function to use */
   toastFunction:
     | typeof toast.success
     | typeof toast.error
@@ -82,6 +143,15 @@ export interface ToastStyle {
     | typeof toast;
 }
 
+/**
+ * Props for the ContainerTextFlip component.
+ *
+ * @property words - Array of words to cycle through in the animation.
+ * @property interval - Time in milliseconds between word transitions.
+ * @property className - Additional CSS classes to apply to the container.
+ * @property textClassName - Additional CSS classes to apply to the text.
+ * @property animationDuration - Duration of the transition animation in milliseconds.
+ */
 export interface ContainerTextFlipProps {
   /** Array of words to cycle through in the animation */
   words?: string[];
@@ -95,6 +165,9 @@ export interface ContainerTextFlipProps {
   animationDuration?: number;
 }
 
+/**
+ * Props for the GlowingEffect component.
+ */
 export interface GlowingEffectProps {
   blur?: number;
   inactiveZone?: number;
@@ -108,22 +181,37 @@ export interface GlowingEffectProps {
   borderWidth?: number;
 }
 
+/**
+ * User agent data for the navigator.
+ */
 export interface NavigatorUAData {
   platform: string;
 }
 
+/**
+ * Props for checking rate limits.
+ */
 export interface RateLimitCheckProps {
   request: CloudflareRequest;
   env: RateLimiterEnv;
 }
 
+/**
+ * Props for a toaster notification.
+ */
 export interface ToasterProps {
   type: "neutral" | "success" | "error" | "warning";
   message: string;
 }
 
+/**
+ * Allowed tag types for animated sections.
+ */
 export type TagType = "div" | "section" | "article" | "main";
 
+/**
+ * Mapping of tag types to framer-motion components.
+ */
 export const motionTags = {
   div: motion.div,
   section: motion.section,
@@ -131,6 +219,9 @@ export const motionTags = {
   main: motion.main,
 };
 
+/**
+ * Props for the AnimatedSection component.
+ */
 export interface AnimatedSectionProps {
   children: React.ReactNode;
   className?: string;

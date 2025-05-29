@@ -9,13 +9,15 @@ export default function Home() {
     <ArticleWrapper
       className={cn(
         "max-w-screen-xl mx-auto px-6 md:px-12 lg:px-24 flex flex-col",
-        "min-h-screen justify-start"
+        "min-h-screen"
       )}
-      style={{ paddingTop: "20vh" }}
     >
-    <span className="w-full min-h-screen flex items-center justify-center">
-      <SparklesHero words="Zendo" />
-    </span>
+      <span className="flex flex-col items-center justify-center">
+        <SparklesHero
+          words="Coming Soon"
+          textClassName="text-3xl md:text-7xl lg:text-9xl"
+        />
+      </span>
     </ArticleWrapper>
   );
 }

@@ -2,7 +2,7 @@
 
 import React from "react";
 import NotFound from "@/components/main/notFound";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "404 - Zendo",

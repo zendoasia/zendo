@@ -14,6 +14,8 @@ import { ArrowUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 
+export const runtime = "edge";
+
 function formatSlug(slug: string[]) {
   return slug
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))

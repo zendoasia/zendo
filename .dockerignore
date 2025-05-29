@@ -150,3 +150,12 @@ renovate.json
 .github
 wrangler.json
 .vscode
+.husky
+resources
+etc
+CHANGELOG.md
+compressor.settings.txt
+wrangler.toml
+Procfile
+start.sh
+tests/

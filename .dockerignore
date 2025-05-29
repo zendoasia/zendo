@@ -79,6 +79,11 @@ web_modules/
 .env.production.local
 .env.local
 
+# Tests
+tests/
+tests
+./tests
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache
@@ -140,12 +145,8 @@ dist
 .nvmrc
 CREDITS.md
 README.md
-eslint.config.mjs
 LICENSE
-next-env.d.ts
 renovate.json
 .github
 wrangler.json
-types.ts
-tsconfig.json
 .vscode

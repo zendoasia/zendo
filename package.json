@@ -47,7 +47,7 @@
     "@eslint/eslintrc": "^3.3.1",
     "@tailwindcss/postcss": "^4.1.8",
     "@types/js-cookie": "^3.0.6",
-    "@types/node": "^22",
+    "@types/node": "^22.15.24",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.1.5",
     "autoprefixer": "^10.4.21",
@@ -61,6 +61,6 @@
     "typescript": "^5.8.3"
   },
   "engines": {
-    "node": ">=20.19.2"
+    "node": ">=22.16.0"
   }
 }

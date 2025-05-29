@@ -9,10 +9,9 @@ import {
   CommandGroup,
 } from "@/components/ui/command";
 import { useState } from "react";
-import { SearchProps } from "@/types";
 import { useEffect } from "react";
 import { Info, Bot } from "lucide-react";
-import { NavGroups } from "@/types";
+import { NavGroups, SearchProps } from "@/types";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";

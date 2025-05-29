@@ -45,7 +45,7 @@ export default function Footer() {
   ];
 
   return (
-    <div className={cn("w-full relative rounded-[var(--radius)] z-50")}>
+    <div className={cn("w-full relative app-border border-t rounded-top z-50")}>
       <GlowingEffect
         spread={30}
         glow={true}
@@ -56,7 +56,7 @@ export default function Footer() {
 
       <footer
         className={cn(
-          "relative z-[60] w-full py-2.5 rounded-[var(--radius)] app-font border border-[color:var(--jet)]"
+          "relative z-[60] w-full py-2.5 app-font app-border rounded-top border-t"
         )}
       >
         <span

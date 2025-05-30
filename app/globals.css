@@ -43,13 +43,12 @@
   --radius-xl: calc(var(--radius) + 4px);
 }
 
-
 .app-gap {
-  @apply gap-[0.5rem]
+  @apply gap-[0.5rem];
 }
 
 .app-border {
-  @apply border-l border-r dark:border-[color:var(--jet)] border-[color:var(--silver2)]
+  @apply border-l border-r dark:border-[color:var(--jet)] border-[color:var(--silver2)];
 }
 
 .rounded-right {
@@ -65,22 +64,22 @@
 }
 
 .app-padding {
-  @apply py-0 px-2
+  @apply py-0 px-2;
 }
 
 .app-font {
-  @apply font-[family-name:var(--font-text)] font-medium text-base
+  @apply font-[family-name:var(--font-text)] font-medium text-base;
 }
 
 .app-font-mono {
-  @apply font-[family-name:var(--font-text-mono)] font-medium text-base
+  @apply font-[family-name:var(--font-text-mono)] font-medium text-base;
 }
 
 .app-font-space {
-  @apply font-[family-name:var(--font-space-grotesk)] font-medium text-base
+  @apply font-[family-name:var(--font-space-grotesk)] font-medium text-base;
 }
 .app-font-code {
-  @apply font-[family-name:var(--font-code)] font-medium text-base
+  @apply font-[family-name:var(--font-code)] font-medium text-base;
 }
 
 @media (max-width: 864px) {
@@ -91,11 +90,10 @@
 }
 
 @theme {
-  --breakpoint-br: 54rem
+  --breakpoint-br: 54rem;
 }
 
 @layer utilities {
-
   /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
@@ -109,7 +107,6 @@
     /* Firefox */
   }
 }
-
 
 :root {
   --font-text: "Geist", "Geist Fallback", Arial, sans-serif;

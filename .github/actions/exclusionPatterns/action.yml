@@ -1,13 +1,13 @@
-name: 'Retrieve exclusion patterns'
-description: 'Retrieves a list of exclusion patterns for either pushing to Pterodactyl or compression.'
+name: "Retrieve exclusion patterns"
+description: "Retrieves a list of exclusion patterns for either pushing to Pterodactyl or compression."
 inputs:
   cp:
     description: "Whether to make ignore pattern for compressor or pterodactyl file excludes. False = Compression, True = Pterodactyl"
     required: false
-    default: 'false'
+    default: "false"
 
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - name: Make Exclusion Patterns for compression
       id: prepare_excludes
@@ -74,7 +74,7 @@ runs:
           if [[ -f .dockerignore ]]; then
             sed '/^#/d; s/#.*//; /^$/d' .dockerignore >> "$TEMP_IGNORE_FILE"
           fi
-        
+
           echo ".devcontainer/*" >> "$TEMP_IGNORE_FILE"
           echo ".git/*" >> "$TEMP_IGNORE_FILE"
           echo ".vscode/*" >> "$TEMP_IGNORE_FILE"

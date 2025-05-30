@@ -158,4 +158,6 @@ compressor.settings.txt
 wrangler.toml
 Procfile
 start.sh
+.prettierignore
+.prettierrc
 tests/

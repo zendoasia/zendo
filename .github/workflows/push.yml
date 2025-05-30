@@ -8,7 +8,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Cancel previous runs
         uses: styfle/cancel-workflow-action@0.12.1
         with:
@@ -27,7 +26,7 @@ jobs:
       - name: Prepare Exclusion list
         uses: ./.github/actions/exclusionPatterns
         with:
-          cp: 'true'
+          cp: "true"
 
       - name: Read exclusion list
         id: prepare_patterns
@@ -46,7 +45,7 @@ jobs:
         run: |
           SERVER_FILES="${{ steps.server-files.outputs.server_files }}"
           CHANGED_FILES="${{ steps.changed-files.outputs.changed_files }}"
-          
+
           IFS=' ' read -r -a SERVER_ARRAY <<< "$SERVER_FILES"
           IFS=' ' read -r -a CHANGED_ARRAY <<< "$CHANGED_FILES"
 
@@ -56,7 +55,7 @@ jobs:
               FILES_TO_UPLOAD+=("$file")
             fi
           done
-          
+
           if [ ${#FILES_TO_UPLOAD[@]} -eq 0 ]; then
             echo "No files to upload."
             echo "Aborting action..."
@@ -74,22 +73,22 @@ jobs:
           SFTP_ROOT: ${{ secrets.PTERODACTYL_CF_ROOT }}
         run: |
           FILES_TO_UPLOAD="${{ steps.check-updates.outputs.files_to_upload }}"
-          
+
           SFTP_CMD_FILE=$(mktemp)
           echo "lcd $(pwd)" >> $SFTP_CMD_FILE  
-          
+
           for file in $FILES_TO_UPLOAD; do
             echo "put \"$file\" \"$SFTP_ROOT/$file\"" >> $SFTP_CMD_FILE
           done
-          
+
           sftp -oBatchMode=no -b $SFTP_CMD_FILE $SFTP_USER@$SFTP_HOST <<< "$SFTP_PASS"
-          
+
           rm $SFTP_CMD_FILE
 
       - name: Restart the server
-        uses: './.github/actions/PTERODACTYLRestart'
+        uses: "./.github/actions/PTERODACTYLRestart"
         with:
-          off: 'true'
+          off: "true"
 
       - name: Clean up
         run: rm -rf ignore.txt tarIgnore.txt zipIgnore.txt ./temp/schema.json ./temparchives tempIgnore.txt

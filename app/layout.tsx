@@ -20,7 +20,8 @@ import LogoDark from "@/public/assets/LogoDark.svg";
 import Logo from "@/public/assets/Logo.svg";
 import { cn } from "@/lib/utils";
 import ThemeSanitizer from "@/hooks/themeSanitizer";
-import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google'
+import CookieConsent from "@/components/CookieConsent";
+import GAnalyticsGTMConsent from "@/components/GAnalyticsGTMConsent";
 
 export const metadata: Metadata = {
   title: "Zendo - Intuition",
@@ -92,11 +93,13 @@ export default function RootLayout({
         <link rel="preload" href={Logo.src} as="image" />
         <link rel="preload" href={LogoDark.src} as="image" />
       </Head>
+      <GAnalyticsGTMConsent />
       <body
         className={cn(
           `scroll-smooth w-full p-0 m-0 overflow-x-clip ${geistSans.variable} ${spaceGrotesk.variable} ${geistMono.variable} ${menlo.variable} ${ubuntu.variable} ${jetbrainsMono.variable} ${consolas.variable} antialiased`
         )}
       >
+        <CookieConsent />
         <noscript>
           <style>
             {`
@@ -125,19 +128,15 @@ export default function RootLayout({
           </style>
           <div id="noscript-dialog">
             <div>
-              <h2 style={{ marginBottom: "1rem", fontSize: "1.25rem" }}>
-                JavaScript Required
-              </h2>
+              <h2 style={{ marginBottom: "1rem", fontSize: "1.25rem" }}>JavaScript Required</h2>
               <p>
-                This site needs JavaScript to function properly. Please enable
-                it in your browser settings. Or, upgrade to a new system and a
-                modern browser to enjoy the full experience.
+                This site needs JavaScript to function properly. Please enable it in your browser
+                settings. Or, upgrade to a new system and a modern browser to enjoy the full
+                experience.
               </p>
             </div>
           </div>
         </noscript>
-        <GoogleAnalytics gaId="G-RNN756TW7T" />
-        <GoogleTagManager gtmId="GTM-P3K2KXRM" />
         <div id="c301e48c-ae4c-4061-b1f9-d4f64d85d4dc">
           <ThemeProvider
             attribute="class"

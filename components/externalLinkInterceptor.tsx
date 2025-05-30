@@ -137,9 +137,7 @@ export default function ExternalLinkInterceptor() {
   };
 
   useEffect(() => {
-    const handleCustomOpen = (
-      e: CustomEvent<{ href: string; target?: string; rel?: string }>
-    ) => {
+    const handleCustomOpen = (e: CustomEvent<{ href: string; target?: string; rel?: string }>) => {
       const { href, target = "_self", rel = "" } = e.detail;
 
       // Create a dummy anchor for consistency
@@ -153,15 +151,9 @@ export default function ExternalLinkInterceptor() {
       setShowPrompt(true);
     };
 
-    window.addEventListener(
-      "open-external-link",
-      handleCustomOpen as EventListener
-    );
+    window.addEventListener("open-external-link", handleCustomOpen as EventListener);
     return () =>
-      window.removeEventListener(
-        "open-external-link",
-        handleCustomOpen as EventListener
-      );
+      window.removeEventListener("open-external-link", handleCustomOpen as EventListener);
   }, []);
 
   if (!mounted) return null; // Prevents hydration error
@@ -175,11 +167,7 @@ export default function ExternalLinkInterceptor() {
           )}
         >
           <Check size="1.2rem" className={cn("text-[color:var(--success)]")} />
-          <span
-            className={cn(
-              "text-xs sm:text-sm flex flex-row items-center gap-2.5"
-            )}
-          >
+          <span className={cn("text-xs sm:text-sm flex flex-row items-center gap-2.5")}>
             HTTPS <ArrowRight size="1.2rem" />
             <span
               className={cn(
@@ -199,11 +187,7 @@ export default function ExternalLinkInterceptor() {
           )}
         >
           <X size="1.2rem" className={cn("text-[color:var(--danger)]")} />
-          <span
-            className={cn(
-              "text-xs sm:text-sm flex flex-row items-center gap-2.5"
-            )}
-          >
+          <span className={cn("text-xs sm:text-sm flex flex-row items-center gap-2.5")}>
             HTTP <ArrowRight size="1.2rem" />
             <span
               className={cn(
@@ -223,11 +207,7 @@ export default function ExternalLinkInterceptor() {
           )}
         >
           <Info size="1.2rem" className={cn("text-[color:var(--warning)]")} />
-          <span
-            className={cn(
-              "text-xs sm:text-sm flex flex-row items-center gap-2.5"
-            )}
-          >
+          <span className={cn("text-xs sm:text-sm flex flex-row items-center gap-2.5")}>
             Unknown <ArrowRight size="1.2rem" />
             <span
               className={cn(
@@ -272,12 +252,9 @@ export default function ExternalLinkInterceptor() {
             />
             You&#39;re leaving our site
           </DrawerTitle>
-          <DrawerDescription
-            className={cn("text-md")}
-            id="external-link-description"
-          >
-            You&#39;re about to visit an external website not affiliated with
-            us. Proceed only if you trust it.
+          <DrawerDescription className={cn("text-md")} id="external-link-description">
+            You&#39;re about to visit an external website not affiliated with us. Proceed only if
+            you trust it.
           </DrawerDescription>
         </DrawerHeader>
         <div
@@ -288,19 +265,13 @@ export default function ExternalLinkInterceptor() {
           {stat()}
         </div>
 
-        <DrawerFooter
-          className={cn("pt-4 flex flex-col sm:flex-row gap-[0.5rem]")}
-        >
+        <DrawerFooter className={cn("pt-4 flex flex-col sm:flex-row gap-[0.5rem]")}>
           <DrawerClose asChild>
             <Button variant="secondary" className={cn("w-full sm:w-auto")}>
               Cancel
             </Button>
           </DrawerClose>
-          <Button
-            type="button"
-            onClick={proceed}
-            className={cn("w-full sm:w-auto")}
-          >
+          <Button type="button" onClick={proceed} className={cn("w-full sm:w-auto")}>
             Proceed
           </Button>
         </DrawerFooter>
@@ -328,20 +299,12 @@ export default function ExternalLinkInterceptor() {
             <OctagonAlert size="1.2rem" className={cn("text-destructive")} />
             You&#39;re leaving our site
           </AlertDialogTitle>
-          <AlertDialogDescription
-            className={cn("text-md")}
-            id="external-link-description"
-          >
-            You&#39;re about to visit an external website. This link is not
-            affiliated with or controlled by us. Continue only if you trust the
-            source.
+          <AlertDialogDescription className={cn("text-md")} id="external-link-description">
+            You&#39;re about to visit an external website. This link is not affiliated with or
+            controlled by us. Continue only if you trust the source.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <div
-          className={cn("bg-muted p-[1.2rem] rounded-[radius:var(--radius)]")}
-        >
-          {stat()}
-        </div>
+        <div className={cn("bg-muted p-[1.2rem] rounded-[radius:var(--radius)]")}>{stat()}</div>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={proceed}>Proceed</AlertDialogAction>

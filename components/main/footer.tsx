@@ -1,24 +1,14 @@
 "use client";
 
 import { Copyright, ArrowUp } from "lucide-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { GlowingEffect } from "@/components/ui/glowing-effect";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { FooterLink } from "@/types";
 import { cn } from "@/lib/utils";
 import { openExternalLinkManually } from "@/components/externalLinkInterceptor";
-import {
-  SiWakatime,
-  SiX,
-  SiDiscord,
-  SiGithub,
-} from "@icons-pack/react-simple-icons";
+import { SiWakatime, SiX, SiDiscord, SiGithub } from "@icons-pack/react-simple-icons";
 
 export default function Footer() {
   const footerLinks: FooterLink[] = [
@@ -46,18 +36,10 @@ export default function Footer() {
 
   return (
     <div className={cn("w-full relative app-border border-t rounded-top z-50")}>
-      <GlowingEffect
-        spread={30}
-        glow={true}
-        disabled={false}
-        proximity={100}
-        inactiveZone={0.01}
-      />
+      <GlowingEffect spread={30} glow={true} disabled={false} proximity={100} inactiveZone={0.01} />
 
       <footer
-        className={cn(
-          "relative z-[60] w-full py-2.5 app-font app-border rounded-top border-t"
-        )}
+        className={cn("relative z-[60] w-full py-2.5 app-font app-border rounded-top border-t")}
       >
         <span
           aria-hidden={true}
@@ -73,17 +55,12 @@ export default function Footer() {
             )}
           >
             {footerLinks.map((section) => (
-              <div
-                key={section.title.name}
-                className={cn("flex flex-col gap-2")}
-              >
+              <div key={section.title.name} className={cn("flex flex-col gap-2")}>
                 <h3>
                   <Link
                     key={section.title.name}
                     href={section.title.path}
-                    className={cn(
-                      "text-lg text-pretty hover:underline font-semibold app-font"
-                    )}
+                    className={cn("text-lg text-pretty hover:underline font-semibold app-font")}
                   >
                     {section.title.name}
                   </Link>
@@ -136,18 +113,12 @@ export default function Footer() {
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button size="icon" key="back-to-top-button" asChild>
-                      <Link
-                        key="back-to-top-link"
-                        aria-label="Go back to top"
-                        href="#top"
-                      >
+                      <Link key="back-to-top-link" aria-label="Go back to top" href="#top">
                         <ArrowUp size="2rem" />
                       </Link>
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent className={cn("text-base")}>
-                    Back to Top
-                  </TooltipContent>
+                  <TooltipContent className={cn("text-base")}>Back to Top</TooltipContent>
                 </Tooltip>
               </TooltipProvider>
               <TooltipProvider>
@@ -195,9 +166,7 @@ export default function Footer() {
                       <SiX size="2rem" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent className={cn("text-base")}>
-                    Visit Twitter Profile
-                  </TooltipContent>
+                  <TooltipContent className={cn("text-base")}>Visit Twitter Profile</TooltipContent>
                 </Tooltip>
               </TooltipProvider>{" "}
               <TooltipProvider>
@@ -220,9 +189,7 @@ export default function Footer() {
                       <SiDiscord size="2rem" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent className={cn("text-base")}>
-                    Visit Discord Profile
-                  </TooltipContent>
+                  <TooltipContent className={cn("text-base")}>Visit Discord Profile</TooltipContent>
                 </Tooltip>
               </TooltipProvider>{" "}
               <TooltipProvider>
@@ -245,9 +212,7 @@ export default function Footer() {
                       <SiGithub size="2rem" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent className={cn("text-base")}>
-                    Visit GitHub Profile
-                  </TooltipContent>
+                  <TooltipContent className={cn("text-base")}>Visit GitHub Profile</TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </span>

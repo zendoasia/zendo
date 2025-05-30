@@ -48,25 +48,17 @@ export default function sendToast({ type, message }: ToasterProps): void {
       hoverAndFocus:
         "hover:bg-slate-200 dark:hover:bg-slate-800 focus:bg-slate-200 dark:focus:bg-slate-800",
       iconColor: "text-slate-600 dark:text-slate-300",
-      icon: (
-        <FaCircleInfo
-          size="1.2rem"
-          className="text-slate-600 dark:text-slate-400"
-        />
-      ),
+      icon: <FaCircleInfo size="1.2rem" className="text-slate-600 dark:text-slate-400" />,
       toastFunction: toast,
     },
   };
 
-  const { container, hoverAndFocus, iconColor, icon, toastFunction } =
-    toastStyles[type];
+  const { container, hoverAndFocus, iconColor, icon, toastFunction } = toastStyles[type];
 
   const toastId = toastFunction(
-    <div className={cn("app-font flex items-center gap-2 w-full")} >
+    <div className={cn("app-font flex items-center gap-2 w-full")}>
       {icon ?? null}
-      <span className={cn("text-md")}>
-        {message}
-      </span>
+      <span className={cn("text-md")}>{message}</span>
     </div>,
     {
       unstyled: true,
@@ -74,7 +66,9 @@ export default function sendToast({ type, message }: ToasterProps): void {
       description: (
         <button
           onClick={() => toast.dismiss(toastId)}
-          className={cn(`absolute top-2 right-2 rounded-[var(--radius)] p-1 transition-colors duration-300 ${hoverAndFocus}`)}
+          className={cn(
+            `absolute top-2 right-2 rounded-[var(--radius)] p-1 transition-colors duration-300 ${hoverAndFocus}`
+          )}
         >
           <X size="1.2rem" className={cn(`${iconColor}`)} />
         </button>

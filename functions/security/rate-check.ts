@@ -1,6 +1,5 @@
-
 import { RateLimitCheckProps } from "../../types";
-import { PagesFunction } from '@cloudflare/workers-types';
+import { PagesFunction } from "@cloudflare/workers-types";
 
 export const onRequestGet: PagesFunction = async ({ request, env }: RateLimitCheckProps) => {
   const url = new URL(request.url);

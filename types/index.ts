@@ -136,11 +136,7 @@ export interface ToastStyle {
   /** Optional icon element */
   icon?: React.JSX.Element;
   /** Toast function to use */
-  toastFunction:
-    | typeof toast.success
-    | typeof toast.error
-    | typeof toast.warning
-    | typeof toast;
+  toastFunction: typeof toast.success | typeof toast.error | typeof toast.warning | typeof toast;
 }
 
 /**
@@ -194,6 +190,26 @@ export interface NavigatorUAData {
 export interface RateLimitCheckProps {
   request: CloudflareRequest;
   env: RateLimiterEnv;
+}
+
+/**
+ * Represents the categories of cookie consent and their enabled/disabled state.
+ *
+ * @property preferences - Indicates whether preference cookies are allowed.
+ * @property analytics - Indicates whether analytics cookies are allowed.
+ */
+export type CookieConsentCategories = {
+  preferences: boolean;
+  analytics: boolean;
+};
+
+/**
+ * Props for a fallback error page component.
+ *
+ * @property error - An optional error message to display. Can be a string or null.
+ */
+export interface FallbackErrorPageProps {
+  error?: string | null;
 }
 
 /**

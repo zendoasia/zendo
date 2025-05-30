@@ -54,13 +54,9 @@ export default function LightModeTipAlert() {
               className={cn("mt-1 text-slate-600 dark:text-slate-400 shrink-0")}
             />
             <div className={cn("flex flex-col")}>
-              <AlertTitle className={cn("text-lg text-shadow-md")}>
-                Tip!
-              </AlertTitle>
+              <AlertTitle className={cn("text-lg text-shadow-md")}>Tip!</AlertTitle>
               <AlertDescription className={cn("text-base")}>
-                <span
-                  className={cn("inline-flex flex-wrap items-center gap-1")}
-                >
+                <span className={cn("inline-flex flex-wrap items-center gap-1")}>
                   It is better to view the page in dark mode. Please switch to
                   <Button
                     size="sm"

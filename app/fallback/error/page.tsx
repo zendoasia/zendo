@@ -3,6 +3,8 @@ import ErrorPage from "@/components/pages/fallback.error";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 
+export const runtime = "edge";
+
 export const metadata: Metadata = {
   title: "Error | Zendo",
   description: "An error occurred. Please see details below.",

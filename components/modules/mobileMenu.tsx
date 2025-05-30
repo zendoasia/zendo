@@ -80,9 +80,7 @@ export default function MobileMenu({
               Quick Access
             </SheetTitle>
           </div>
-          <p className={cn("text-sm text-muted-foreground mt-1")}>
-            Quick links and tools
-          </p>
+          <p className={cn("text-sm text-muted-foreground mt-1")}>Quick links and tools</p>
         </div>
 
         <Separator className={cn("my-[0.5]")} />
@@ -103,9 +101,7 @@ export default function MobileMenu({
                 >
                   {sectionKey.toUpperCase()}
                 </AccordionTrigger>
-                <AccordionContent
-                  className={cn("flex flex-col gap-[0.7rem] pt-[0.7rem]")}
-                >
+                <AccordionContent className={cn("flex flex-col gap-[0.7rem] pt-[0.7rem]")}>
                   {navItems[sectionKey].map(({ label, icon: Icon, path }) => (
                     <Button
                       key={label}

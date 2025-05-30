@@ -5,7 +5,11 @@ import { cn } from "@/lib/utils";
 
 export default function SearchSkeleton() {
   return (
-    <div className={cn("fixed inset-0 z-105 flex items-center justify-center bg-background/80 backdrop-blur-sm")}>
+    <div
+      className={cn(
+        "fixed inset-0 z-105 flex items-center justify-center bg-background/80 backdrop-blur-sm"
+      )}
+    >
       <motion.div
         initial={{ opacity: 0, scale: 0.98, y: -10 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}

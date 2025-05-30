@@ -1,5 +1,4 @@
 /** @type {import('next').NextConfig} */
-const path = require('path');
 const nextConfig = {
   reactStrictMode: false,
   deploymentId: process.env.DEPLOYMENT_ID,
@@ -13,15 +12,30 @@ const nextConfig = {
             key: "Strict-Transport-Security",
             value: "max-age=63072000; includeSubDomains; preload",
           },
+          {
+            key: "Content-Security-Policy",
+            value: [
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://cdn.jsdelivr.net;",
+              "object-src 'none';",
+              "base-uri 'self';",
+              "form-action 'self';",
+            ].join(" "),
+          },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+          { key: "Cross-Origin-Embedder-Policy", value: "require-corp" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
         ],
       },
     ];
   },
-  webpack: (config) => {
-    config.resolve = config.resolve || {};
-    config.resolve.alias = config.resolve.alias || {};
-    config.resolve.alias['@'] = path.resolve(__dirname);
-    return config;
+  async rewrites() {
+    return [
+      {
+        source: "/fallback/unsupported",
+        destination: "/fallback/unsupported.html",
+      },
+    ];
   },
 };
 

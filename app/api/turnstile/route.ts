@@ -43,9 +43,7 @@ export async function POST(req: NextRequest) {
     }
 
     try {
-      const secret = new TextEncoder().encode(
-        process.env.NEXT_PRIVATE_JWT_SECRET!
-      );
+      const secret = new TextEncoder().encode(process.env.NEXT_PRIVATE_JWT_SECRET!);
       const { payload } = await jwtVerify(jwtToken, secret);
 
       if (payload.from !== process.env.NEXT_PRIVATE_JWT_PAYLOAD_MESSAGE) {
@@ -59,10 +57,7 @@ export async function POST(req: NextRequest) {
       }
     } catch (err) {
       console.error("JWT verification failed:", err);
-      return NextResponse.json(
-        { code: 403, message: "Invalid origin token." },
-        { status: 403 }
-      );
+      return NextResponse.json({ code: 403, message: "Invalid origin token." }, { status: 403 });
     }
 
     if (!token) {
@@ -86,17 +81,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const turnstileRes = await fetch(
-      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          secret: process.env.TURNSTILE_SECRET_KEY!,
-          response: token,
-        }),
-      }
-    );
+    const turnstileRes = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        secret: process.env.TURNSTILE_SECRET_KEY!,
+        response: token,
+      }),
+    });
 
     if (!turnstileRes.ok) {
       const errorText = await turnstileRes.text();
@@ -114,7 +106,9 @@ export async function POST(req: NextRequest) {
     try {
       turnstileData = await turnstileRes.json();
     } catch (err) {
-      console.error(`Failed to parse turnstile response json due to error ${err}, finding out reason...`);
+      console.error(
+        `Failed to parse turnstile response json due to error ${err}, finding out reason...`
+      );
       const raw = await turnstileRes.text();
       console.error("Failed to parse Turnstile response JSON:", raw);
       return NextResponse.json(
@@ -130,8 +124,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           code: 403,
-          message:
-            "Invalid CAPTCHA code found. Please verify the code you are sending.",
+          message: "Invalid CAPTCHA code found. Please verify the code you are sending.",
         },
         { status: 403 }
       );

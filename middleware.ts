@@ -8,16 +8,9 @@ const isAncientBrowser = (userAgent: string): boolean => {
   const firefox = userAgent.match(/Firefox\/(\d+)/);
   if (firefox && parseInt(firefox[1], 10) < 52) return true;
   const safari = userAgent.match(/Version\/(\d+).+Safari/);
-  if (safari && parseInt(safari[1], 10) < 10 && !userAgent.includes("Chrome"))
-    return true;
+  if (safari && parseInt(safari[1], 10) < 10 && !userAgent.includes("Chrome")) return true;
   const edge = userAgent.match(/Edge\/(\d+)/);
   if (edge && parseInt(edge[1], 10) < 15) return true;
-  return false;
-};
-
-const isAncientHardware = (userAgent: string): boolean => {
-  // Heuristic: match old device models
-  if (/Windows Phone|Nokia/.test(userAgent)) return true; // Old Windows phones
   return false;
 };
 
@@ -33,11 +26,7 @@ export function middleware(request: NextRequest) {
       if (userAgent.length > 512 || /[\r\n]/.test(userAgent)) {
         return NextResponse.redirect("/fallback/unsupported");
       }
-      if (
-        userAgent &&
-        !isBot(userAgent) &&
-        (isAncientBrowser(userAgent) || isAncientHardware(userAgent))
-      ) {
+      if (userAgent && !isBot(userAgent) && isAncientBrowser(userAgent)) {
         return NextResponse.redirect("/fallback/unsupported");
       }
     }

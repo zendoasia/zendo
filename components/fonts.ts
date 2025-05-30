@@ -64,5 +64,5 @@ export const geistMono = Geist_Mono({
 export const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
   subsets: ["latin"],
-  display: "swap"
-})
+  display: "swap",
+});

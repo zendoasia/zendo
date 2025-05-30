@@ -22,17 +22,17 @@ body:
     validations:
       required: true
   - type: textarea
-    attributes: 
-        label: How can this feature be implemented?
-        description: >
-            Please provide a detailed explanation of how this feature can be implemented. What are the steps to be taken? What are the prerequisites?
+    attributes:
+      label: How can this feature be implemented?
+      description: >
+        Please provide a detailed explanation of how this feature can be implemented. What are the steps to be taken? What are the prerequisites?
     validations:
-        required: true
+      required: true
   - type: textarea
-    attributes: 
+    attributes:
       label: Additional Context/Information.
       description: >
-          Please provide any additional information that you think might be helpful in implementing this feature.
+        Please provide any additional information that you think might be helpful in implementing this feature.
     validations:
       required: false
   - type: checkboxes

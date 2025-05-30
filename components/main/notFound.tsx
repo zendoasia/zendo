@@ -9,11 +9,7 @@ import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { ContainerTextFlip } from "@/components/ui/container-text-flip";
-import {
-  HoverCard,
-  HoverCardTrigger,
-  HoverCardContent,
-} from "@/components/ui/hover-card";
+import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
 import {
   Accordion,
   AccordionItem,
@@ -38,9 +34,7 @@ export default function NotFound() {
         transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
       >
         <div className={cn("relative w-full max-w-[400px]")}>
-          {!imageLoaded && (
-            <Skeleton className={cn("w-full aspect-[1/1] rounded-xl")} />
-          )}
+          {!imageLoaded && <Skeleton className={cn("w-full aspect-[1/1] rounded-xl")} />}
           <Image
             src={lonelyGhost}
             alt="Lonely Ghost"
@@ -55,11 +49,7 @@ export default function NotFound() {
         </div>
       </motion.div>
 
-      <div
-        className={cn(
-          "flex flex-col items-center br:items-start gap-[2rem] max-w-xl"
-        )}
-      >
+      <div className={cn("flex flex-col items-center br:items-start gap-[2rem] max-w-xl")}>
         <div className="flex items-center gap-[0.3rem]">
           <CircleHelp size="2.5rem" className="text-rose-600" />
           <h1 className="text-xl font-[family-name:var(--font-space-grotesk)] font-extrabold">
@@ -68,14 +58,10 @@ export default function NotFound() {
         </div>
         <section>
           <span className="text-lg">
-            Sorry but we are not able to find the page you are looking for.
-            Maybe checkout our
+            Sorry but we are not able to find the page you are looking for. Maybe checkout our
             <span className="inline-block text-sm mr-2 ml-2">
               <Link href="/">
-                <ContainerTextFlip
-                  words={["homepage", "hub", "start"]}
-                  aria-label="Home Page"
-                />
+                <ContainerTextFlip words={["homepage", "hub", "start"]} aria-label="Home Page" />
               </Link>
             </span>
             for finding something truly awesome.
@@ -90,8 +76,8 @@ export default function NotFound() {
               </Button>
             </HoverCardTrigger>
             <HoverCardContent className="text-sm font-[family-name:var(--font-space-grotesk)] leading-relaxed">
-              The page you are visiting was either moved or does not exist at
-              this location. Please check the URL you are visiting and retry.
+              The page you are visiting was either moved or does not exist at this location. Please
+              check the URL you are visiting and retry.
             </HoverCardContent>
           </HoverCard>
         </section>
@@ -103,8 +89,8 @@ export default function NotFound() {
                 What do you mean?
               </AccordionTrigger>
               <AccordionContent className="text-sm font-[family-name:var(--font-space-grotesk)] leading-relaxed px-1 pt-2 pb-4">
-                The page you are visiting was either moved or does not exist at
-                this location. Please check the URL you are visiting and retry.
+                The page you are visiting was either moved or does not exist at this location.
+                Please check the URL you are visiting and retry.
               </AccordionContent>
             </AccordionItem>
           </Accordion>

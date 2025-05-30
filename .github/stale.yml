@@ -19,9 +19,6 @@ markComment: >
   any type of activities in this thread to stop it from shutting down within 14
   days from now.
 
-closeComment: false
-
-
 closeComment: true
 
 remove-stale-when-updated: true

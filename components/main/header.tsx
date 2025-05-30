@@ -17,20 +17,12 @@ import SearchSkeleton from "@/components/skeletons/searchSkeleton";
 import MobileMenuSkeleton from "@/components/skeletons/mobileMenuSkeleton";
 import { useTheme } from "next-themes";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
-const LazyMobileMenu = dynamic(
-  () => import("@/components/modules/mobileMenu"),
-  {
-    loading: () => <MobileMenuSkeleton />,
-    ssr: false,
-  }
-);
+const LazyMobileMenu = dynamic(() => import("@/components/modules/mobileMenu"), {
+  loading: () => <MobileMenuSkeleton />,
+  ssr: false,
+});
 
 const LazySearchBar = dynamic(() => import("@/components/modules/search"), {
   loading: () => <SearchSkeleton />,
@@ -146,19 +138,11 @@ export default function Header() {
           <Button
             variant="ghost"
             asChild
-            className={cn(
-              "flex items-center transition-colors bg-transparent duration-400"
-            )}
+            className={cn("flex items-center transition-colors bg-transparent duration-400")}
           >
             {/* Preload both logos at once to prevent network requests */}
-            <Link
-              key="logo-link"
-              href="/"
-              className="relative w-[140px] aspect-[140/30]"
-            >
-              {!imageLoaded && (
-                <Skeleton className="absolute inset-0 w-full h-full rounded-full" />
-              )}
+            <Link key="logo-link" href="/" className="relative w-[140px] aspect-[140/30]">
+              {!imageLoaded && <Skeleton className="absolute inset-0 w-full h-full rounded-full" />}
 
               <Image
                 src={Logo}
@@ -190,13 +174,7 @@ export default function Header() {
             className={cn("hidden br:flex items-center gap-[0.5rem] ml-7")}
           >
             {["About", "Portfolio", "Projects", "Contact"].map((label) => (
-              <Button
-                size="lg"
-                key={label}
-                variant="ghost"
-                className={cn("nav-btn")}
-                asChild
-              >
+              <Button size="lg" key={label} variant="ghost" className={cn("nav-btn")} asChild>
                 <Link href={`/${label.toLowerCase()}`}>{label}</Link>
               </Button>
             ))}
@@ -212,9 +190,7 @@ export default function Header() {
               size="lg"
               variant="ghost"
               onClick={() => setOpenS(true)}
-              className={cn(
-                "ml-6 group inline-flex items-center justify-center gap-3 nav-btn"
-              )}
+              className={cn("ml-6 group inline-flex items-center justify-center gap-3 nav-btn")}
             >
               <Search size="1.2rem" />
               <span className={cn("flex items-center gap-5")}>
@@ -229,10 +205,10 @@ export default function Header() {
                     {strippedOS === "mac"
                       ? "Command key plus K"
                       : strippedOS === "windows"
-                      ? "Control key plus K"
-                      : strippedOS === "phone"
-                      ? "Press to search"
-                      : "Press to refresh"}
+                        ? "Control key plus K"
+                        : strippedOS === "phone"
+                          ? "Press to search"
+                          : "Press to refresh"}
                   </span>
                   {strippedOS === "mac" ? (
                     <>{"\u2318"} K</>
@@ -257,10 +233,7 @@ export default function Header() {
                     asChild
                     key="github-repository"
                   >
-                    <Link
-                      href="https://github.com/aarush0101/zendo"
-                      target="_blank"
-                    >
+                    <Link href="https://github.com/aarush0101/zendo" target="_blank">
                       <span className="flex items-center justify-center">
                         <span className="sr-only">GitHub Repository</span>
                         <SiGithub size="1.2rem" />
@@ -277,11 +250,7 @@ export default function Header() {
             <ModeToggle />
           </section>
 
-          <section
-            className={cn(
-              "flex flex-col justify-center items-center ml-auto br:hidden"
-            )}
-          >
+          <section className={cn("flex flex-col justify-center items-center ml-auto br:hidden")}>
             <Button
               aria-label="Mobile Menu Button"
               key="mobile-menu"
@@ -290,9 +259,7 @@ export default function Header() {
               }}
               variant="ghost"
               size="icon"
-              className={cn(
-                "flex justify-center items-center gap-[0.5rem] nav-btn br:hidden"
-              )}
+              className={cn("flex justify-center items-center gap-[0.5rem] nav-btn br:hidden")}
             >
               <AnimatePresence mode="wait" initial={false}>
                 {open ? (

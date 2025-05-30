@@ -12,7 +12,6 @@ import {
 import { cn } from "@/lib/utils";
 
 export function ModeToggle() {
- 
   const { handleThemeChange, theme, resolvedTheme, mounted } = useHandleThemeChange();
 
   if (!mounted) return null;

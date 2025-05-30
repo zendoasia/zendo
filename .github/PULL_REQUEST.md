@@ -13,7 +13,7 @@
 
 - [ ] The code is clearly tested on different platforms, in different environments, and passed all the general tests.
 - [ ] The code is approved by the following Linter on the following repository, if any. Weak and low-level errors are
-  acceptable.
+      acceptable.
 - [ ] The PR upgrades or applies a modification that improves Quality of Life.
 
 ## Checklist - If your PR is not a code change

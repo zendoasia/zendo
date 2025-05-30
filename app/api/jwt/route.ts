@@ -6,7 +6,6 @@ export const runtime = "edge";
 export async function POST(req: NextRequest) {
   const cfRay = req.headers.get("cf-ray");
 
-
   if (!cfRay) {
     return NextResponse.json({ error: "Forbidden." }, { status: 403 });
   }

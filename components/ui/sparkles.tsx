@@ -1,82 +1,82 @@
-"use client"
-import { useId, useRef, useEffect, useState, useCallback } from "react"
-import Particles, { initParticlesEngine } from "@tsparticles/react"
-import type { Container } from "@tsparticles/engine"
-import { loadSlim } from "@tsparticles/slim"
-import { cn } from "@/lib/utils"
-import { motion, useAnimation } from "motion/react"
+"use client";
+import { useId, useRef, useEffect, useState, useCallback } from "react";
+import Particles, { initParticlesEngine } from "@tsparticles/react";
+import type { Container } from "@tsparticles/engine";
+import { loadSlim } from "@tsparticles/slim";
+import { cn } from "@/lib/utils";
+import { motion, useAnimation } from "motion/react";
 
 type SparklesHeroProps = {
-  words: string
-  id?: string
-  className?: string
-  particleColor?: string
-  textClassName?: string
-}
+  words: string;
+  id?: string;
+  className?: string;
+  particleColor?: string;
+  textClassName?: string;
+};
 
 export const SparklesHero = (props: SparklesHeroProps) => {
-  const { words, id, className, particleColor, textClassName } = props
+  const { words, id, className, particleColor, textClassName } = props;
 
-  const [init, setInit] = useState(false)
-  const [textDimensions, setTextDimensions] = useState({ width: 0, height: 0 })
-  const textRef = useRef<HTMLHeadingElement>(null)
+  const [init, setInit] = useState(false);
+  const [textDimensions, setTextDimensions] = useState({ width: 0, height: 0 });
+  const textRef = useRef<HTMLHeadingElement>(null);
 
-  const [theme, setTheme] = useState<"light" | "dark">("dark")
+  const [theme, setTheme] = useState<"light" | "dark">("dark");
 
   useEffect(() => {
     const detectTheme = () => {
-      const isDark = document.documentElement.classList.contains("dark")
-      setTheme(isDark ? "dark" : "light")
-    }
+      const isDark = document.documentElement.classList.contains("dark");
+      setTheme(isDark ? "dark" : "light");
+    };
 
-    detectTheme()
+    detectTheme();
 
     // Watch for theme changes
-    const observer = new MutationObserver(detectTheme)
+    const observer = new MutationObserver(detectTheme);
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["class"],
-    })
+    });
 
-    return () => observer.disconnect()
-  }, [])
+    return () => observer.disconnect();
+  }, []);
 
   // Compute particle color based on theme
-  const computedParticleColor = particleColor || (theme === "dark" ? "#FFFFFF" : "#000000")
+  const computedParticleColor = particleColor || (theme === "dark" ? "#FFFFFF" : "#000000");
 
   useEffect(() => {
     initParticlesEngine(async (engine) => {
-      await loadSlim(engine)
+      await loadSlim(engine);
     }).then(() => {
-      setInit(true)
-    })
-  }, [])
+      setInit(true);
+    });
+  }, []);
 
   // Debounced resize handler for better performance
   const measureText = useCallback(() => {
     if (textRef.current) {
-      const rect = textRef.current.getBoundingClientRect()
-      setTextDimensions({ width: rect.width, height: rect.height })
+      const rect = textRef.current.getBoundingClientRect();
+      setTextDimensions({ width: rect.width, height: rect.height });
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    measureText()
+    measureText();
 
-    let timeoutId: NodeJS.Timeout
+    let timeoutId: NodeJS.Timeout;
     const debouncedResize = () => {
-      clearTimeout(timeoutId)
-      timeoutId = setTimeout(measureText, 100)
-    }
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(measureText, 100);
+    };
 
-    window.addEventListener("resize", debouncedResize)
+    window.addEventListener("resize", debouncedResize);
     return () => {
-      window.removeEventListener("resize", debouncedResize)
-      clearTimeout(timeoutId)
-    }
-  }, [words, measureText])
+      window.removeEventListener("resize", debouncedResize);
+      clearTimeout(timeoutId);
+    };
+  }, [words, measureText]);
 
-  const controls = useAnimation()
+  const controls = useAnimation();
 
   const particlesLoaded = async (container?: Container) => {
     if (container) {
@@ -85,25 +85,28 @@ export const SparklesHero = (props: SparklesHeroProps) => {
         transition: {
           duration: 1,
         },
-      })
+      });
     }
-  }
+  };
 
-  const generatedId = useId()
+  const generatedId = useId();
 
   // Calculate sparkle area dimensions based on text
-  const sparkleHeight = Math.max(textDimensions.height * 0.3, 32) // 30% of text height, minimum 32px
-  const sparkleWidth = textDimensions.width || 0 // Use exact text width, no minimum
+  const sparkleHeight = Math.max(textDimensions.height * 0.3, 32); // 30% of text height, minimum 32px
+  const sparkleWidth = textDimensions.width || 0; // Use exact text width, no minimum
 
   // Fixed particle count independent of text size - more particles for better effect
-  const particleCount = 400
+  const particleCount = 400;
 
   return (
     <span className={cn("relative inline-block", className)}>
       {/* Text for SEO & accessibility */}
       <h1
         ref={textRef}
-        className={cn("md:text-7xl text-3xl lg:text-9xl font-bold text-center text-black dark:text-white relative z-20", textClassName)}
+        className={cn(
+          "md:text-7xl text-3xl lg:text-9xl font-bold text-center text-black dark:text-white relative z-20",
+          textClassName
+        )}
         style={{ position: "relative" }}
       >
         {words}
@@ -276,5 +279,5 @@ export const SparklesHero = (props: SparklesHeroProps) => {
         </span>
       )}
     </span>
-  )
-}
+  );
+};

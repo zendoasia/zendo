@@ -44,9 +44,7 @@ export function useHandleThemeChange() {
       console.error("Theme switch failed:", error);
       sendToast({
         type: "error",
-        message: `Failed to switch theme due to unexpected exception: ${
-          (error as Error).message
-        }`,
+        message: `Failed to switch theme due to unexpected exception: ${(error as Error).message}`,
       });
     }
   };

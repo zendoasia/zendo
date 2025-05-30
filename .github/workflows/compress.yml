@@ -9,7 +9,7 @@ jobs:
       contents: write
     strategy:
       matrix:
-        python-version: [ "3.13" ]
+        python-version: ["3.13"]
 
     steps:
       - name: Cancel previous runs
@@ -27,9 +27,9 @@ jobs:
 
       - name: Prepare exclusion patterns
         id: prepare_excludes
-        uses: './.github/actions/exclusionPatterns'
+        uses: "./.github/actions/exclusionPatterns"
         with:
-          cp: 'false'
+          cp: "false"
 
       - name: Get Git Info
         id: git_info

@@ -20,7 +20,7 @@ export default function SearchBar({
   setOpenAction,
   setOpenSAction,
   openS = true, // Default to true for backward compatibility
-  open, 
+  open,
   onCloseComplete,
 }: SearchProps) {
   const [search, setSearch] = useState("");
@@ -61,14 +61,15 @@ export default function SearchBar({
       />
       <CommandList className={cn("pb-2 pt-2")}>
         <CommandEmpty>
-          No results found for your query. Please check your query and try
-          again.
+          No results found for your query. Please check your query and try again.
         </CommandEmpty>
         {sectionKeys.map((sectionKey, index) => (
           <div key={sectionKey}>
             <CommandGroup
               heading={
-                <span className={cn("!app-font-mono !text-xs !font-semibold text-muted-foreground")}>
+                <span
+                  className={cn("!app-font-mono !text-xs !font-semibold text-muted-foreground")}
+                >
                   {sectionKey.toUpperCase()}
                 </span>
               }

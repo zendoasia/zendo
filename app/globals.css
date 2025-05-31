@@ -108,6 +108,10 @@
   }
 }
 
+body {
+  -webkit-tap-highlight-color: transparent;
+}
+
 :root {
   --font-text: "Geist", "Geist Fallback", Arial, sans-serif;
   --font-text-mono: "Geist Mono", "Geist Mono Fallback", Menlo, Consolas;

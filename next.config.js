@@ -2,7 +2,6 @@
 const nextConfig = {
   reactStrictMode: false,
   deploymentId: process.env.DEPLOYMENT_ID,
-  devIndicators: false,
   async headers() {
     return [
       {

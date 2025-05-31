@@ -15,7 +15,7 @@ const isAncientBrowser = (userAgent: string): boolean => {
 };
 
 const isBot = (userAgent: string): boolean => {
-  return /bot|crawl|spider|slurp|bing|duckduckgo|baidu|yandex/i.test(userAgent);
+  return /bot|crawl|spider|slurp|bing|baidu|yandex/i.test(userAgent);
 };
 
 export function middleware(request: NextRequest) {
@@ -24,10 +24,10 @@ export function middleware(request: NextRequest) {
       const userAgent = request.headers.get("user-agent") || "";
       // Basic header validation to prevent header injection
       if (userAgent.length > 512 || /[\r\n]/.test(userAgent)) {
-        return NextResponse.redirect("/fallback/unsupported");
+        return NextResponse.redirect(`${request.nextUrl.origin}/fallback/unsupported`);
       }
       if (userAgent && !isBot(userAgent) && isAncientBrowser(userAgent)) {
-        return NextResponse.redirect("/fallback/unsupported");
+        return NextResponse.redirect(`${request.nextUrl.origin}/fallback/unsupported`);
       }
     }
   } catch (err) {
@@ -35,7 +35,7 @@ export function middleware(request: NextRequest) {
     if (!request.nextUrl.pathname.startsWith("/fallback")) {
       // Pass error message in header (truncated for safety)
       const errorMsg = (err instanceof Error ? err.message : String(err)).slice(0, 256);
-      const response = NextResponse.redirect("/fallback/error");
+      const response = NextResponse.redirect(`${request.nextUrl.origin}/fallback/error`);
       response.headers.set("x-zendo-error", encodeURIComponent(errorMsg));
       return response;
     }

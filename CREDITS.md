@@ -14,6 +14,7 @@ This project makes use of the following open-source libraries, fonts, and UI com
 - [Lucide React](https://lucide.dev/) – ISC License
 - [React Icons](https://react-icons.github.io/react-icons/) – MIT License
 
+
 ## Fonts
 
 The project uses the following fonts, primarily served via [Google Fonts](https://fonts.google.com/) or respective providers:
@@ -24,6 +25,12 @@ The project uses the following fonts, primarily served via [Google Fonts](https:
 - **Space Grotesk** – [SIL Open Font License](https://github.com/floriankarsten/space-grotesk#license)
 - **Ubuntu** – [Ubuntu Font License](https://design.ubuntu.com/font/)
 - **Menlo**, **Consolas**, **Arial**, and other system fonts – Subject to respective OS-level licenses
+
+## Services
+
+The projects has taken some of its fonts from the following services:
+
+- [Best Fonts.Pro](https://en.bestfonts.pro/) – Custom font service
 
 ---
 

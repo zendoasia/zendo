@@ -63,6 +63,7 @@ export const metadata: Metadata = {
     determiner: "the",
   },
   robots: "/robots.txt",
+  manifest: "/manifest.webmanifest",
   twitter: {
     card: "summary_large_image",
     title: "Zendo",

@@ -3,6 +3,9 @@ name: Sync Branches
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   sync_branches:
     runs-on: ubuntu-latest

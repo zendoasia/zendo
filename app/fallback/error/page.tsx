@@ -14,8 +14,12 @@ function sanitizeError(err: string | null): string | null {
   if (!err) return null;
   // Limit length and remove newlines/control chars
   let safe = err.slice(0, 256).replace(/[\r\n\0\x08\x09\x1b]/g, " ");
-  // Strip HTML tags
-  safe = safe.replace(/<[^>]*>/g, "");
+  // Strip HTML tags (repeatedly apply until no matches remain)
+  let previous;
+  do {
+    previous = safe;
+    safe = safe.replace(/<[^>]*>/g, "");
+  } while (safe !== previous);
   // Only allow printable ASCII
   safe = safe.replace(/[^\x20-\x7E]/g, "");
   return safe.trim() || null;

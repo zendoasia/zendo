@@ -12,81 +12,81 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: "#000000",
     icons: [
       {
-        src: "icons/maskable-icon.png",
+        src: "assets/icons/maskable-icon.png",
         sizes: "512x512",
         type: "image/png",
         purpose: "maskable",
       },
       {
-        src: "icons/icon-48x48.png",
+        src: "assets/icons/icon-48x48.png",
         sizes: "48x48",
         type: "image/png",
       },
       {
-        src: "icons/icon-72x72.png",
+        src: "assets/icons/icon-72x72.png",
         sizes: "72x72",
         type: "image/png",
       },
       {
-        src: "icons/icon-96x96.png",
+        src: "assets/icons/icon-96x96.png",
         sizes: "96x96",
         type: "image/png",
       },
       {
-        src: "icons/icon-128x128.png",
+        src: "assets/icons/icon-128x128.png",
         sizes: "128x128",
         type: "image/png",
       },
       {
-        src: "icons/icon-144x144.png",
+        src: "assets/icons/icon-144x144.png",
         sizes: "144x144",
         type: "image/png",
       },
       {
-        src: "icons/icon-152x152.png",
+        src: "assets/icons/icon-152x152.png",
         sizes: "152x152",
         type: "image/png",
       },
       {
-        src: "icons/icon-192x192.png",
+        src: "assets/icons/icon-192x192.png",
         sizes: "192x192",
         type: "image/png",
       },
       {
-        src: "icons/icon-256x256.png",
+        src: "assets/icons/icon-256x256.png",
         sizes: "256x256",
         type: "image/png",
       },
       {
-        src: "icons/icon-384x384.png",
+        src: "assets/icons/icon-384x384.png",
         sizes: "384x384",
         type: "image/png",
       },
       {
-        src: "icons/icon-512x512.png",
+        src: "assets/icons/icon-512x512.png",
         sizes: "512x512",
         type: "image/png",
       },
       {
-        src: "icons/apple/manifest-icon-192.maskable.png",
+        src: "assets/icons/apple/manifest-icon-192.maskable.png",
         sizes: "192x192",
         type: "image/png",
         purpose: "any",
       },
       {
-        src: "icons/apple/manifest-icon-192.maskable.png",
+        src: "assets/icons/apple/manifest-icon-192.maskable.png",
         sizes: "192x192",
         type: "image/png",
         purpose: "maskable",
       },
       {
-        src: "icons/apple/manifest-icon-512.maskable.png",
+        src: "assets/icons/apple/manifest-icon-512.maskable.png",
         sizes: "512x512",
         type: "image/png",
         purpose: "any",
       },
       {
-        src: "icons/apple/manifest-icon-512.maskable.png",
+        src: "assets/icons/apple/manifest-icon-512.maskable.png",
         sizes: "512x512",
         type: "image/png",
         purpose: "maskable",
@@ -100,7 +100,7 @@ export default function manifest(): MetadataRoute.Manifest {
         description: "View Projects of mine.",
         icons: [
           {
-            src: "icons/maskable-icon.png",
+            src: "assets/icons/maskable-icon.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "maskable",
@@ -114,7 +114,7 @@ export default function manifest(): MetadataRoute.Manifest {
         description: "Get in touch with me.",
         icons: [
           {
-            src: "icons/maskable-icon.png",
+            src: "assets/icons/maskable-icon.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "maskable",
@@ -128,7 +128,7 @@ export default function manifest(): MetadataRoute.Manifest {
         description: "View Blogs of mine.",
         icons: [
           {
-            src: "icons/maskable-icon.png",
+            src: "assets/icons/maskable-icon.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "maskable",
@@ -142,7 +142,7 @@ export default function manifest(): MetadataRoute.Manifest {
         description: "View Portfolio of mine.",
         icons: [
           {
-            src: "icons/maskable-icon.png",
+            src: "assets/icons/maskable-icon.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "maskable",
@@ -156,7 +156,7 @@ export default function manifest(): MetadataRoute.Manifest {
         description: "Learn more about me.",
         icons: [
           {
-            src: "icons/maskable-icon.png",
+            src: "assets/icons/maskable-icon.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "maskable",

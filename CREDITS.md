@@ -14,7 +14,6 @@ This project makes use of the following open-source libraries, fonts, and UI com
 - [Lucide React](https://lucide.dev/) – ISC License
 - [React Icons](https://react-icons.github.io/react-icons/) – MIT License
 
-
 ## Fonts
 
 The project uses the following fonts, primarily served via [Google Fonts](https://fonts.google.com/) or respective providers:

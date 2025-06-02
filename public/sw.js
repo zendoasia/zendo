@@ -1,459 +1,410 @@
-// Service Worker for PWA with offline support and push notifications
+// Cache names with versioning
+const CACHE_NAMES = {
+  STATIC: "static-cache-v1",
+  FONTS: "fonts-cache-v1",
+  PAGES: "pages-cache-v1",
+  OFFLINE: "offline-cache-v1",
+};
 
-self.addEventListener("push", (event) => {
-  if (event.data) {
-    const data = event.data.json();
-    const options = {
-      body: data.body,
-      icon: data.icon || "/icons/maskable-icon.png",
-      badge: "/icons/maskable-icon.png",
-      vibrate: [100, 50, 100],
-      data: {
-        dateOfArrival: Date.now(),
-        primaryKey: "2",
-      },
-    };
-    event.waitUntil(self.registration.showNotification(data.title, options));
-  }
-});
+// Resources to cache
+const OFFLINE_PAGE = "/fallback/offline.html";
 
-self.addEventListener("notificationclick", (event) => {
-  console.log("Notification click received.");
-  event.notification.close();
-  event.waitUntil(clients.openWindow("https://zendo.pages.dev"));
-});
+// Cache duration in milliseconds (365 days)
+const CACHE_DURATION = 365 * 24 * 60 * 60 * 1000;
+// Check interval in milliseconds (5 minutes)
+const CHECK_INTERVAL = 5 * 60 * 1000;
 
-const CACHE_NAME = "zendo-pwa-cache-v5";
-const OFFLINE_RICH_URL = "/fallback/offline.html";
-const OFFLINE_RAW_URL = "/fallback/offline/offline.html";
-const ASSETS = ["/assets/LogoWhite.svg", "/assets/LogoBlack.svg", "/assets/lonelyGhost.svg"];
-const GOOGLE_FONTS_CSS = [
-  "https://fonts.googleapis.com/css2?family=Geist:wght@400;700&display=swap",
-  "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap",
-];
-
-const ONE_YEAR = 365 * 24 * 60 * 60 * 1000;
-
-// Simplified cache checking - just check if it exists
-async function isCached(cache, url) {
-  try {
-    const cached = await cache.match(url);
-    return !!cached;
-  } catch (error) {
-    console.error("Error checking cache:", error);
-    return false;
-  }
-}
-
-// Helper function to safely cache a response
-async function safeCache(cache, request, response) {
-  try {
-    if (response && response.status === 200 && response.body) {
-      await cache.put(request, response);
-      console.log("Successfully cached:", typeof request === "string" ? request : request.url);
-      return true;
-    }
-  } catch (error) {
-    console.error(
-      "Failed to cache resource:",
-      typeof request === "string" ? request : request.url,
-      error
-    );
-  }
-  return false;
-}
-
+// Install event - cache critical assets
 self.addEventListener("install", (event) => {
-  console.log("Service Worker installing...");
+  console.log("[Service Worker] Installing Service Worker...");
 
   event.waitUntil(
-    (async () => {
-      try {
-        const cache = await caches.open(CACHE_NAME);
-
-        // Cache basic assets
-        console.log("Caching basic assets...");
-        for (const asset of ASSETS) {
-          try {
-            if (!(await isCached(cache, asset))) {
-              const response = await fetch(asset);
-              if (response.ok) {
-                await safeCache(cache, asset, response.clone());
-              }
-            } else {
-              console.log("Asset already cached:", asset);
-            }
-          } catch (error) {
-            console.error("Failed to cache asset:", asset, error);
-          }
-        }
-
-        // Cache offline pages
-        console.log("Caching offline pages...");
-        for (const offlineUrl of [OFFLINE_RICH_URL, OFFLINE_RAW_URL]) {
-          try {
-            if (!(await isCached(cache, offlineUrl))) {
-              const response = await fetch(offlineUrl);
-              if (response.ok) {
-                await safeCache(cache, offlineUrl, response.clone());
-                console.log("Cached offline page:", offlineUrl);
-              } else {
-                console.warn("Offline page not found:", offlineUrl, response.status);
-              }
-            } else {
-              console.log("Offline page already cached:", offlineUrl);
-            }
-          } catch (error) {
-            console.warn("Could not cache offline page:", offlineUrl, error);
-          }
-        }
-
-        // Cache Google Fonts CSS and extract font files
-        console.log("Caching Google Fonts...");
-        for (const cssUrl of GOOGLE_FONTS_CSS) {
-          try {
-            if (!(await isCached(cache, cssUrl))) {
-              console.log("Fetching Google Fonts CSS:", cssUrl);
-              const response = await fetch(cssUrl);
-              if (response.ok) {
-                const cssText = await response.text();
-                console.log("CSS content preview:", cssText.substring(0, 200) + "...");
-
-                // Cache the CSS file
-                const cssResponse = new Response(cssText, {
-                  headers: { "Content-Type": "text/css" },
-                });
-                await safeCache(cache, cssUrl, cssResponse);
-
-                // Extract font URLs - try multiple patterns
-                let fontUrls = [];
-
-                // Pattern 1: url(https://fonts.gstatic.com/...)
-                const pattern1 = cssText.matchAll(/url$$(https:\/\/fonts\.gstatic\.com\/[^)]+)$$/g);
-                fontUrls.push(...Array.from(pattern1, (m) => m[1]));
-
-                // Pattern 2: url("https://fonts.gstatic.com/...")
-                const pattern2 = cssText.matchAll(
-                  /url$$"(https:\/\/fonts\.gstatic\.com\/[^"]+)"$$/g
-                );
-                fontUrls.push(...Array.from(pattern2, (m) => m[1]));
-
-                // Pattern 3: url('https://fonts.gstatic.com/...')
-                const pattern3 = cssText.matchAll(
-                  /url$$'(https:\/\/fonts\.gstatic\.com\/[^']+)'$$/g
-                );
-                fontUrls.push(...Array.from(pattern3, (m) => m[1]));
-
-                // Remove duplicates
-                fontUrls = [...new Set(fontUrls)];
-
-                console.log(`Found ${fontUrls.length} font files for ${cssUrl}:`, fontUrls);
-
-                // Cache each font file
-                for (const fontUrl of fontUrls) {
-                  try {
-                    if (!(await isCached(cache, fontUrl))) {
-                      console.log("Fetching font:", fontUrl);
-                      const fontResponse = await fetch(fontUrl, {
-                        mode: "cors",
-                        credentials: "omit",
-                      });
-                      if (fontResponse.ok) {
-                        await safeCache(cache, fontUrl, fontResponse.clone());
-                        console.log("Successfully cached font:", fontUrl);
-                      } else {
-                        console.error("Failed to fetch font:", fontUrl, fontResponse.status);
-                      }
-                    } else {
-                      console.log("Font already cached:", fontUrl);
-                    }
-                  } catch (fontError) {
-                    console.error("Error caching font:", fontUrl, fontError);
-                  }
-                }
-              } else {
-                console.error("Failed to fetch CSS:", cssUrl, response.status);
-              }
-            } else {
-              console.log("Google Fonts CSS already cached:", cssUrl);
-            }
-          } catch (error) {
-            console.error("Error caching Google Fonts CSS:", cssUrl, error);
-          }
-        }
-
-        console.log("Service Worker installation completed");
-      } catch (error) {
-        console.error("Service Worker installation failed:", error);
-      }
-    })()
+    caches
+      .open(CACHE_NAMES.OFFLINE)
+      .then((cache) => {
+        console.log("[Service Worker] Caching offline page");
+        return cache.add(OFFLINE_PAGE);
+      })
+      .then(() => {
+        console.log("[Service Worker] Installation complete");
+        return self.skipWaiting();
+      })
+      .catch((error) => {
+        console.error("[Service Worker] Installation failed:", error);
+      })
   );
-
-  self.skipWaiting();
 });
 
+// Activate event - clean up old caches
 self.addEventListener("activate", (event) => {
-  console.log("Service Worker activating...");
+  console.log("[Service Worker] Activating Service Worker...");
 
   event.waitUntil(
-    (async () => {
-      // Clean up old caches
-      const cacheNames = await caches.keys();
-      await Promise.all(
-        cacheNames
-          .filter((name) => name !== CACHE_NAME)
-          .map((name) => {
-            console.log("Deleting old cache:", name);
-            return caches.delete(name);
+    caches
+      .keys()
+      .then((cacheNames) => {
+        return Promise.all(
+          cacheNames.map((cacheName) => {
+            // Delete caches that aren't in our defined CACHE_NAMES
+            if (!Object.values(CACHE_NAMES).includes(cacheName)) {
+              console.log("[Service Worker] Deleting old cache:", cacheName);
+              return caches.delete(cacheName);
+            }
+            return Promise.resolve();
           })
-      );
-
-      console.log("Service Worker activated and claiming clients");
-    })()
+        );
+      })
+      .then(() => {
+        console.log("[Service Worker] Activation complete");
+        return self.clients.claim();
+      })
+      .catch((error) => {
+        console.error("[Service Worker] Activation failed:", error);
+      })
   );
-
-  // Take control of all clients immediately
-  self.clients.claim();
 });
 
+// Fetch event - intercept network requests
 self.addEventListener("fetch", (event) => {
-  const { request } = event;
+  const request = event.request;
   const url = new URL(request.url);
 
-  // Only handle GET requests
-  if (request.method !== "GET") return;
-
-  console.log("SW intercepting:", request.url);
-
-  // Handle Google Fonts CSS
-  if (url.hostname === "fonts.googleapis.com") {
-    event.respondWith(handleGoogleFonts(request));
+  // Skip non-GET requests
+  if (request.method !== "GET") {
     return;
   }
 
-  // Handle Google Fonts static files
-  if (url.hostname === "fonts.gstatic.com") {
-    event.respondWith(handleGoogleFontsStatic(request));
+  // Skip browser extensions and chrome-extension URLs
+  if (url.protocol === "chrome-extension:" || url.protocol === "moz-extension:") {
     return;
   }
 
-  // Handle local assets
-  if (url.pathname.includes("/assets/")) {
-    event.respondWith(handleAssets(request));
+  // Handle Google Fonts requests with no-cors mode
+  if (url.hostname.includes("googleapis.com") || url.hostname.includes("gstatic.com")) {
+    event.respondWith(handleFontRequest(request));
     return;
   }
 
   // Handle navigation requests (HTML pages)
-  if (
-    request.mode === "navigate" ||
-    (request.method === "GET" && request.headers.get("accept")?.includes("text/html"))
-  ) {
-    event.respondWith(handleNavigation(request));
+  if (request.mode === "navigate") {
+    event.respondWith(handleNavigationRequest(request));
     return;
   }
 
-  // Handle all other requests with basic caching
-  event.respondWith(handleOtherRequests(request));
+  // Handle static assets
+  if (url.origin === self.location.origin) {
+    event.respondWith(handleStaticAssetRequest(request));
+    return;
+  }
 });
 
-async function handleGoogleFonts(request) {
-  console.log("Handling Google Fonts CSS:", request.url);
+// Handle navigation requests
+async function handleNavigationRequest(request) {
   try {
-    const cache = await caches.open(CACHE_NAME);
-    const cached = await cache.match(request);
-
-    if (cached) {
-      console.log("Serving cached Google Fonts CSS:", request.url);
-      return cached;
-    }
-
-    console.log("Fetching Google Fonts CSS from network:", request.url);
+    // Try to fetch from network first
     const response = await fetch(request);
-    if (response.ok) {
-      await safeCache(cache, request, response.clone());
-    }
     return response;
   } catch (error) {
-    console.error("Error handling Google Fonts CSS:", error);
-    const cache = await caches.open(CACHE_NAME);
-    const cached = await cache.match(request);
-    return cached || new Response("Font CSS unavailable", { status: 503 });
+    // If network fails (offline), serve the offline page
+    console.log("[Service Worker] Network failed, serving offline page");
+
+    try {
+      const offlineResponse = await caches.match(OFFLINE_PAGE);
+      if (offlineResponse) {
+        return processOfflinePage(offlineResponse);
+      }
+    } catch (cacheError) {
+      console.error("[Service Worker] Error serving offline page:", cacheError);
+    }
+
+    // Final fallback
+    return new Response(
+      `<!DOCTYPE html>
+      <html>
+        <head>
+          <title>Offline</title>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1">
+          <style>
+            body { 
+              font-family: system-ui, sans-serif; 
+              text-align: center; 
+              padding: 2rem; 
+              background: #f9fafb; 
+            }
+            h1 { color: #111827; }
+          </style>
+        </head>
+        <body>
+          <h1>You're Offline</h1>
+          <p>Please check your internet connection and try again.</p>
+          <button onclick="window.location.reload()">Retry</button>
+        </body>
+      </html>`,
+      {
+        headers: { "Content-Type": "text/html" },
+        status: 200,
+      }
+    );
   }
 }
 
-async function handleGoogleFontsStatic(request) {
-  console.log("Handling Google Fonts static file:", request.url);
+// Handle font requests with proper CORS handling
+async function handleFontRequest(request) {
   try {
-    const cache = await caches.open(CACHE_NAME);
-    const cached = await cache.match(request);
-
-    if (cached) {
-      console.log("Serving cached font file:", request.url);
-      return cached;
+    // Check cache first
+    const cachedResponse = await caches.match(request);
+    if (cachedResponse) {
+      return cachedResponse;
     }
 
-    console.log("Fetching font file from network:", request.url);
-    const response = await fetch(request, {
-      mode: "cors",
+    // Create a new request with no-cors mode to avoid CORS issues
+    const corsRequest = new Request(request.url, {
+      method: "GET",
+      mode: "no-cors",
       credentials: "omit",
-    });
-    if (response.ok) {
-      await safeCache(cache, request, response.clone());
-    }
-    return response;
-  } catch (error) {
-    console.error("Error handling Google Fonts static file:", error);
-    const cache = await caches.open(CACHE_NAME);
-    const cached = await cache.match(request);
-    return cached || new Response("Font unavailable", { status: 503 });
-  }
-}
-
-async function handleAssets(request) {
-  console.log("Handling asset:", request.url);
-  try {
-    const cache = await caches.open(CACHE_NAME);
-    const cached = await cache.match(request);
-
-    if (cached) {
-      return cached;
-    }
-
-    const response = await fetch(request);
-    if (response.ok) {
-      await safeCache(cache, request, response.clone());
-    }
-    return response;
-  } catch (error) {
-    console.error("Error handling asset:", error);
-    const cache = await caches.open(CACHE_NAME);
-    return await cache.match(request);
-  }
-}
-
-async function handleNavigation(request) {
-  console.log("Handling navigation request:", request.url);
-  try {
-    const response = await fetch(request, {
-      cache: "no-cache",
+      cache: "default",
     });
 
-    if (response.ok) {
-      const cache = await caches.open(CACHE_NAME);
-      await safeCache(cache, request, response.clone());
-      console.log("Successfully fetched and cached page:", request.url);
-      return response;
+    // Fetch with no-cors mode
+    const response = await fetch(corsRequest);
+
+    // Cache successful responses
+    if (response.status === 0 || response.ok) {
+      try {
+        const cache = await caches.open(CACHE_NAMES.FONTS);
+        // Clone the response before caching
+        const responseToCache = response.clone();
+        await cache.put(request, responseToCache);
+        console.log("[Service Worker] Font cached:", request.url);
+      } catch (cacheError) {
+        console.log(
+          "[Service Worker] Could not cache font (this is normal for no-cors requests):",
+          request.url
+        );
+      }
     }
 
     return response;
   } catch (error) {
-    console.log("Network error for navigation, serving offline page:", error.message);
-    return await serveOfflinePage();
-  }
-}
+    console.log("[Service Worker] Font request failed, checking cache:", request.url);
 
-async function handleOtherRequests(request) {
-  try {
-    const response = await fetch(request);
-    if (response.ok) {
-      const cache = await caches.open(CACHE_NAME);
-      await safeCache(cache, request, response.clone());
+    // Try to serve from cache as fallback
+    const cachedResponse = await caches.match(request);
+    if (cachedResponse) {
+      return cachedResponse;
     }
-    return response;
-  } catch (error) {
-    const cache = await caches.open(CACHE_NAME);
-    const cached = await cache.match(request);
-    if (cached) {
-      console.log("Serving from cache:", request.url);
-      return cached;
+
+    // If it's a CSS request, return a minimal fallback
+    if (request.url.includes("googleapis.com") && request.url.includes("css")) {
+      return new Response(
+        `/* Fallback font CSS */
+        @font-face {
+          font-family: 'Geist Sans';
+          font-style: normal;
+          font-weight: 400;
+          font-display: swap;
+          src: local('system-ui'), local('sans-serif');
+        }
+        @font-face {
+          font-family: 'Space Grotesk';
+          font-style: normal;
+          font-weight: 400;
+          font-display: swap;
+          src: local('system-ui'), local('sans-serif');
+        }`,
+        {
+          headers: { "Content-Type": "text/css" },
+          status: 200,
+        }
+      );
     }
+
+    // For font files, let the browser handle the fallback
     throw error;
   }
 }
 
-async function serveOfflinePage() {
-  console.log("Serving offline page...");
+// Handle static asset requests
+async function handleStaticAssetRequest(request) {
   try {
-    const cache = await caches.open(CACHE_NAME);
+    // Try network first
+    const response = await fetch(request);
 
-    // Try rich offline page first
-    const rich = await cache.match(OFFLINE_RICH_URL);
-    if (rich) {
-      console.log("Serving rich offline page");
-      return rich;
-    }
-
-    // Try raw offline page
-    const raw = await cache.match(OFFLINE_RAW_URL);
-    if (raw) {
-      console.log("Serving raw offline page");
-      return raw;
-    }
-
-    // Serve minimal fallback
-    console.log("Serving minimal offline fallback");
-    return new Response(
-      `<!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Offline - Zendo</title>
-        <style>
-          body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            margin: 0;
-            padding: 2rem;
-            background: #f5f5f5;
-            color: #333;
-            text-align: center;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-          }
-          .container {
-            max-width: 400px;
-            background: white;
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-          }
-          h1 { color: #e74c3c; margin-bottom: 1rem; }
-          p { line-height: 1.6; margin-bottom: 1rem; }
-          .retry-btn {
-            background: #3498db;
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 1rem;
-          }
-          .retry-btn:hover { background: #2980b9; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <h1>You're Offline</h1>
-          <p>It looks like you're not connected to the internet. Please check your connection and try again.</p>
-          <button class="retry-btn" onclick="window.location.reload()">Try Again</button>
-        </div>
-      </body>
-      </html>`,
-      {
-        headers: {
-          "Content-Type": "text/html; charset=utf-8",
-          "Cache-Control": "no-cache",
-        },
+    // Cache successful responses for static assets
+    if (response.ok && shouldCacheAsset(request.url)) {
+      try {
+        const cache = await caches.open(CACHE_NAMES.STATIC);
+        const responseToCache = response.clone();
+        await cache.put(request, responseToCache);
+      } catch (cacheError) {
+        console.log("[Service Worker] Could not cache asset:", request.url);
       }
-    );
+    }
+
+    return response;
   } catch (error) {
-    console.error("Error serving offline page:", error);
-    return new Response("Offline", {
-      status: 503,
-      headers: { "Content-Type": "text/plain" },
-    });
+    // If network fails, try cache
+    const cachedResponse = await caches.match(request);
+    if (cachedResponse) {
+      return cachedResponse;
+    }
+
+    throw error;
   }
 }
+
+// Check if an asset should be cached
+function shouldCacheAsset(url) {
+  const cacheableExtensions = [
+    ".js",
+    ".css",
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".svg",
+    ".ico",
+    ".woff",
+    ".woff2",
+    ".ttf",
+  ];
+  return cacheableExtensions.some((ext) => url.includes(ext));
+}
+
+// Process the offline page before serving
+async function processOfflinePage(response) {
+  try {
+    const html = await response.text();
+
+    // Ensure the offline page has proper font fallbacks
+    const modifiedHtml = html.replace(
+      "</head>",
+      `
+      <style>
+        /* Enhanced font fallbacks for offline use */
+        body {
+          font-family: 'Geist Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif !important;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+          font-family: 'Space Grotesk', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif !important;
+        }
+        
+        /* Ensure fonts load properly */
+        * {
+          font-display: swap;
+        }
+      </style>
+    </head>`
+    );
+
+    return new Response(modifiedHtml, {
+      headers: {
+        "Content-Type": "text/html",
+        "Cache-Control": "no-cache",
+      },
+      status: 200,
+    });
+  } catch (error) {
+    console.error("[Service Worker] Error processing offline page:", error);
+    return response;
+  }
+}
+
+// Periodic cache check and maintenance
+async function checkAndRefreshCache() {
+  try {
+    console.log("[Service Worker] Checking cache status...");
+
+    // Check if offline page is cached
+    const offlineCache = await caches.open(CACHE_NAMES.OFFLINE);
+    const offlinePageCached = await offlineCache.match(OFFLINE_PAGE);
+
+    if (!offlinePageCached) {
+      console.log("[Service Worker] Offline page not found in cache, re-caching...");
+      try {
+        await offlineCache.add(OFFLINE_PAGE);
+        console.log("[Service Worker] Offline page re-cached successfully");
+      } catch (error) {
+        console.log("[Service Worker] Could not re-cache offline page:", error.message);
+      }
+    }
+
+    // Clean up expired caches
+    await cleanupExpiredCaches();
+
+    console.log("[Service Worker] Cache check complete");
+  } catch (error) {
+    console.error("[Service Worker] Error during cache check:", error);
+  }
+}
+
+// Clean up expired cache entries
+async function cleanupExpiredCaches() {
+  try {
+    const now = Date.now();
+    const cacheNames = await caches.keys();
+
+    for (const cacheName of cacheNames) {
+      if (!Object.values(CACHE_NAMES).includes(cacheName)) {
+        continue;
+      }
+
+      const cache = await caches.open(cacheName);
+      const requests = await cache.keys();
+
+      for (const request of requests) {
+        try {
+          const response = await cache.match(request);
+
+          if (response) {
+            const dateHeader = response.headers.get("date");
+
+            if (dateHeader) {
+              const cacheDate = new Date(dateHeader).getTime();
+
+              if (now - cacheDate > CACHE_DURATION) {
+                console.log(`[Service Worker] Removing expired cache for: ${request.url}`);
+                await cache.delete(request);
+              }
+            }
+          }
+        } catch (error) {
+          // Silently continue if we can't process this cache entry
+          continue;
+        }
+      }
+    }
+  } catch (error) {
+    console.log("[Service Worker] Error during cache cleanup:", error.message);
+  }
+}
+
+// Set up periodic cache checking
+let cacheCheckInterval;
+
+// Start the cache check interval
+function startCacheCheckInterval() {
+  if (cacheCheckInterval) {
+    clearInterval(cacheCheckInterval);
+  }
+
+  cacheCheckInterval = setInterval(checkAndRefreshCache, CHECK_INTERVAL);
+}
+
+// Handle messages from the main thread
+self.addEventListener("message", (event) => {
+  if (event.data === "CHECK_CACHE") {
+    checkAndRefreshCache();
+  } else if (event.data === "START_CACHE_CHECK") {
+    startCacheCheckInterval();
+  }
+});
+
+// Start cache checking when the service worker becomes active
+self.addEventListener("activate", () => {
+  startCacheCheckInterval();
+});
+
+// Run initial cache check
+checkAndRefreshCache();

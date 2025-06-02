@@ -16,10 +16,10 @@ import {
 import LightModeTipAlert from "@/components/lightModeTip";
 import Header from "@/components/main/header";
 import Head from "next/head";
-import LogoDark from "@/public/assets/LogoDark.svg";
-import Logo from "@/public/assets/Logo.svg";
+import LogoBlack from "@/public/assets/LogoBlack.svg";
+import LogoWhite from "@/public/assets/LogoWhite.svg";
 import { cn } from "@/lib/utils";
-import ThemeSanitizer from "@/hooks/themeSanitizer";
+import ThemeSanitizer from "@/components/modules/themeSanitizer";
 import CookieConsent from "@/components/CookieConsent";
 import GAnalyticsGTMConsent from "@/components/GAnalyticsGTMConsent";
 import { Viewport } from "next";
@@ -83,7 +83,7 @@ export const metadata: Metadata = {
       "msvalidate.01": "969F0E11BC415787B2C7464A98FBDF02",
     },
   },
-  icons: [{ rel: "apple-touch-icon", url: "assets/icons/apple/apple-icon-180.png" }],
+  icons: [{ rel: "apple-touch-icon", url: "assets/icons/apple/apple-icon-180.svg" }],
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -302,8 +302,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <Head>
-        <link rel="preload" href={Logo.src} as="image" />
-        <link rel="preload" href={LogoDark.src} as="image" />
+        <link rel="preload" href={LogoWhite.src} as="image" type="image/svg+xml" />
+        <link rel="preload" href={LogoBlack.src} as="image" type="image/svg+xml" />
       </Head>
       <GAnalyticsGTMConsent />
       <body

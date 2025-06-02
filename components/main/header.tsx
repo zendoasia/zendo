@@ -6,8 +6,8 @@ import { Menu, X, Search } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
-import LogoDark from "@/public/assets/LogoDark.svg";
-import Logo from "@/public/assets/Logo.svg";
+import LogoBlack from "@/public/assets/LogoBlack.svg";
+import LogoWhite from "@/public/assets/LogoWhite.svg";
 import Link from "next/link";
 import { SiGithub } from "@icons-pack/react-simple-icons";
 import { detectOS, stripOS } from "@/lib/utils";
@@ -145,8 +145,8 @@ export default function Header() {
               {!imageLoaded && <Skeleton className="absolute inset-0 w-full h-full rounded-full" />}
 
               <Image
-                src={Logo}
-                alt="Zendo Logo Light"
+                src={LogoBlack}
+                alt="Zendo Logo Black"
                 fill
                 loading="lazy"
                 onLoad={() => setImageLoaded(true)}
@@ -156,8 +156,8 @@ export default function Header() {
                 )}
               />
               <Image
-                src={LogoDark}
-                alt="Zendo Logo Dark"
+                src={LogoWhite}
+                alt="Zendo Logo Light"
                 fill
                 loading="lazy"
                 onLoad={() => setImageLoaded(true)}

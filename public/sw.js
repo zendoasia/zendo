@@ -1,1 +1,459 @@
-const a0_0x1b2385=a0_0x4c1d;(function(_0x348b65,_0x20b4db){const _0x3297f3=a0_0x4c1d,_0x22b2bb=_0x348b65();while(!![]){try{const _0x607875=parseInt(_0x3297f3(0x1c2))/0x1+-parseInt(_0x3297f3(0x1b6))/0x2+-parseInt(_0x3297f3(0x1db))/0x3+parseInt(_0x3297f3(0x1d4))/0x4+-parseInt(_0x3297f3(0x1cd))/0x5*(-parseInt(_0x3297f3(0x1a8))/0x6)+-parseInt(_0x3297f3(0x1c6))/0x7*(-parseInt(_0x3297f3(0x1c4))/0x8)+-parseInt(_0x3297f3(0x1ad))/0x9;if(_0x607875===_0x20b4db)break;else _0x22b2bb['push'](_0x22b2bb['shift']());}catch(_0x381c43){_0x22b2bb['push'](_0x22b2bb['shift']());}}}(a0_0x16d5,0xf0329),self['addEventListener'](a0_0x1b2385(0x1ac),function(_0x4526d8){const _0x8dacea=a0_0x1b2385;if(_0x4526d8[_0x8dacea(0x1aa)]){const _0xbe14fb=_0x4526d8['data'][_0x8dacea(0x1ba)](),_0x4186d3={'body':_0xbe14fb[_0x8dacea(0x1bd)],'icon':_0xbe14fb['icon']||_0x8dacea(0x1c7),'badge':'/icons/maskable-icon.png','vibrate':[0x64,0x32,0x64],'data':{'dateOfArrival':Date[_0x8dacea(0x1da)](),'primaryKey':'2'}};_0x4526d8[_0x8dacea(0x1a2)](self[_0x8dacea(0x1b2)][_0x8dacea(0x1c3)](_0xbe14fb[_0x8dacea(0x1b8)],_0x4186d3));}}),self[a0_0x1b2385(0x1ce)](a0_0x1b2385(0x1a6),function(_0x4f2f6e){const _0x293c20=a0_0x1b2385;console[_0x293c20(0x1b1)]('Notification\x20click\x20received.'),_0x4f2f6e[_0x293c20(0x1bf)][_0x293c20(0x1a3)](),_0x4f2f6e[_0x293c20(0x1a2)](clients[_0x293c20(0x1b0)]('<https://zendo.pages.dev>'));}));const CACHE_NAME=a0_0x1b2385(0x1a1),OFFLINE_RICH_URL=a0_0x1b2385(0x1d6),OFFLINE_RAW_URL=a0_0x1b2385(0x1c5),ASSETS=[OFFLINE_RICH_URL,OFFLINE_RAW_URL,a0_0x1b2385(0x1b4),'/assets/LogoDark.svg','/assets/lonelyGhost.svg'],GOOGLE_FONTS_CSS=['https://fonts.googleapis.com/css2?family=Geist:wght@400;700&display=swap',a0_0x1b2385(0x1e0)],ONE_YEAR=0x16d*0x18*0x3c*0x3c*0x3e8;self[a0_0x1b2385(0x1ce)]('install',_0x2da4d0=>{const _0x14712b=a0_0x1b2385;_0x2da4d0[_0x14712b(0x1a2)](((async()=>{const _0x5b8349=_0x14712b,_0x98e4af=await caches[_0x5b8349(0x1ae)](CACHE_NAME);await _0x98e4af[_0x5b8349(0x1d9)]([...ASSETS,...GOOGLE_FONTS_CSS]);for(const _0x46f852 of GOOGLE_FONTS_CSS){try{const _0xcab82b=await fetch(_0x46f852);if(_0xcab82b['ok']){const _0x596801=await _0xcab82b[_0x5b8349(0x1d1)](),_0x394e06=Array[_0x5b8349(0x1a9)](_0x596801[_0x5b8349(0x1d0)](/url\((https:\/\/fonts\.gstatic\.com\/[^)]+)\)/g),_0x12da6f=>_0x12da6f[0x1]);for(const _0xd872f3 of _0x394e06){try{const _0x2009af=await fetch(_0xd872f3);_0x2009af['ok']&&await _0x98e4af[_0x5b8349(0x1b3)](_0xd872f3,_0x2009af[_0x5b8349(0x1bc)]());}catch(_0x33baf0){console[_0x5b8349(0x1c0)](_0x5b8349(0x1dd),_0xd872f3,_0x33baf0);}}}}catch(_0x3d1e71){console[_0x5b8349(0x1c0)](_0x5b8349(0x1a4),_0x46f852,_0x3d1e71);}}})())),self[_0x14712b(0x1a5)]();}),self[a0_0x1b2385(0x1ce)]('activate',_0x363d94=>{const _0x6cec82=a0_0x1b2385;_0x363d94[_0x6cec82(0x1a2)](caches[_0x6cec82(0x1cb)]()[_0x6cec82(0x1d5)](_0xf6fbff=>{const _0xadf6f1=_0x6cec82;return Promise[_0xadf6f1(0x1af)](_0xf6fbff[_0xadf6f1(0x1df)](_0x163a76=>_0x163a76!==CACHE_NAME)[_0xadf6f1(0x1d8)](_0x4ed64b=>caches['delete'](_0x4ed64b)));})),self['clients'][_0x6cec82(0x1a7)]();}),self[a0_0x1b2385(0x1ce)](a0_0x1b2385(0x1c8),_0x58f40a=>{const _0x246875=a0_0x1b2385,{request:_0x28a67f}=_0x58f40a;if(_0x28a67f[_0x246875(0x1d7)]!==_0x246875(0x1be))return;if(_0x28a67f[_0x246875(0x1dc)]['startsWith'](_0x246875(0x1bb))||_0x28a67f[_0x246875(0x1dc)][_0x246875(0x1b9)](_0x246875(0x1b5))){_0x58f40a['respondWith'](caches['open'](CACHE_NAME)['then'](_0x104e0f=>_0x104e0f[_0x246875(0x1cc)](_0x28a67f)[_0x246875(0x1d5)](_0x3dd48e=>{const _0xf1470d=_0x246875;if(_0x3dd48e)return _0x3dd48e;return fetch(_0x28a67f)[_0xf1470d(0x1d5)](_0x3264f5=>{const _0x127e25=_0xf1470d;if(_0x3264f5[_0x127e25(0x1b7)]===0xc8)_0x104e0f['put'](_0x28a67f,_0x3264f5[_0x127e25(0x1bc)]());return _0x3264f5;})[_0xf1470d(0x1cf)](()=>undefined);})));return;}if(_0x28a67f['url'][_0x246875(0x1b9)](_0x246875(0x1d2))){_0x58f40a[_0x246875(0x1d3)](caches['open'](CACHE_NAME)['then'](_0x2e6470=>_0x2e6470[_0x246875(0x1cc)](_0x28a67f)['then'](_0x267fb8=>{const _0x2edc05=_0x246875;if(_0x267fb8)return _0x267fb8;return fetch(_0x28a67f)[_0x2edc05(0x1d5)](_0x320996=>{const _0xad246e=_0x2edc05;if(_0x320996[_0xad246e(0x1b7)]===0xc8)_0x2e6470['put'](_0x28a67f,_0x320996['clone']());return _0x320996;})[_0x2edc05(0x1cf)](()=>undefined);})));return;}if(_0x28a67f[_0x246875(0x1dc)][_0x246875(0x1ca)]('/assets/')){_0x58f40a[_0x246875(0x1d3)](caches['open'](CACHE_NAME)[_0x246875(0x1d5)](_0x4bb314=>_0x4bb314[_0x246875(0x1cc)](_0x28a67f)[_0x246875(0x1d5)](_0x536a4f=>{if(_0x536a4f)return _0x536a4f;return fetch(_0x28a67f)['then'](_0x1f6368=>{const _0x32a8ab=a0_0x4c1d;if(_0x1f6368[_0x32a8ab(0x1b7)]===0xc8)_0x4bb314[_0x32a8ab(0x1b3)](_0x28a67f,_0x1f6368['clone']());return _0x1f6368;})['catch'](()=>undefined);})));return;}if(_0x28a67f[_0x246875(0x1de)]==='navigate'){_0x58f40a['respondWith'](fetch(_0x28a67f)[_0x246875(0x1d5)](_0x130516=>{const _0x2e3bf5=_0x246875;if(_0x130516[_0x2e3bf5(0x1b7)]===0xc8){const _0x4acb4f=_0x130516[_0x2e3bf5(0x1bc)]();caches[_0x2e3bf5(0x1ae)](CACHE_NAME)['then'](_0x3e0480=>_0x3e0480[_0x2e3bf5(0x1b3)](_0x28a67f,_0x4acb4f));}return _0x130516;})['catch'](async()=>{const _0x5c3182=_0x246875,_0x26d62e=await caches[_0x5c3182(0x1ae)](CACHE_NAME),_0x5ec7f9=await _0x26d62e['match'](OFFLINE_RICH_URL);if(_0x5ec7f9)return _0x5ec7f9;const _0x3d8361=await _0x26d62e[_0x5c3182(0x1cc)](OFFLINE_RAW_URL);if(_0x3d8361)return _0x3d8361;return console['error'](_0x5c3182(0x1ab)),new Response(_0x5c3182(0x1c1),{'headers':{'Content-Type':_0x5c3182(0x1c9)}});}));return;}_0x58f40a[_0x246875(0x1d3)](fetch(_0x28a67f)[_0x246875(0x1d5)](_0x308e95=>{const _0x87eed3=_0x246875;if(_0x308e95['status']===0xc8){const _0x335e19=_0x308e95[_0x87eed3(0x1bc)]();caches[_0x87eed3(0x1ae)](CACHE_NAME)[_0x87eed3(0x1d5)](_0xfde287=>_0xfde287[_0x87eed3(0x1b3)](_0x28a67f,_0x335e19));}return _0x308e95;})['catch'](()=>caches[_0x246875(0x1cc)](_0x28a67f)['then'](_0x43bd40=>_0x43bd40||caches['match'](OFFLINE_RICH_URL))));});function a0_0x4c1d(_0x24266a,_0x5349d7){const _0x16d55d=a0_0x16d5();return a0_0x4c1d=function(_0x4c1d21,_0x26de81){_0x4c1d21=_0x4c1d21-0x1a1;let _0x3d452c=_0x16d55d[_0x4c1d21];return _0x3d452c;},a0_0x4c1d(_0x24266a,_0x5349d7);}function a0_0x16d5(){const _0x3e506e=['3935580QPkERZ','url','Error\x20fetching\x20font:','mode','filter','https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap','zendo-pwa-cache-v2','waitUntil','close','Error\x20fetching\x20Google\x20Fonts\x20CSS:','skipWaiting','notificationclick','claim','10617042MyIIIE','from','data','Both\x20offline\x20pages\x20missing\x20from\x20cache.\x20Serving\x20minimal\x20fallback.','push','8727696ynlOtm','open','all','openWindow','log','registration','put','/assets/Logo.svg','https://fonts.googleapis.com/css2?family=Space+Grotesk','3130498NazbSt','status','title','startsWith','json','https://fonts.googleapis.com/css2?family=Geist','clone','body','GET','notification','error','<!DOCTYPE\x20html><html><head><title>Offline</title></head><body><h1>You\x20are\x20offline</h1><p>No\x20offline\x20page\x20available.</p></body></html>','1723975FjezyJ','showNotification','88696bebjph','/fallback/offline/offline.html','672EMPzaE','/icons/maskable-icon.png','fetch','text/html','includes','keys','match','5MFKLBm','addEventListener','catch','matchAll','text','https://fonts.gstatic.com/s/','respondWith','1091472KGSwgU','then','/fallback/offline.html','method','map','addAll','now'];a0_0x16d5=function(){return _0x3e506e;};return a0_0x16d5();}
+// Service Worker for PWA with offline support and push notifications
+
+self.addEventListener("push", (event) => {
+  if (event.data) {
+    const data = event.data.json();
+    const options = {
+      body: data.body,
+      icon: data.icon || "/icons/maskable-icon.png",
+      badge: "/icons/maskable-icon.png",
+      vibrate: [100, 50, 100],
+      data: {
+        dateOfArrival: Date.now(),
+        primaryKey: "2",
+      },
+    };
+    event.waitUntil(self.registration.showNotification(data.title, options));
+  }
+});
+
+self.addEventListener("notificationclick", (event) => {
+  console.log("Notification click received.");
+  event.notification.close();
+  event.waitUntil(clients.openWindow("https://zendo.pages.dev"));
+});
+
+const CACHE_NAME = "zendo-pwa-cache-v5";
+const OFFLINE_RICH_URL = "/fallback/offline.html";
+const OFFLINE_RAW_URL = "/fallback/offline/offline.html";
+const ASSETS = ["/assets/LogoWhite.svg", "/assets/LogoBlack.svg", "/assets/lonelyGhost.svg"];
+const GOOGLE_FONTS_CSS = [
+  "https://fonts.googleapis.com/css2?family=Geist:wght@400;700&display=swap",
+  "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap",
+];
+
+const ONE_YEAR = 365 * 24 * 60 * 60 * 1000;
+
+// Simplified cache checking - just check if it exists
+async function isCached(cache, url) {
+  try {
+    const cached = await cache.match(url);
+    return !!cached;
+  } catch (error) {
+    console.error("Error checking cache:", error);
+    return false;
+  }
+}
+
+// Helper function to safely cache a response
+async function safeCache(cache, request, response) {
+  try {
+    if (response && response.status === 200 && response.body) {
+      await cache.put(request, response);
+      console.log("Successfully cached:", typeof request === "string" ? request : request.url);
+      return true;
+    }
+  } catch (error) {
+    console.error(
+      "Failed to cache resource:",
+      typeof request === "string" ? request : request.url,
+      error
+    );
+  }
+  return false;
+}
+
+self.addEventListener("install", (event) => {
+  console.log("Service Worker installing...");
+
+  event.waitUntil(
+    (async () => {
+      try {
+        const cache = await caches.open(CACHE_NAME);
+
+        // Cache basic assets
+        console.log("Caching basic assets...");
+        for (const asset of ASSETS) {
+          try {
+            if (!(await isCached(cache, asset))) {
+              const response = await fetch(asset);
+              if (response.ok) {
+                await safeCache(cache, asset, response.clone());
+              }
+            } else {
+              console.log("Asset already cached:", asset);
+            }
+          } catch (error) {
+            console.error("Failed to cache asset:", asset, error);
+          }
+        }
+
+        // Cache offline pages
+        console.log("Caching offline pages...");
+        for (const offlineUrl of [OFFLINE_RICH_URL, OFFLINE_RAW_URL]) {
+          try {
+            if (!(await isCached(cache, offlineUrl))) {
+              const response = await fetch(offlineUrl);
+              if (response.ok) {
+                await safeCache(cache, offlineUrl, response.clone());
+                console.log("Cached offline page:", offlineUrl);
+              } else {
+                console.warn("Offline page not found:", offlineUrl, response.status);
+              }
+            } else {
+              console.log("Offline page already cached:", offlineUrl);
+            }
+          } catch (error) {
+            console.warn("Could not cache offline page:", offlineUrl, error);
+          }
+        }
+
+        // Cache Google Fonts CSS and extract font files
+        console.log("Caching Google Fonts...");
+        for (const cssUrl of GOOGLE_FONTS_CSS) {
+          try {
+            if (!(await isCached(cache, cssUrl))) {
+              console.log("Fetching Google Fonts CSS:", cssUrl);
+              const response = await fetch(cssUrl);
+              if (response.ok) {
+                const cssText = await response.text();
+                console.log("CSS content preview:", cssText.substring(0, 200) + "...");
+
+                // Cache the CSS file
+                const cssResponse = new Response(cssText, {
+                  headers: { "Content-Type": "text/css" },
+                });
+                await safeCache(cache, cssUrl, cssResponse);
+
+                // Extract font URLs - try multiple patterns
+                let fontUrls = [];
+
+                // Pattern 1: url(https://fonts.gstatic.com/...)
+                const pattern1 = cssText.matchAll(/url$$(https:\/\/fonts\.gstatic\.com\/[^)]+)$$/g);
+                fontUrls.push(...Array.from(pattern1, (m) => m[1]));
+
+                // Pattern 2: url("https://fonts.gstatic.com/...")
+                const pattern2 = cssText.matchAll(
+                  /url$$"(https:\/\/fonts\.gstatic\.com\/[^"]+)"$$/g
+                );
+                fontUrls.push(...Array.from(pattern2, (m) => m[1]));
+
+                // Pattern 3: url('https://fonts.gstatic.com/...')
+                const pattern3 = cssText.matchAll(
+                  /url$$'(https:\/\/fonts\.gstatic\.com\/[^']+)'$$/g
+                );
+                fontUrls.push(...Array.from(pattern3, (m) => m[1]));
+
+                // Remove duplicates
+                fontUrls = [...new Set(fontUrls)];
+
+                console.log(`Found ${fontUrls.length} font files for ${cssUrl}:`, fontUrls);
+
+                // Cache each font file
+                for (const fontUrl of fontUrls) {
+                  try {
+                    if (!(await isCached(cache, fontUrl))) {
+                      console.log("Fetching font:", fontUrl);
+                      const fontResponse = await fetch(fontUrl, {
+                        mode: "cors",
+                        credentials: "omit",
+                      });
+                      if (fontResponse.ok) {
+                        await safeCache(cache, fontUrl, fontResponse.clone());
+                        console.log("Successfully cached font:", fontUrl);
+                      } else {
+                        console.error("Failed to fetch font:", fontUrl, fontResponse.status);
+                      }
+                    } else {
+                      console.log("Font already cached:", fontUrl);
+                    }
+                  } catch (fontError) {
+                    console.error("Error caching font:", fontUrl, fontError);
+                  }
+                }
+              } else {
+                console.error("Failed to fetch CSS:", cssUrl, response.status);
+              }
+            } else {
+              console.log("Google Fonts CSS already cached:", cssUrl);
+            }
+          } catch (error) {
+            console.error("Error caching Google Fonts CSS:", cssUrl, error);
+          }
+        }
+
+        console.log("Service Worker installation completed");
+      } catch (error) {
+        console.error("Service Worker installation failed:", error);
+      }
+    })()
+  );
+
+  self.skipWaiting();
+});
+
+self.addEventListener("activate", (event) => {
+  console.log("Service Worker activating...");
+
+  event.waitUntil(
+    (async () => {
+      // Clean up old caches
+      const cacheNames = await caches.keys();
+      await Promise.all(
+        cacheNames
+          .filter((name) => name !== CACHE_NAME)
+          .map((name) => {
+            console.log("Deleting old cache:", name);
+            return caches.delete(name);
+          })
+      );
+
+      console.log("Service Worker activated and claiming clients");
+    })()
+  );
+
+  // Take control of all clients immediately
+  self.clients.claim();
+});
+
+self.addEventListener("fetch", (event) => {
+  const { request } = event;
+  const url = new URL(request.url);
+
+  // Only handle GET requests
+  if (request.method !== "GET") return;
+
+  console.log("SW intercepting:", request.url);
+
+  // Handle Google Fonts CSS
+  if (url.hostname === "fonts.googleapis.com") {
+    event.respondWith(handleGoogleFonts(request));
+    return;
+  }
+
+  // Handle Google Fonts static files
+  if (url.hostname === "fonts.gstatic.com") {
+    event.respondWith(handleGoogleFontsStatic(request));
+    return;
+  }
+
+  // Handle local assets
+  if (url.pathname.includes("/assets/")) {
+    event.respondWith(handleAssets(request));
+    return;
+  }
+
+  // Handle navigation requests (HTML pages)
+  if (
+    request.mode === "navigate" ||
+    (request.method === "GET" && request.headers.get("accept")?.includes("text/html"))
+  ) {
+    event.respondWith(handleNavigation(request));
+    return;
+  }
+
+  // Handle all other requests with basic caching
+  event.respondWith(handleOtherRequests(request));
+});
+
+async function handleGoogleFonts(request) {
+  console.log("Handling Google Fonts CSS:", request.url);
+  try {
+    const cache = await caches.open(CACHE_NAME);
+    const cached = await cache.match(request);
+
+    if (cached) {
+      console.log("Serving cached Google Fonts CSS:", request.url);
+      return cached;
+    }
+
+    console.log("Fetching Google Fonts CSS from network:", request.url);
+    const response = await fetch(request);
+    if (response.ok) {
+      await safeCache(cache, request, response.clone());
+    }
+    return response;
+  } catch (error) {
+    console.error("Error handling Google Fonts CSS:", error);
+    const cache = await caches.open(CACHE_NAME);
+    const cached = await cache.match(request);
+    return cached || new Response("Font CSS unavailable", { status: 503 });
+  }
+}
+
+async function handleGoogleFontsStatic(request) {
+  console.log("Handling Google Fonts static file:", request.url);
+  try {
+    const cache = await caches.open(CACHE_NAME);
+    const cached = await cache.match(request);
+
+    if (cached) {
+      console.log("Serving cached font file:", request.url);
+      return cached;
+    }
+
+    console.log("Fetching font file from network:", request.url);
+    const response = await fetch(request, {
+      mode: "cors",
+      credentials: "omit",
+    });
+    if (response.ok) {
+      await safeCache(cache, request, response.clone());
+    }
+    return response;
+  } catch (error) {
+    console.error("Error handling Google Fonts static file:", error);
+    const cache = await caches.open(CACHE_NAME);
+    const cached = await cache.match(request);
+    return cached || new Response("Font unavailable", { status: 503 });
+  }
+}
+
+async function handleAssets(request) {
+  console.log("Handling asset:", request.url);
+  try {
+    const cache = await caches.open(CACHE_NAME);
+    const cached = await cache.match(request);
+
+    if (cached) {
+      return cached;
+    }
+
+    const response = await fetch(request);
+    if (response.ok) {
+      await safeCache(cache, request, response.clone());
+    }
+    return response;
+  } catch (error) {
+    console.error("Error handling asset:", error);
+    const cache = await caches.open(CACHE_NAME);
+    return await cache.match(request);
+  }
+}
+
+async function handleNavigation(request) {
+  console.log("Handling navigation request:", request.url);
+  try {
+    const response = await fetch(request, {
+      cache: "no-cache",
+    });
+
+    if (response.ok) {
+      const cache = await caches.open(CACHE_NAME);
+      await safeCache(cache, request, response.clone());
+      console.log("Successfully fetched and cached page:", request.url);
+      return response;
+    }
+
+    return response;
+  } catch (error) {
+    console.log("Network error for navigation, serving offline page:", error.message);
+    return await serveOfflinePage();
+  }
+}
+
+async function handleOtherRequests(request) {
+  try {
+    const response = await fetch(request);
+    if (response.ok) {
+      const cache = await caches.open(CACHE_NAME);
+      await safeCache(cache, request, response.clone());
+    }
+    return response;
+  } catch (error) {
+    const cache = await caches.open(CACHE_NAME);
+    const cached = await cache.match(request);
+    if (cached) {
+      console.log("Serving from cache:", request.url);
+      return cached;
+    }
+    throw error;
+  }
+}
+
+async function serveOfflinePage() {
+  console.log("Serving offline page...");
+  try {
+    const cache = await caches.open(CACHE_NAME);
+
+    // Try rich offline page first
+    const rich = await cache.match(OFFLINE_RICH_URL);
+    if (rich) {
+      console.log("Serving rich offline page");
+      return rich;
+    }
+
+    // Try raw offline page
+    const raw = await cache.match(OFFLINE_RAW_URL);
+    if (raw) {
+      console.log("Serving raw offline page");
+      return raw;
+    }
+
+    // Serve minimal fallback
+    console.log("Serving minimal offline fallback");
+    return new Response(
+      `<!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Offline - Zendo</title>
+        <style>
+          body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            background: #f5f5f5;
+            color: #333;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+          }
+          .container {
+            max-width: 400px;
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+          }
+          h1 { color: #e74c3c; margin-bottom: 1rem; }
+          p { line-height: 1.6; margin-bottom: 1rem; }
+          .retry-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+          }
+          .retry-btn:hover { background: #2980b9; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h1>You're Offline</h1>
+          <p>It looks like you're not connected to the internet. Please check your connection and try again.</p>
+          <button class="retry-btn" onclick="window.location.reload()">Try Again</button>
+        </div>
+      </body>
+      </html>`,
+      {
+        headers: {
+          "Content-Type": "text/html; charset=utf-8",
+          "Cache-Control": "no-cache",
+        },
+      }
+    );
+  } catch (error) {
+    console.error("Error serving offline page:", error);
+    return new Response("Offline", {
+      status: 503,
+      headers: { "Content-Type": "text/plain" },
+    });
+  }
+}

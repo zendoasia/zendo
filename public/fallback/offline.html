@@ -2,9 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no"
+    />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
+    <meta name="color-scheme" content="dark" />
     <meta
       name="description"
       content="Welcome to Zendo. This is a private website for covering my work, projects, and portfolio. Let's explore the world of technology together."
@@ -20,7 +25,7 @@
     <meta name="category" content="Programming and Technology" />
     <meta name="referrer" content="origin-when-cross-origin" />
     <meta name="robots" content="/robots.txt" />
-    <meta name="manifest" content="/manifest.webmanifest" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <meta property="og:title" content="Zendo" />
     <meta
       property="og:description"
@@ -40,39 +45,472 @@
     <meta name="google-site-verification" content="-q79a7PlxvBy3gr5cMmDHsT3av2Axtzrq1Vb6dcmSWA" />
     <meta name="yandex-verification" content="a16a2e8a4fb0ad33" />
     <meta name="msvalidate.01" content="969F0E11BC415787B2C7464A98FBDF02" />
-    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="assets/icons/apple/apple-icon-180.svg" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Zendo" />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-2048-2732.jpg"
+      media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-2732-2048.jpg"
+      media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-1668-2388.jpg"
+      media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-2388-1668.jpg"
+      media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-1536-2048.jpg"
+      media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-2048-1536.jpg"
+      media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-1640-2360.jpg"
+      media="(device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-2360-1640.jpg"
+      media="(device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-1668-2224.jpg"
+      media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-2224-1668.jpg"
+      media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-1620-2160.jpg"
+      media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-2160-1620.jpg"
+      media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-1488-2266.jpg"
+      media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-2266-1488.jpg"
+      media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-1320-2868.jpg"
+      media="(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-2868-1320.jpg"
+      media="(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-1206-2622.jpg"
+      media="(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-2622-1206.jpg"
+      media="(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-1290-2796.jpg"
+      media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-2796-1290.jpg"
+      media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-1179-2556.jpg"
+      media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-2556-1179.jpg"
+      media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-1170-2532.jpg"
+      media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-2532-1170.jpg"
+      media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-1284-2778.jpg"
+      media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-2778-1284.jpg"
+      media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-1125-2436.jpg"
+      media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-2436-1125.jpg"
+      media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-1242-2688.jpg"
+      media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-2688-1242.jpg"
+      media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-828-1792.jpg"
+      media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-1792-828.jpg"
+      media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-1242-2208.jpg"
+      media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-2208-1242.jpg"
+      media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-750-1334.jpg"
+      media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-1334-750.jpg"
+      media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-640-1136.jpg"
+      media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
+    />
+    <link
+      rel="apple-touch-startup-image"
+      href="assets/icons/apple/apple-splash-1136-640.jpg"
+      media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <title>Offline | Zendo</title>
-    <meta name="description" content="Your browser or device is not supported." />
+    <style>
+      /* Font definitions with comprehensive fallbacks */
+      @font-face {
+        font-family: "Geist Sans Fallback";
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src:
+          local("system-ui"), local("-apple-system"), local("BlinkMacSystemFont"),
+          local("Segoe UI"), local("Roboto"), local("sans-serif");
+      }
+
+      @font-face {
+        font-family: "Space Grotesk Fallback";
+        font-style: normal;
+        font-weight: 400;
+        font-display: swap;
+        src:
+          local("system-ui"), local("-apple-system"), local("BlinkMacSystemFont"),
+          local("Segoe UI"), local("Roboto"), local("sans-serif");
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100%;
+        font-family:
+          "Geist Sans",
+          "Geist Sans Fallback",
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          Oxygen,
+          Ubuntu,
+          Cantarell,
+          "Open Sans",
+          "Helvetica Neue",
+          sans-serif;
+        background-color: #f9fafb;
+        color: #111827;
+        line-height: 1.6;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        padding: 2rem;
+        text-align: center;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .icon {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 2rem;
+        color: #6b7280;
+      }
+
+      h1 {
+        font-family:
+          "Space Grotesk",
+          "Space Grotesk Fallback",
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Roboto,
+          Oxygen,
+          Ubuntu,
+          Cantarell,
+          "Open Sans",
+          "Helvetica Neue",
+          sans-serif;
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+        color: #111827;
+      }
+
+      p {
+        font-size: 1.125rem;
+        margin-bottom: 2rem;
+        color: #6b7280;
+        max-width: 500px;
+      }
+
+      .button {
+        background-color: #111827;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-family: "Geist Sans", "Geist Sans Fallback", system-ui, sans-serif;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .button:hover {
+        background-color: #1f2937;
+        transform: translateY(-1px);
+      }
+
+      .button:active {
+        transform: translateY(0);
+      }
+
+      .status {
+        margin-top: 2rem;
+        padding: 1rem;
+        background-color: #fef3c7;
+        border: 1px solid #f59e0b;
+        border-radius: 0.5rem;
+        color: #92400e;
+        font-size: 0.875rem;
+      }
+
+      @media (max-width: 640px) {
+        .container {
+          padding: 1rem;
+        }
+
+        h1 {
+          font-size: 2rem;
+        }
+
+        p {
+          font-size: 1rem;
+        }
+
+        .icon {
+          width: 60px;
+          height: 60px;
+        }
+      }
+
+      @media (prefers-color-scheme: dark) {
+        body {
+          background-color: #111827;
+          color: #f9fafb;
+        }
+
+        h1 {
+          color: #f9fafb;
+        }
+
+        p {
+          color: #d1d5db;
+        }
+
+        .button {
+          background-color: #f9fafb;
+          color: #111827;
+        }
+
+        .button:hover {
+          background-color: #e5e7eb;
+        }
+
+        .status {
+          background-color: #451a03;
+          border-color: #92400e;
+          color: #fbbf24;
+        }
+      }
+    </style>
   </head>
   <body>
-    <main id="c301e48c-ae4c-4061-b1f9-d4f64d85d4dc">
-      <div
-        class="max-w-screen-xl mx-auto px-6 md:px-12 lg:px-24 flex flex-col min-h-screen justify-center app-font"
+    <div class="container">
+      <svg
+        class="icon"
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
       >
-        <span class="flex flex-col items-center justify-center"> </span>
-        <div class="flex flex-col items-center text-balance app-font">
-          <span class="app-font-space text-2xl md:text-5xl lg:text-7xl">
-            Seems Like You're Offline
-          </span>
-          <p>And the world isn't the same without you. Try these methods to come back online:</p>
-          <ul class="list-disc pl-6">
-            <li>
-              <span class="font-semibold">Check your internet connection:</span>
-              Ensure your device is connected to Wi-Fi or mobile data.
-            </li>
-            <li>
-              <span class="font-semibold">Refresh the page:</span>
-              Sometimes a simple refresh can resolve connectivity issues. Press
-              <kbd class="kbd">F5</kbd> or click the refresh button in your browser.
-            </li>
-            <li>
-              <span class="font-semibold">Restart your device:</span>
-              A quick reboot can often fix network problems. Turn off your device, wait a few
-              seconds, and turn it back on.
-            </li>
-          </ul>
-        </div>
-      </div>
-    </main>
+        <line x1="1" y1="1" x2="23" y2="23"></line>
+        <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"></path>
+        <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"></path>
+        <path d="M10.71 5.05A16 16 0 0 1 22.58 9"></path>
+        <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"></path>
+        <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+        <line x1="12" y1="20" x2="12.01" y2="20"></line>
+      </svg>
+
+      <h1>You're Offline</h1>
+      <p>
+        It looks like you've lost your internet connection. Please check your network settings and
+        try again when you're back online.
+      </p>
+
+      <button class="button" onclick="handleRetry()">Try Again</button>
+
+      <div class="status" id="status" style="display: none">Checking connection...</div>
+    </div>
+
+    <script>
+      let retryAttempts = 0;
+      const maxRetries = 3;
+
+      function showStatus(message) {
+        const status = document.getElementById("status");
+        status.textContent = message;
+        status.style.display = "block";
+      }
+
+      function hideStatus() {
+        const status = document.getElementById("status");
+        status.style.display = "none";
+      }
+
+      function handleRetry() {
+        retryAttempts++;
+        showStatus(`Checking connection... (Attempt ${retryAttempts}/${maxRetries})`);
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      }
+
+      window.addEventListener("online", function () {
+        showStatus("Connection restored! Reloading...");
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
+      });
+
+      if (navigator.onLine) {
+        showStatus("Connection detected! Reloading...");
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
+      }
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Enter" || event.key === " ") {
+          if (event.target.classList.contains("button")) {
+            event.preventDefault();
+            handleRetry();
+          }
+        }
+      });
+    </script>
   </body>
 </html>

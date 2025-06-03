@@ -78,6 +78,7 @@
 .app-font-space {
   @apply font-[family-name:var(--font-space-grotesk)] font-medium text-base;
 }
+
 .app-font-code {
   @apply font-[family-name:var(--font-code)] font-medium text-base;
 }
@@ -94,6 +95,7 @@
 }
 
 @layer utilities {
+
   /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
@@ -115,10 +117,11 @@ body {
 }
 
 :root {
-  --font-text: "Geist", "Geist Fallback", Arial, sans-serif;
-  --font-text-mono: "Geist Mono", "Geist Mono Fallback", Menlo, Consolas;
-  --font-code: "Jetbrains Mono", "Ubuntu", "Consolas", monospace;
-  --font-space-grotesk: "Space Grotesk", "Geist", "Geist Fallback", Arial, sans-serif;
+  --font-text: "Geist", "Geist Fallback", -apple-system, BlinkMacSystemFont, system-ui, Arial, sans-serif;
+  --font-text-mono: "Geist Mono", "Geist Mono Fallback", -apple-system, BlinkMacSystemFont, system-ui, Menlo, Consolas;
+  --font-code: "Jetbrains Mono", "Ubuntu", "Consolas", -apple-system, BlinkMacSystemFont, system-ui, monospace;
+  --font-space-grotesk: "Space Grotesk", "Geist", "Geist Fallback", -apple-system, BlinkMacSystemFont, system-ui, Arial, sans-serif;
+
   /* Neutrals */
   --white: #ffffff;
   --white-smoke: #f5f5f5;

@@ -21,7 +21,7 @@ import LogoWhite from "@/public/assets/LogoWhite.svg";
 import { cn } from "@/lib/utils";
 import ThemeSanitizer from "@/components/modules/themeSanitizer";
 import CookieConsent from "@/components/CookieConsent";
-import GAnalyticsGTMConsent from "@/components/GAnalyticsGTMConsent";
+import GAnalyticsConsent from "@/components/GAnalyticsConsent";
 import { Viewport } from "next";
 import ServiceWorkerRegister from "@/components/serviceWorkerRegister";
 
@@ -305,7 +305,7 @@ export default function RootLayout({
         <link rel="preload" href={LogoWhite.src} as="image" type="image/svg+xml" />
         <link rel="preload" href={LogoBlack.src} as="image" type="image/svg+xml" />
       </Head>
-      <GAnalyticsGTMConsent />
+      <GAnalyticsConsent />
       <body
         className={cn(
           `scroll-smooth w-full p-0 m-0 overflow-x-clip ${geistSans.variable} ${spaceGrotesk.variable} ${geistMono.variable} ${menlo.variable} ${ubuntu.variable} ${jetbrainsMono.variable} ${consolas.variable} antialiased`

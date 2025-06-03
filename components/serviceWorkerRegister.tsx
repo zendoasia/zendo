@@ -6,7 +6,7 @@ export default function ServiceWorkerRegister() {
     if ("serviceWorker" in navigator) {
       registerServiceWorker();
     } else {
-      console.debug("Service workers are not supported in this browser");
+      console.log("Service workers are not supported in this browser");
     }
   }, []);
 
@@ -14,7 +14,6 @@ export default function ServiceWorkerRegister() {
     try {
       const registrations = await navigator.serviceWorker.getRegistrations();
 
-      // Check if we already have a registration for our scope
       const currentOrigin = window.location.origin;
       const existingRegistration = registrations.find(
         (reg) =>
@@ -23,17 +22,85 @@ export default function ServiceWorkerRegister() {
           reg.scope.startsWith(currentOrigin)
       );
 
-      if (existingRegistration) {
-        console.debug("Found existing service worker registration:", {
-          scope: existingRegistration.scope,
-          state: existingRegistration.active?.state,
-          installing: !!existingRegistration.installing,
-          waiting: !!existingRegistration.waiting,
-          active: !!existingRegistration.active,
-        });
+      const swResponse = await fetch("/sw.js", { cache: "no-cache" });
+      const swLastModified = swResponse.headers.get("last-modified");
+      const swETag = swResponse.headers.get("etag");
 
-        if (existingRegistration.active && existingRegistration.active.state === "activated") {
-          console.debug("Service worker is already active, skipping registration");
+      if (existingRegistration) {
+
+        let isOutdated = false;
+
+        if (existingRegistration.active) {
+          try {
+            const messageChannel = new MessageChannel();
+            existingRegistration.active.postMessage({ type: "GET_VERSION" }, [
+              messageChannel.port2,
+            ]);
+
+            // Set a timeout to assume it's outdated if no response
+            const timeoutPromise = new Promise((resolve) => {
+              setTimeout(() => resolve("timeout"), 1000);
+            });
+
+            const versionCheckResult = await Promise.race([
+              new Promise((resolve) => {
+                messageChannel.port1.onmessage = (event) => {
+                  if (event.data && event.data.type === "VERSION") {
+                    resolve(event.data.version);
+                  } else {
+                    resolve(null);
+                  }
+                };
+              }),
+              timeoutPromise,
+            ]);
+
+            if (versionCheckResult === "timeout" || versionCheckResult === null) {
+              console.debug("Service worker version check failed, considering it outdated");
+              isOutdated = true;
+            }
+          } catch (error) {
+            console.debug("Error checking service worker version, considering it outdated:", error);
+            isOutdated = true;
+          }
+
+          // If we have last-modified or etag headers, use them as fallback
+          if (!isOutdated && (swLastModified || swETag)) {
+            // We don't have a direct way to check the SW file date that was registered
+            // So we'll use the update() method which will check if the SW file has changed
+            await existingRegistration.update();
+
+            // If after update() there's a waiting worker, it means the SW file has changed
+            if (existingRegistration.waiting) {
+              console.debug("Service worker update found, considering current one outdated");
+              isOutdated = true;
+            }
+          }
+        } else {
+          // No active service worker, consider it outdated/incomplete
+          isOutdated = true;
+        }
+
+        if (isOutdated) {
+          console.debug("Service worker is outdated, unregistering and registering latest...");
+          await existingRegistration.unregister();
+
+          // Register the new service worker
+          const registration = await navigator.serviceWorker.register("/sw.js", {
+            scope: "/",
+            updateViaCache: "none", // Ensure we always check for updates
+          });
+
+          console.debug("New service worker registered successfully:", {
+            scope: registration.scope,
+            state: registration.active?.state,
+          });
+
+          return;
+        } else if (
+          existingRegistration.active &&
+          existingRegistration.active.state === "activated"
+        ) {
           return;
         }
 
@@ -73,7 +140,7 @@ export default function ServiceWorkerRegister() {
             console.debug("Service worker state changed:", newWorker.state);
 
             if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
-              console.debug("New service worker installed, page refresh recommended");
+              console.log("New service worker installed, page refresh recommended");
             }
           });
         }

@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import Cookies from "js-cookie";
 
 const GA_ID = "G-RNN756TW7T";
-const GTM_ID = "GTM-P3K2KXRM";
 const GA_COOKIE_PREFIXES = ["_ga", "_gid", "_gat", "_gcl_", "_gat_gtag", "_gat_UA-"];
 
 function removeScript(id: string) {
@@ -12,7 +11,7 @@ function removeScript(id: string) {
 }
 
 function removeGACookies() {
-  // Remove all known GA/GTM cookies
+  // Remove all known GA cookies
   const cookies = document.cookie.split("; ");
   for (const cookie of cookies) {
     const [name] = cookie.split("=");
@@ -25,11 +24,9 @@ function removeGACookies() {
 
 function removeGASnippets() {
   removeScript("ga-script");
-  removeScript("gtm-script");
-  // Remove any gtag/gtm scripts by src as fallback
-  document
-    .querySelectorAll('script[src*="googletagmanager"],script[src*="google-analytics"]')
-    .forEach((el) => el.remove());
+  removeScript("ga-init");
+  // Remove any gtag scripts by src as fallback
+  document.querySelectorAll('script[src*="google-analytics"]').forEach((el) => el.remove());
 }
 
 declare global {
@@ -39,11 +36,10 @@ declare global {
   }
 }
 
-export default function GAnalyticsGTMConsent() {
+export default function GAnalyticsConsent() {
   const pathname = typeof window !== "undefined" ? window.location.pathname : "/";
   useEffect(() => {
     let gaLoaded = false;
-    let gtmLoaded = false;
     let initialPageviewSent = false;
     const consent = Cookies.get("cookieconsent_status");
     let gaScriptEl: HTMLScriptElement | null = null;
@@ -93,22 +89,6 @@ export default function GAnalyticsGTMConsent() {
         injectGAScriptAndInit();
         gaLoaded = true;
       }
-      if (!gtmLoaded) {
-        const gtmScript = document.getElementById("gtm-script");
-        if (!gtmScript) {
-          const script = document.createElement("script");
-          script.id = "gtm-script";
-          script.innerHTML = `
-            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-            })(window,document,'script','dataLayer','${GTM_ID}');
-          `;
-          document.head.appendChild(script);
-        }
-        gtmLoaded = true;
-      }
     }
 
     function handleDeny() {
@@ -117,7 +97,6 @@ export default function GAnalyticsGTMConsent() {
       if (window.gtag) delete window.gtag;
       if (window.dataLayer) window.dataLayer = [];
       gaLoaded = false;
-      gtmLoaded = false;
       initialPageviewSent = false;
       if (gaScriptEl) gaScriptEl.remove();
     }

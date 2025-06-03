@@ -196,9 +196,8 @@ export default function Header() {
               <span className={cn("flex items-center gap-5")}>
                 <span className={cn("text-sm")}>Search</span>
                 <kbd
-                  aria-label="Search Bar Shortcut"
                   className={cn(
-                    "!text-xs br:inline-block app-font-code border app-border px-2 py-0.5 rounded-md text-muted-foreground"
+                    "!text-xs br:inline-block app-font-mono border app-border px-2 py-0.5 rounded-md text-muted-foreground"
                   )}
                 >
                   <span className="sr-only">
@@ -208,7 +207,7 @@ export default function Header() {
                         ? "Control key plus K"
                         : strippedOS === "phone"
                           ? "Press to search"
-                          : "Press to refresh"}
+                          : "Please Refresh the Page"}
                   </span>
                   {strippedOS === "mac" ? (
                     <>{"\u2318"} K</>

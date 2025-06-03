@@ -84,7 +84,7 @@ export const metadata: Metadata = {
       "msvalidate.01": "969F0E11BC415787B2C7464A98FBDF02",
     },
   },
-  icons: [{ rel: "apple-touch-icon", url: "assets/icons/apple/apple-icon-180.svg" }],
+  icons: [{ rel: "apple-touch-icon", url: "assets/icons/apple/apple-icon-180.png" }],
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
@@ -285,8 +285,9 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
+  width: "device-width",   
   maximumScale: 1,
-  width: "device-width",
+  height: "device-height",
   userScalable: false,
   themeColor: [
     { media: "(prefers-color-scheme: dark)", color: "#000000" },

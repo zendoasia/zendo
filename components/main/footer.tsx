@@ -7,7 +7,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { FooterLink } from "@/types";
 import { cn } from "@/lib/utils";
-import { openExternalLinkManually } from "@/components/externalLinkInterceptor";
+import { openExternalLinkManually } from "@/components/scripts/externalLinkInterceptor";
 import { SiWakatime, SiX, SiDiscord, SiGithub } from "@icons-pack/react-simple-icons";
 
 export default function Footer() {

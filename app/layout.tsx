@@ -3,7 +3,7 @@ import "@/app/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
 import Footer from "@/components/main/footer";
-import ExternalLinkInterceptor from "@/components/externalLinkInterceptor";
+import ExternalLinkInterceptor from "@/components/scripts/externalLinkInterceptor";
 import {
   geistSans,
   geistMono,
@@ -20,10 +20,11 @@ import LogoBlack from "@/public/assets/LogoBlack.svg";
 import LogoWhite from "@/public/assets/LogoWhite.svg";
 import { cn } from "@/lib/utils";
 import ThemeSanitizer from "@/components/modules/themeSanitizer";
-import CookieConsent from "@/components/CookieConsent";
-import GAnalyticsConsent from "@/components/GAnalyticsConsent";
+import CookieConsent from "@/components/scripts/CookieConsent";
+import GAnalyticsConsent from "@/components/scripts/GAnalyticsConsent";
 import { Viewport } from "next";
-import ServiceWorkerRegister from "@/components/serviceWorkerRegister";
+import ServiceWorkerRegister from "@/components/scripts/serviceWorkerRegister";
+import CloudflareAnalytics from "@/components/scripts/cloudflareInsights";
 
 export const metadata: Metadata = {
   title: "Zendo - Intuition",
@@ -373,6 +374,7 @@ export default function RootLayout({
             </section>
             <Footer />
           </ThemeProvider>
+          <CloudflareAnalytics />
         </div>
       </body>
     </html>

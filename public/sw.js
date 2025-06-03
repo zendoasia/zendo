@@ -16,19 +16,13 @@ const CHECK_INTERVAL = 5 * 60 * 1000;
 
 // Install event - cache critical assets
 self.addEventListener("install", (event) => {
-  console.log("[Service Worker] Installing Service Worker...");
-
   event.waitUntil(
     caches
       .open(CACHE_NAMES.OFFLINE)
       .then((cache) => {
-        console.log("[Service Worker] Caching offline page");
         return cache.add(OFFLINE_PAGE);
       })
-      .then(() => {
-        console.log("[Service Worker] Installation complete");
-        return self.skipWaiting();
-      })
+      .then(() => self.skipWaiting())
       .catch((error) => {
         console.error("[Service Worker] Installation failed:", error);
       })
@@ -37,8 +31,6 @@ self.addEventListener("install", (event) => {
 
 // Activate event - clean up old caches
 self.addEventListener("activate", (event) => {
-  console.log("[Service Worker] Activating Service Worker...");
-
   event.waitUntil(
     caches
       .keys()
@@ -47,17 +39,13 @@ self.addEventListener("activate", (event) => {
           cacheNames.map((cacheName) => {
             // Delete caches that aren't in our defined CACHE_NAMES
             if (!Object.values(CACHE_NAMES).includes(cacheName)) {
-              console.log("[Service Worker] Deleting old cache:", cacheName);
               return caches.delete(cacheName);
             }
             return Promise.resolve();
           })
         );
       })
-      .then(() => {
-        console.log("[Service Worker] Activation complete");
-        return self.clients.claim();
-      })
+      .then(() => self.clients.claim())
       .catch((error) => {
         console.error("[Service Worker] Activation failed:", error);
       })
@@ -106,8 +94,6 @@ async function handleNavigationRequest(request) {
     return response;
   } catch (error) {
     // If network fails (offline), serve the offline page
-    console.log("[Service Worker] Network failed, serving offline page");
-
     try {
       const offlineResponse = await caches.match(OFFLINE_PAGE);
       if (offlineResponse) {
@@ -176,19 +162,13 @@ async function handleFontRequest(request) {
         // Clone the response before caching
         const responseToCache = response.clone();
         await cache.put(request, responseToCache);
-        console.log("[Service Worker] Font cached:", request.url);
       } catch (cacheError) {
-        console.log(
-          "[Service Worker] Could not cache font (this is normal for no-cors requests):",
-          request.url
-        );
+        // Could not cache font (normal for no-cors requests)
       }
     }
 
     return response;
   } catch (error) {
-    console.log("[Service Worker] Font request failed, checking cache:", request.url);
-
     // Try to serve from cache as fallback
     const cachedResponse = await caches.match(request);
     if (cachedResponse) {
@@ -238,7 +218,7 @@ async function handleStaticAssetRequest(request) {
         const responseToCache = response.clone();
         await cache.put(request, responseToCache);
       } catch (cacheError) {
-        console.log("[Service Worker] Could not cache asset:", request.url);
+        // Could not cache asset
       }
     }
 
@@ -314,26 +294,20 @@ async function processOfflinePage(response) {
 // Periodic cache check and maintenance
 async function checkAndRefreshCache() {
   try {
-    console.log("[Service Worker] Checking cache status...");
-
     // Check if offline page is cached
     const offlineCache = await caches.open(CACHE_NAMES.OFFLINE);
     const offlinePageCached = await offlineCache.match(OFFLINE_PAGE);
 
     if (!offlinePageCached) {
-      console.log("[Service Worker] Offline page not found in cache, re-caching...");
       try {
         await offlineCache.add(OFFLINE_PAGE);
-        console.log("[Service Worker] Offline page re-cached successfully");
       } catch (error) {
-        console.log("[Service Worker] Could not re-cache offline page:", error.message);
+        // Could not re-cache offline page
       }
     }
 
     // Clean up expired caches
     await cleanupExpiredCaches();
-
-    console.log("[Service Worker] Cache check complete");
   } catch (error) {
     console.error("[Service Worker] Error during cache check:", error);
   }
@@ -364,7 +338,6 @@ async function cleanupExpiredCaches() {
               const cacheDate = new Date(dateHeader).getTime();
 
               if (now - cacheDate > CACHE_DURATION) {
-                console.log(`[Service Worker] Removing expired cache for: ${request.url}`);
                 await cache.delete(request);
               }
             }
@@ -376,7 +349,7 @@ async function cleanupExpiredCaches() {
       }
     }
   } catch (error) {
-    console.log("[Service Worker] Error during cache cleanup:", error.message);
+    // Error during cache cleanup
   }
 }
 

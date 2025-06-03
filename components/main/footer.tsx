@@ -43,6 +43,7 @@ export default function Footer() {
       >
         <span
           aria-hidden={true}
+          role="presentation"
           className={cn(
             "absolute bottom-0 left-0 w-48 h-48 rounded-full dark:bg-[color:var(--accent2)] bg-[color:var(--primary2)] blur-[100px] opacity-50 pointer-events-none"
           )}
@@ -134,7 +135,7 @@ export default function Footer() {
                             href: "https://wakatime.com/@aarush0101",
                             target: "_blank",
                           });
-                        }, 650);
+                        }, 350);
                       }}
                     >
                       <span className="sr-only">Wakatime Profile</span>
@@ -159,7 +160,7 @@ export default function Footer() {
                             href: "https://x.com/aarush01111",
                             target: "_blank",
                           });
-                        }, 650);
+                        }, 350);
                       }}
                     >
                       <span className="sr-only">Twitter Profile</span>
@@ -182,7 +183,7 @@ export default function Footer() {
                             href: "https://discord.com/users/906543610269401148",
                             target: "_blank",
                           });
-                        }, 650);
+                        }, 350);
                       }}
                     >
                       <span className="sr-only">Discord Profile</span>
@@ -205,7 +206,7 @@ export default function Footer() {
                             href: "https://github.com/aarush0101",
                             target: "_blank",
                           });
-                        }, 650);
+                        }, 350);
                       }}
                     >
                       <span className="sr-only">GitHub Profile</span>

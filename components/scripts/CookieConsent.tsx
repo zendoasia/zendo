@@ -8,7 +8,7 @@ import { Check, CheckCircle, XCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
-const COOKIE_NAME = "cookieconsent_status";
+const COOKIE_NAME = "cookie_consent_status";
 
 export default function CookieConsent() {
   const [mounted, setMounted] = useState(false);

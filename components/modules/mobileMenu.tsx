@@ -9,7 +9,7 @@ import { ModeToggle } from "@/components/modules/modes";
 import { Briefcase, Folder, Home, Info, Mail, Search } from "lucide-react";
 import { SiGithub } from "@icons-pack/react-simple-icons";
 import { BiSolidBellRing } from "react-icons/bi";
-import { openExternalLinkManually } from "@/components/externalLinkInterceptor";
+import { openExternalLinkManually } from "@/components/scripts/externalLinkInterceptor";
 import {
   Accordion,
   AccordionItem,

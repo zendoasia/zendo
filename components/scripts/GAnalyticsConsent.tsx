@@ -41,7 +41,7 @@ export default function GAnalyticsConsent() {
   useEffect(() => {
     let gaLoaded = false;
     let initialPageviewSent = false;
-    const consent = Cookies.get("cookieconsent_status");
+    const consent = Cookies.get("cookie_consent_status");
     let gaScriptEl: HTMLScriptElement | null = null;
 
     function sendInitialPageview() {

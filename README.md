@@ -62,7 +62,7 @@ Because why not? Me, who has struggled learning React myself for a year, underst
 #### Foundation (Completed)
 
 - [x] **Plans** - Designs, ideas, concepts.
-- [x] **IDomain Ownership** - Zendo domains, assets.
+- [x] **Domain Ownership** - Zendo domains, assets.
 - [x] **Team Planning** - Hire developers, and designers.
 - [x] **Presence** - Establish GitHub page, and add SEO for the website to appear on google.
 

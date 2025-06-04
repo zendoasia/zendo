@@ -1,12 +1,3 @@
 name = "zendo"
-main = "test/do-test-worker.js"
-compatibility_date = "2025-05-29"
+compatibility_date = "2025-06-06"
 compatibility_flags = ["nodejs_compat"]
-
-[[durable_objects.bindings]]
-name = "RATE_LIMITER"
-class_name = "RateLimiter"
-
-[[migrations]]
-tag = "v1"
-new_classes = ["RateLimiter"]

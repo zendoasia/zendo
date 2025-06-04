@@ -95,7 +95,6 @@
 }
 
 @layer utilities {
-
   /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
@@ -117,10 +116,16 @@ body {
 }
 
 :root {
-  --font-text: "Geist", "Geist Fallback", -apple-system, BlinkMacSystemFont, system-ui, Arial, sans-serif;
-  --font-text-mono: "Geist Mono", "Geist Mono Fallback", -apple-system, BlinkMacSystemFont, system-ui, Menlo, Consolas;
-  --font-code: "Jetbrains Mono", "Ubuntu", "Consolas", -apple-system, BlinkMacSystemFont, system-ui, monospace;
-  --font-space-grotesk: "Space Grotesk", "Geist", "Geist Fallback", -apple-system, BlinkMacSystemFont, system-ui, Arial, sans-serif;
+  --font-text:
+    "Geist", "Geist Fallback", -apple-system, BlinkMacSystemFont, system-ui, Arial, sans-serif;
+  --font-text-mono:
+    "Geist Mono", "Geist Mono Fallback", -apple-system, BlinkMacSystemFont, system-ui, Menlo,
+    Consolas;
+  --font-code:
+    "Jetbrains Mono", "Ubuntu", "Consolas", -apple-system, BlinkMacSystemFont, system-ui, monospace;
+  --font-space-grotesk:
+    "Space Grotesk", "Geist", "Geist Fallback", -apple-system, BlinkMacSystemFont, system-ui, Arial,
+    sans-serif;
 
   /* Neutrals */
   --white: #ffffff;

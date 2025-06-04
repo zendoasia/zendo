@@ -4,6 +4,14 @@ import { SignJWT } from "jose";
 export const runtime = "edge";
 
 export async function POST(req: NextRequest) {
+  return NextResponse.json(
+    {
+      code: 403,
+      error: "Coming soon...",
+    },
+    { status: 403 }
+  );
+
   const cfRay = req.headers.get("cf-ray");
 
   if (!cfRay) {

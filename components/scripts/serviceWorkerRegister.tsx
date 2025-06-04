@@ -27,7 +27,6 @@ export default function ServiceWorkerRegister() {
       const swETag = swResponse.headers.get("etag");
 
       if (existingRegistration) {
-
         let isOutdated = false;
 
         if (existingRegistration.active) {

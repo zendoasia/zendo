@@ -5,6 +5,14 @@ import { TurnstileResponse } from "@/types";
 export const runtime = "edge";
 
 export async function POST(req: NextRequest) {
+  return NextResponse.json(
+    {
+      code: 403,
+      error: "Coming soon...",
+    },
+    { status: 403 }
+  );
+
   try {
     let body: Record<string, unknown>;
     try {

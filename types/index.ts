@@ -17,6 +17,47 @@ export interface ArticleWrapperProps {
 }
 
 /**
+ * Represents the event fired before a web application is installed.
+ *
+ * This event allows developers to prompt the user to install the app
+ * and to respond to the user's choice.
+ *
+ * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/BeforeInstallPromptEvent}
+ *
+ * @extends Event
+ *
+ * @property prompt - Prompts the user to install the web application. Returns a promise that resolves when the prompt is shown.
+ * @property userChoice - A promise that resolves to an object indicating whether the user accepted or dismissed the installation prompt.
+ */
+export interface BeforeInstallPromptEvent extends Event {
+  prompt(): Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
+}
+
+/**
+ * Props for the KoFiButton component.
+ *
+ * @property username - The kofi username to link to.
+ * @property className - Optional additional CSS class names for styling the button.
+ */
+export interface KoFiButtonProps {
+  username: string;
+  className?: string;
+}
+
+/**
+ * Props for the iOS Install Dialog component.
+ *
+ * @property open - Indicates whether the dialog is currently open.
+ * @property onOpenChangeAction - Callback function invoked when the open state changes.
+ *   Receives the new open state as a boolean argument.
+ */
+export interface IOSInstallDialogProps {
+  open: boolean;
+  onOpenChangeAction: (open: boolean) => void;
+}
+
+/**
  * Props for the SparklesHero component.
  */
 export type SparklesHeroProps = {

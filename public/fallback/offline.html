@@ -353,7 +353,7 @@
         border: none;
         padding: 0.75rem 1.5rem;
         border-radius: 0.5rem;
-        font-family: "Geist Sans", "Geist Sans Fallback", system-ui, sans-serif;
+        font-family: "Geist Mono", "Geist Mono Fallback", system-ui, Arial;
         font-size: 1rem;
         font-weight: 500;
         cursor: pointer;
@@ -460,7 +460,9 @@
         try again when you're back online.
       </p>
 
-      <button class="button" onclick="handleRetry()">Try Again</button>
+      <button type="button" class="button" onclick="handleRetry()" aria-live="polite">
+        Try Again
+      </button>
 
       <div class="status" id="status" style="display: none">Checking connection...</div>
     </div>
@@ -483,24 +485,24 @@
       function handleRetry() {
         retryAttempts++;
         showStatus(`Checking connection... (Attempt ${retryAttempts}/${maxRetries})`);
-
         setTimeout(() => {
-          window.location.reload();
+          if (navigator.onLine) {
+            showStatus("You're back online! Refreshing...");
+            location.reload();
+          } else {
+            showStatus("Still offline. Check again?");
+          }
         }, 1000);
       }
 
       window.addEventListener("online", function () {
-        showStatus("Connection restored! Reloading...");
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
+        showStatus(
+          "Connection restored! Refresh when you're ready, or click 'Try Again' to refresh."
+        );
       });
 
       if (navigator.onLine) {
-        showStatus("Connection detected! Reloading...");
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
+        showStatus("You are online. This page was served from cache.");
       }
 
       document.addEventListener("keydown", function (event) {

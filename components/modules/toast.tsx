@@ -6,7 +6,28 @@ import { FaCircleInfo } from "react-icons/fa6";
 import type React from "react";
 import { useRef, useLayoutEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import type { ToasterProps, ToastStyle } from "@/types";
+
+interface ToastAction {
+  label: string;
+  onClick: () => void;
+}
+
+interface ToasterProps {
+  type: "error" | "success" | "neutral" | "warning";
+  message: string;
+  action?: ToastAction;
+}
+
+interface ToastStyle {
+  container: string;
+  hoverAndFocus: string;
+  iconColor: string;
+  icon?: React.ReactNode;
+  toastFunction: (
+    content: React.ReactNode,
+    options?: { unstyled?: boolean; className?: string; duration?: number }
+  ) => string | number;
+}
 
 interface DynamicToastContentProps {
   message: string;
@@ -15,6 +36,7 @@ interface DynamicToastContentProps {
   onDismiss: () => void;
   iconColor: string;
   hoverAndFocus: string;
+  action?: ToastAction;
 }
 
 function DynamicToastContent({
@@ -23,6 +45,7 @@ function DynamicToastContent({
   onDismiss,
   iconColor,
   hoverAndFocus,
+  action,
 }: DynamicToastContentProps) {
   const textRef = useRef<HTMLSpanElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -38,10 +61,9 @@ function DynamicToastContent({
       // Get the viewport width
       const viewportWidth = window.innerWidth;
 
-      // Calculate available space (accounting for padding, margins, and close button)
-      // Subtract some buffer for padding, icon, close button, and margins
-      const bufferSpace = 120; // Adjust this value based on your layout
-      const availableWidth = Math.min(viewportWidth - bufferSpace, 400); // Max toast width
+      // Calculate available space (accounting for padding, margins, close button, and action button)
+      const bufferSpace = action ? 200 : 120; // More space if there's an action button
+      const availableWidth = Math.min(viewportWidth - bufferSpace, 400);
 
       // Temporarily remove whitespace-nowrap to measure natural text width
       textElement.style.whiteSpace = "normal";
@@ -73,7 +95,7 @@ function DynamicToastContent({
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [message]);
+  }, [message, action]);
 
   return (
     <div
@@ -85,15 +107,32 @@ function DynamicToastContent({
       )}
     >
       {icon && <div className="flex-shrink-0 mt-0.5">{icon}</div>}
-      <span
-        ref={textRef}
-        className={cn(
-          "text-md flex-1",
-          shouldWrap ? "whitespace-normal break-words" : "whitespace-nowrap"
+      <div className="flex-1 min-w-0">
+        <span
+          ref={textRef}
+          className={cn(
+            "text-md block",
+            shouldWrap ? "whitespace-normal break-words" : "whitespace-nowrap"
+          )}
+        >
+          {message}
+        </span>
+        {action && (
+          <button
+            onClick={() => {
+              action.onClick();
+              onDismiss();
+            }}
+            className={cn(
+              "mt-2 px-3 py-1 text-sm font-medium rounded transition-colors duration-200",
+              "bg-blue-600 hover:bg-blue-700 text-white",
+              "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+            )}
+          >
+            {action.label}
+          </button>
         )}
-      >
-        {message}
-      </span>
+      </div>
       <button
         onClick={onDismiss}
         className={cn(
@@ -107,11 +146,13 @@ function DynamicToastContent({
   );
 }
 
-export default function sendToast({ type, message }: ToasterProps): void {
+export default function sendToast({ type, message, action }: ToasterProps): void {
   const toastTypes = ["error", "success", "neutral", "warning"];
   if (!toastTypes.includes(type)) {
     console.error(
-      `Failed to send toast. Toast type: "${type}" doesn't exist. Valid types: ${toastTypes.join(", ")}`
+      `Failed to send toast. Toast type: "${type}" doesn't exist. Valid types: ${toastTypes.join(
+        ", "
+      )}`
     );
     return;
   }
@@ -162,10 +203,12 @@ export default function sendToast({ type, message }: ToasterProps): void {
       onDismiss={() => toast.dismiss(toastId)}
       iconColor={iconColor}
       hoverAndFocus={hoverAndFocus}
+      action={action}
     />,
     {
       unstyled: true,
       className: container,
+      duration: action ? 10000 : 4000, // Longer duration if there's an action
     }
   );
 }

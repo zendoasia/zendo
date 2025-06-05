@@ -142,9 +142,18 @@ export default function MobileMenu({
             <span className={cn("text-sm")}>Search</span>
             <kbd
               className={cn(
-                "ml-auto !text-xs br:inline-block app-font-mono border app-border px-2 py-0.5 rounded-md text-muted-foreground"
+                "px-1.5 py-[2px] rounded bg-muted/30 border border-border text-[10px] font-medium font-mono text-muted-foreground backdrop-blur-sm ml-auto !text-xs br:inline-block app-font-mono"
               )}
             >
+              <span className="sr-only">
+                {strippedOS === "mac"
+                  ? "Command key plus K"
+                  : strippedOS === "windows"
+                    ? "Control key plus K"
+                    : strippedOS === "phone"
+                      ? "Press to search"
+                      : "Please Refresh the Page"}
+              </span>
               {strippedOS === "mac" ? (
                 <>{"\u2318"} K</>
               ) : strippedOS === "windows" ? (

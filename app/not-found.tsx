@@ -8,6 +8,7 @@ import lonelyGhost from "@/public/assets/lonelyGhost.svg";
 
 export const metadata: Metadata = {
   title: "404 - Zendo",
+  description: "The page you were looking for was not found here.",
 };
 
 export default function NotFoundSrv() {

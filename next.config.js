@@ -14,7 +14,7 @@ const nextConfig = {
           {
             key: "Content-Security-Policy",
             value: [
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://fonts.gstatic.com/ https://googleapis.com;",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://fonts.gstatic.com/ https://fonts.googleapis.com;",
               "object-src 'none';",
               "base-uri 'self';",
               "form-action 'self';",
@@ -26,23 +26,6 @@ const nextConfig = {
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
         ],
       },
-      {
-        source: "/sw.js",
-        headers: [
-          {
-            key: "Content-Type",
-            value: "application/javascript; charset=utf-8",
-          },
-          {
-            key: "Cache-Control",
-            value: "no-cache, no-store, must-revalidate",
-          },
-          {
-            key: "Content-Security-Policy",
-            value: "default-src 'self'; script-src 'self'",
-          },
-        ],
-      },
     ];
   },
   async rewrites() {
@@ -50,10 +33,6 @@ const nextConfig = {
       {
         source: "/fallback/unsupported",
         destination: "/fallback/unsupported.html",
-      },
-      {
-        source: "/offline",
-        destination: "/fallback/offline.html",
       },
     ];
   },

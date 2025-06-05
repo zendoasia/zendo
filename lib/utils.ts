@@ -48,3 +48,26 @@ export function stripOS(os: OS): string | null {
       return null;
   }
 }
+
+export function isIOS(): boolean {
+  if (typeof window === "undefined") return false;
+  return /iPad|iPhone|iPod/.test(navigator.userAgent);
+}
+
+export function isMacOS(): boolean {
+  if (typeof window === "undefined") return false;
+  return /Macintosh|MacIntel|MacPPC|Mac68K/.test(navigator.userAgent);
+}
+
+export function isSafari(): boolean {
+  if (typeof window === "undefined") return false;
+  return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+}
+
+export function isStandalone(): boolean {
+  if (typeof window === "undefined") return false;
+  return (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    (window.navigator as Navigator & { standalone?: boolean }).standalone === true
+  );
+}

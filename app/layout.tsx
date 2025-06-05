@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
 import Footer from "@/components/main/footer";
 import ExternalLinkInterceptor from "@/components/scripts/externalLinkInterceptor";
+import PWAInstallDetector from "@/components/pwa/pwaInstallDetector";
 import {
   geistSans,
   geistMono,
@@ -285,10 +286,6 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  width: "device-width",
-  maximumScale: 1,
-  height: "device-height",
-  userScalable: false,
   themeColor: [
     { media: "(prefers-color-scheme: dark)", color: "#000000" },
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
@@ -314,6 +311,7 @@ export default function RootLayout({
         )}
       >
         <ServiceWorkerRegister />
+        <PWAInstallDetector />
         <CookieConsent />
         <noscript>
           <style>

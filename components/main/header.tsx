@@ -171,7 +171,7 @@ export default function Header() {
 
           <nav
             aria-label="Primary Navigation and Inter-Links"
-            className={cn("hidden br:flex items-center gap-[0.5rem] ml-7")}
+            className={cn("hidden br:flex items-center app-gap ml-7")}
           >
             {["About", "Portfolio", "Projects", "Contact"].map((label) => (
               <Button size="lg" key={label} variant="ghost" className={cn("nav-btn")} asChild>
@@ -190,14 +190,14 @@ export default function Header() {
               size="lg"
               variant="ghost"
               onClick={() => setOpenS(true)}
-              className={cn("ml-6 group inline-flex items-center justify-center gap-3 nav-btn")}
+              className={cn("ml-6 group inline-flex items-center justify-center app-gap nav-btn")}
             >
               <Search size="1.2rem" />
-              <span className={cn("flex items-center gap-5")}>
+              <span className={cn("flex items-center gap-3")}>
                 <span className={cn("text-sm")}>Search</span>
                 <kbd
                   className={cn(
-                    "!text-xs br:inline-block app-font-mono border app-border px-2 py-0.5 rounded-md text-muted-foreground"
+                    "px-1.5 py-[2px] rounded bg-muted/30 border border-border text-[10px] font-medium font-mono text-muted-foreground backdrop-blur-sm"
                   )}
                 >
                   <span className="sr-only">
@@ -258,7 +258,7 @@ export default function Header() {
               }}
               variant="ghost"
               size="icon"
-              className={cn("flex justify-center items-center gap-[0.5rem] nav-btn br:hidden")}
+              className={cn("flex justify-center items-center app-gap nav-btn br:hidden")}
             >
               <AnimatePresence mode="wait" initial={false}>
                 {open ? (

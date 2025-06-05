@@ -55,6 +55,7 @@ export default function ServiceWorkerRegister() {
             ]);
 
             if (versionCheckResult === "timeout" || versionCheckResult === null) {
+              console.log(versionCheckResult);
               console.debug("Service worker version check failed, considering it outdated");
               isOutdated = true;
             }

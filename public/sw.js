@@ -4,24 +4,49 @@ const CACHE_NAMES = {
   FONTS: "fonts-cache-v1",
   PAGES: "pages-cache-v1",
   OFFLINE: "offline-cache-v1",
+  CRITICAL: "critical-cache-v1", // For manifest, favicon, etc.
 };
+
+// Service worker version - increment this when you want to force updates
+const SW_VERSION = "1.0.1";
 
 // Resources to cache
 const OFFLINE_PAGE = "/fallback/offline.html";
+
+// Critical resources that should be cached during install
+const CRITICAL_RESOURCES = ["/manifest.webmanifest", "/favicon.ico", "/robots.txt"];
 
 // Cache duration in milliseconds (365 days)
 const CACHE_DURATION = 365 * 24 * 60 * 60 * 1000;
 // Check interval in milliseconds (5 minutes)
 const CHECK_INTERVAL = 5 * 60 * 1000;
 
+// Session management for install prompts
+const INSTALL_SESSION_KEY = "pwa-install-session";
+const INSTALL_PROMPT_DELAY = 8000; // 8 seconds
+const SESSION_DURATION = 24 * 60 * 60 * 1000; // 24 hours
+
 // Install event - cache critical assets
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches
-      .open(CACHE_NAMES.OFFLINE)
-      .then((cache) => {
-        return cache.add(OFFLINE_PAGE);
-      })
+    Promise.all([
+      // Cache offline page
+      caches.open(CACHE_NAMES.OFFLINE).then((cache) => {
+        return cache.add(OFFLINE_PAGE).catch((error) => {
+          console.warn("[Service Worker] Could not cache offline page:", error);
+        });
+      }),
+      // Cache critical resources
+      caches.open(CACHE_NAMES.CRITICAL).then((cache) => {
+        return Promise.allSettled(
+          CRITICAL_RESOURCES.map((resource) =>
+            cache.add(resource).catch((error) => {
+              console.warn(`[Service Worker] Could not cache ${resource}:`, error);
+            })
+          )
+        );
+      }),
+    ])
       .then(() => self.skipWaiting())
       .catch((error) => {
         console.error("[Service Worker] Installation failed:", error);
@@ -52,6 +77,115 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+// Session management functions
+async function getInstallSession() {
+  try {
+    const cache = await caches.open(CACHE_NAMES.STATIC);
+    const response = await cache.match(INSTALL_SESSION_KEY);
+    if (response) {
+      const data = await response.json();
+      return data;
+    }
+  } catch (error) {
+    console.warn("[Service Worker] Could not retrieve install session:", error);
+  }
+  return null;
+}
+
+async function setInstallSession(data) {
+  try {
+    const cache = await caches.open(CACHE_NAMES.STATIC);
+    const response = new Response(JSON.stringify(data), {
+      headers: { "Content-Type": "application/json" },
+    });
+    await cache.put(INSTALL_SESSION_KEY, response);
+  } catch (error) {
+    console.warn("[Service Worker] Could not save install session:", error);
+  }
+}
+
+async function clearInstallSession() {
+  try {
+    const cache = await caches.open(CACHE_NAMES.STATIC);
+    await cache.delete(INSTALL_SESSION_KEY);
+  } catch (error) {
+    console.warn("[Service Worker] Could not clear install session:", error);
+  }
+}
+
+// Check if user is on Safari iOS/macOS
+function isSafariApple(userAgent) {
+  const isSafari = /^((?!chrome|android).)*safari/i.test(userAgent);
+  const isApple = /iPad|iPhone|iPod|Macintosh|MacIntel|MacPPC|Mac68K/.test(userAgent);
+  return isSafari && isApple;
+}
+
+// Handle install session initialization and timing
+async function handleInstallSession(data) {
+  if (!isSafariApple(data.userAgent) || data.isInstalled) {
+    return;
+  }
+
+  const session = await getInstallSession();
+  const now = Date.now();
+
+  // Check if we have an existing session
+  if (session) {
+    // Check if session is expired
+    if (now - session.startTime > SESSION_DURATION) {
+      // Session expired, start new one
+      await setInstallSession({
+        startTime: now,
+        totalTime: 0,
+        hasShownPrompt: false,
+        userAgent: data.userAgent,
+      });
+      console.log("[Service Worker] Started new install session (expired)");
+    } else if (!session.hasShownPrompt) {
+      // Update total time spent
+      const updatedSession = {
+        ...session,
+        totalTime: session.totalTime + (now - (session.lastUpdate || session.startTime)),
+        lastUpdate: now,
+      };
+
+      // Check if user has spent enough time to show prompt
+      if (updatedSession.totalTime >= INSTALL_PROMPT_DELAY) {
+        updatedSession.hasShownPrompt = true;
+        await setInstallSession(updatedSession);
+
+        // Send message to all clients to show the toast
+        const clients = await self.clients.matchAll({ type: "window" });
+        clients.forEach((client) => {
+          client.postMessage({
+            type: "SHOW_INSTALL_TOAST",
+            data: { timestamp: now },
+          });
+        });
+
+        console.log(
+          "[Service Worker] Triggered install toast after",
+          updatedSession.totalTime,
+          "ms"
+        );
+      } else {
+        await setInstallSession(updatedSession);
+        console.log("[Service Worker] Updated session time:", updatedSession.totalTime, "/ 8000ms");
+      }
+    }
+  } else {
+    // No existing session, create new one
+    await setInstallSession({
+      startTime: now,
+      totalTime: 0,
+      hasShownPrompt: false,
+      userAgent: data.userAgent,
+      lastUpdate: now,
+    });
+    console.log("[Service Worker] Started new install session");
+  }
+}
+
 // Fetch event - intercept network requests
 self.addEventListener("fetch", (event) => {
   const request = event.request;
@@ -64,6 +198,12 @@ self.addEventListener("fetch", (event) => {
 
   // Skip browser extensions and chrome-extension URLs
   if (url.protocol === "chrome-extension:" || url.protocol === "moz-extension:") {
+    return;
+  }
+
+  // Handle critical resources (manifest, favicon, etc.)
+  if (isCriticalResource(url.pathname)) {
+    event.respondWith(handleCriticalResource(request));
     return;
   }
 
@@ -86,6 +226,91 @@ self.addEventListener("fetch", (event) => {
   }
 });
 
+// Check if a resource is critical
+function isCriticalResource(pathname) {
+  return CRITICAL_RESOURCES.some(
+    (resource) => pathname === resource || pathname.endsWith(resource)
+  );
+}
+
+// Handle critical resources (manifest, favicon, etc.)
+async function handleCriticalResource(request) {
+  try {
+    // Try cache first for critical resources
+    const cachedResponse = await caches.match(request);
+    if (cachedResponse) {
+      return cachedResponse;
+    }
+
+    // Try network
+    const response = await fetch(request);
+
+    // Cache successful responses
+    if (response.ok) {
+      try {
+        const cache = await caches.open(CACHE_NAMES.CRITICAL);
+        const responseToCache = response.clone();
+        await cache.put(request, responseToCache);
+      } catch (cacheError) {
+        // Silently handle cache errors
+      }
+    }
+
+    return response;
+  } catch (error) {
+    // Try cache again as fallback
+    const cachedResponse = await caches.match(request);
+    if (cachedResponse) {
+      return cachedResponse;
+    }
+
+    // For manifest.webmanifest, return a minimal fallback
+    if (request.url.includes("manifest.webmanifest")) {
+      return new Response(
+        JSON.stringify({
+          name: "Zendo",
+          short_name: "Zendo",
+          start_url: "/",
+          display: "standalone",
+          background_color: "#000000",
+          theme_color: "#000000",
+          icons: [
+            {
+              src: "/assets/icons/apple/apple-icon-180.png",
+              sizes: "180x180",
+              type: "image/png",
+            },
+          ],
+        }),
+        {
+          headers: { "Content-Type": "application/manifest+json" },
+          status: 200,
+        }
+      );
+    }
+
+    // For favicon.ico, return a minimal 1x1 transparent PNG
+    if (request.url.includes("favicon.ico")) {
+      // Minimal 1x1 transparent PNG as base64
+      const transparentPng =
+        "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==";
+      const binaryString = atob(transparentPng);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+
+      return new Response(bytes, {
+        headers: { "Content-Type": "image/png" },
+        status: 200,
+      });
+    }
+
+    // For other critical resources, return a 404 but don't throw
+    return new Response("Not Found", { status: 404 });
+  }
+}
+
 // Handle navigation requests
 async function handleNavigationRequest(request) {
   try {
@@ -100,7 +325,7 @@ async function handleNavigationRequest(request) {
         return processOfflinePage(offlineResponse);
       }
     } catch (cacheError) {
-      console.error("[Service Worker] Error serving offline page:", cacheError);
+      // Silently handle cache errors
     }
 
     // Final fallback
@@ -163,7 +388,7 @@ async function handleFontRequest(request) {
         const responseToCache = response.clone();
         await cache.put(request, responseToCache);
       } catch (cacheError) {
-        // Could not cache font (normal for no-cors requests)
+        // Silently handle cache errors
       }
     }
 
@@ -200,8 +425,8 @@ async function handleFontRequest(request) {
       );
     }
 
-    // For font files, let the browser handle the fallback
-    throw error;
+    // For font files, return a 404 but don't throw
+    return new Response("Font not available offline", { status: 404 });
   }
 }
 
@@ -218,7 +443,7 @@ async function handleStaticAssetRequest(request) {
         const responseToCache = response.clone();
         await cache.put(request, responseToCache);
       } catch (cacheError) {
-        // Could not cache asset
+        // Silently handle cache errors
       }
     }
 
@@ -230,7 +455,11 @@ async function handleStaticAssetRequest(request) {
       return cachedResponse;
     }
 
-    throw error;
+    // Return a 404 instead of throwing - this prevents unhandled promise rejections
+    return new Response("Resource not available offline", {
+      status: 404,
+      headers: { "Content-Type": "text/plain" },
+    });
   }
 }
 
@@ -286,7 +515,6 @@ async function processOfflinePage(response) {
       status: 200,
     });
   } catch (error) {
-    console.error("[Service Worker] Error processing offline page:", error);
     return response;
   }
 }
@@ -302,14 +530,14 @@ async function checkAndRefreshCache() {
       try {
         await offlineCache.add(OFFLINE_PAGE);
       } catch (error) {
-        // Could not re-cache offline page
+        // Silently handle errors
       }
     }
 
     // Clean up expired caches
     await cleanupExpiredCaches();
   } catch (error) {
-    console.error("[Service Worker] Error during cache check:", error);
+    // Silently handle errors during maintenance
   }
 }
 
@@ -349,7 +577,7 @@ async function cleanupExpiredCaches() {
       }
     }
   } catch (error) {
-    // Error during cache cleanup
+    // Silently handle cleanup errors
   }
 }
 
@@ -367,11 +595,72 @@ function startCacheCheckInterval() {
 
 // Handle messages from the main thread
 self.addEventListener("message", (event) => {
-  if (event.data === "CHECK_CACHE") {
+  const { data, ports } = event;
+
+  if (data && data.type === "GET_VERSION") {
+    // Respond with the service worker version
+    const port = ports[0];
+    if (port) {
+      port.postMessage({
+        type: "VERSION",
+        version: SW_VERSION,
+        cacheNames: CACHE_NAMES,
+        timestamp: Date.now(),
+      });
+    }
+  } else if (data && data.type === "INIT_INSTALL_SESSION") {
+    // Initialize install session tracking
+    handleInstallSession(data.data);
+  } else if (data && data.type === "APP_INSTALLED") {
+    // Clear install session when app is installed
+    clearInstallSession();
+    console.log("[Service Worker] Cleared install session - app installed");
+  } else if (data === "CHECK_CACHE") {
     checkAndRefreshCache();
-  } else if (event.data === "START_CACHE_CHECK") {
+  } else if (data === "START_CACHE_CHECK") {
     startCacheCheckInterval();
   }
+});
+
+// Handle notification click events
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+
+  const action = event.action;
+  const data = event.notification.data || {};
+
+  let url = "/";
+
+  // Handle different actions
+  if (action === "support") {
+    url = "/kofi";
+  } else if (action === "explore") {
+    url = "/";
+  } else if (event.notification.tag === "install-thank-you") {
+    // Default click on install thank you notification goes to kofi
+    url = "/kofi";
+  } else if (data.kofiUrl) {
+    url = data.kofiUrl;
+  }
+
+  event.waitUntil(
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
+      // Try to focus existing window and navigate to the URL
+      for (const client of clientList) {
+        if (client.url.includes(self.location.origin) && "focus" in client) {
+          if ("navigate" in client) {
+            client.navigate(url);
+          }
+          return client.focus();
+        }
+      }
+
+      // Open new window if no existing window found
+      if (clients.openWindow) {
+        return clients.openWindow(url);
+      }
+    })
+  );
 });
 
 // Start cache checking when the service worker becomes active

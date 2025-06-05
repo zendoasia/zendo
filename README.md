@@ -35,8 +35,7 @@
     <img src="https://img.shields.io/badge/Zendo-Roadmap-white?logo=roadmapdotsh&logoColor=orange" alt="Zendo Roadmap">
   </a>
     <a href="https://github.com/aarush0101/zendo#" target="_blank">
-    <img src="
-      https://img.shields.io/github/last-commit/aarush0101/zendo?style=flat&logo=github&logoColor=black" alt="Zendo Last Commit">
+    <img src="https://img.shields.io/github/last-commit/aarush0101/zendo?style=flat&logo=github&logoColor=black" alt="Zendo Last Commit">
   </a>
   
 </p>

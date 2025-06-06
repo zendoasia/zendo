@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import Footer from "@/components/main/footer";
 import ExternalLinkInterceptor from "@/components/scripts/externalLinkInterceptor";
 import PWAInstallDetector from "@/components/pwa/pwaInstallDetector";
+import FCMHandler from "@/components/firebase/firebase";
 import {
   geistSans,
   geistMono,
@@ -310,9 +311,10 @@ export default function RootLayout({
           `scroll-smooth w-full p-0 m-0 overflow-x-clip ${geistSans.variable} ${spaceGrotesk.variable} ${geistMono.variable} ${menlo.variable} ${ubuntu.variable} ${jetbrainsMono.variable} ${consolas.variable} antialiased`
         )}
       >
-        <ServiceWorkerRegister />
-        <PWAInstallDetector />
         <CookieConsent />
+        <PWAInstallDetector />
+        <ServiceWorkerRegister />
+        <FCMHandler />
         <noscript>
           <style>
             {`

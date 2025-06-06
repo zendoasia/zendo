@@ -2,7 +2,7 @@
 
 import Script from "next/script";
 
-const CLOUD_FLARE_ANALYTICS_ID = "66acbddcdde94cf3ae06fbd39ad53760";
+const CLOUD_FLARE_ANALYTICS_ID = process.env.NEXT_PUBLIC_CF_INSIGHTS_ID;
 
 export default function CloudflareAnalytics() {
   const isProd = process.env.NODE_ENV === "production";

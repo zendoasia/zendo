@@ -1,6 +1,7 @@
 {
   "name": "zendo",
-  "version": "0.1.4",
+  "version": "0.1.5",
+  "description": "The zendo website.",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack --port 3000 -H 0.0.0.0",
@@ -9,6 +10,20 @@
     "lint": "next lint",
     "prepare": "husky"
   },
+  "repository": {
+    "type": "git",
+    "url": "zendo"
+  },
+  "keywords": [
+    "website",
+    "sleek",
+    "modern",
+    "projects",
+    "showcase",
+    "portfolio"
+  ],
+  "author": "aarush0101",
+  "license": "MIT",
   "dependencies": {
     "@icons-pack/react-simple-icons": "^12.9.0",
     "@next/third-parties": "^15.3.2",

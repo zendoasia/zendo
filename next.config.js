@@ -14,7 +14,7 @@ const nextConfig = {
           {
             key: "Content-Security-Policy",
             value: [
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://firebase.googleapis.com https://www.gstatic.com/ https://fonts.gstatic.com/ https://fonts.googleapis.com https://www.googleapis.com https://static.cloudflareinsights.com;",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://cloudflareinsights.com https://www.google-analytics.com https://firebase.googleapis.com https://www.gstatic.com/ https://fonts.gstatic.com/ https://fonts.googleapis.com https://www.googleapis.com https://static.cloudflareinsights.com;",
               "object-src 'none';",
               "base-uri 'self';",
               "form-action 'self';",

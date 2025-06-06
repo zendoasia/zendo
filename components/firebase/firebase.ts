@@ -1,21 +1,21 @@
-"use client"
+"use client";
 
-import { useEffect } from "react"
+import { useEffect } from "react";
 
 export default function FCMHandler() {
   useEffect(() => {
     const initializeFCM = async () => {
       if (typeof window === "undefined" || !("serviceWorker" in navigator)) {
-        return
+        return;
       }
 
       try {
         // Wait for service worker to be ready
-        await navigator.serviceWorker.ready
+        await navigator.serviceWorker.ready;
 
         // Initialize Firebase
-        const { initializeApp } = await import("firebase/app")
-        const { getMessaging, onMessage } = await import("firebase/messaging")
+        const { initializeApp } = await import("firebase/app");
+        const { getMessaging, onMessage } = await import("firebase/messaging");
 
         const firebaseConfig = {
           apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -24,15 +24,15 @@ export default function FCMHandler() {
           storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
           messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
           appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-          measurementId: process.env.NEXT_PUBLIC_GA_ID
-        }
+          measurementId: process.env.NEXT_PUBLIC_GA_ID,
+        };
 
-        const app = initializeApp(firebaseConfig)
-        const messaging = getMessaging(app)
+        const app = initializeApp(firebaseConfig);
+        const messaging = getMessaging(app);
 
         // Handle foreground messages
         onMessage(messaging, (payload) => {
-          console.log("Received foreground message:", payload)
+          console.log("Received foreground message:", payload);
 
           // Show notification if the app is in foreground
           if (Notification.permission === "granted") {
@@ -41,18 +41,18 @@ export default function FCMHandler() {
               icon: payload.notification?.icon || "/assets/icons/maskable-icon.png",
               tag: payload.data?.tag || "default",
               data: payload.data,
-            })
+            });
           }
-        })
+        });
 
-        console.log("FCM initialized successfully")
+        console.log("FCM initialized successfully");
       } catch (error) {
-        console.error("Error initializing FCM:", error)
+        console.error("Error initializing FCM:", error);
       }
-    }
+    };
 
-    initializeFCM()
-  }, [])
+    initializeFCM();
+  }, []);
 
-  return null
+  return null;
 }

@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import Cookies from "js-cookie";
 
-const GA_ID = "G-RNN756TW7T";
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 const GA_COOKIE_PREFIXES = ["_ga", "_gid", "_gat", "_gcl_", "_gat_gtag", "_gat_UA-"];
 
 function removeScript(id: string) {

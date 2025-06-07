@@ -7,7 +7,7 @@
     "dev": "next dev --turbopack --port 3000 -H 0.0.0.0",
     "build": "node static/minify.js && next build",
     "start": "next start -H 0.0.0.0 -p 3000",
-    "lint": "next lint",
+    "lint": "next lint"
   },
   "repository": {
     "type": "git",

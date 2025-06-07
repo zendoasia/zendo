@@ -1,5 +1,6 @@
 const fs = require("fs");
 const Terser = require("terser");
+import path from "path";
 
 (async () => {
   const swPath = path.resolve(__dirname, "../public/sw.js");

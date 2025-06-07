@@ -22,7 +22,7 @@ export default function ServiceWorkerRegister() {
           reg.scope.startsWith(currentOrigin)
       );
 
-      const swResponse = await fetch("/sw.js", { cache: "no-cache" });
+      const swResponse = await fetch("/sw.min.js", { cache: "no-cache" });
       const swLastModified = swResponse.headers.get("last-modified");
       const swETag = swResponse.headers.get("etag");
 
@@ -86,7 +86,7 @@ export default function ServiceWorkerRegister() {
           await existingRegistration.unregister();
 
           // Register the new service worker
-          const registration = await navigator.serviceWorker.register("/sw.js", {
+          const registration = await navigator.serviceWorker.register("/sw.min.js", {
             scope: "/",
             updateViaCache: "none", // Ensure we always check for updates
           });
@@ -120,7 +120,7 @@ export default function ServiceWorkerRegister() {
 
       // Only register if no suitable existing registration was found
       console.debug("No active service worker found, registering new one...");
-      const registration = await navigator.serviceWorker.register("/sw.js", {
+      const registration = await navigator.serviceWorker.register("/sw.min.js", {
         scope: "/",
         updateViaCache: "none", // Ensure we always check for updates
       });

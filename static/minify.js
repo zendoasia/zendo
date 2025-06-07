@@ -20,7 +20,5 @@ fs.writeFileSync(minPath, result.code);
 fs.unlinkSync(swPath);
 
 // Remove itself
-const staticDir = path.resolve(__dirname, "./static");
-if (fs.existsSync(staticDir)) {
-  fs.rmSync(staticDir, { recursive: true, force: true });
-}
+fs.rmSync(staticDir, { recursive: true, force: true });
+

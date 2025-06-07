@@ -26,33 +26,50 @@ export default function FCMHandler() {
           appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
           measurementId: process.env.NEXT_PUBLIC_GA_ID,
         };
-
-        const app = initializeApp(firebaseConfig);
-        const messaging = getMessaging(app);
+ const app = initializeApp(firebaseConfig)
+        const messaging = getMessaging(app)
 
         // Handle foreground messages
         onMessage(messaging, (payload) => {
-          console.log("Received foreground message:", payload);
+          console.log("Received foreground message:", payload)
+
+          // Parse actions if they exist in the payload
+          let actions = []
+          try {
+            if (payload.data?.actions) {
+              actions = JSON.parse(payload.data.actions)
+            }
+          } catch (error) {
+            console.error("Error parsing notification actions:", error)
+          }
 
           // Show notification if the app is in foreground
           if (Notification.permission === "granted") {
-            new Notification(payload.notification?.title || "Zendo", {
+            const notification = new Notification(payload.notification?.title || "Zendo", {
               body: payload.notification?.body,
-              icon: payload.notification?.icon || "/assets/icons/maskable-icon.png",
+              icon: "/assets/icons/maskable-icon.png",
               tag: payload.data?.tag || "default",
               data: payload.data,
-            });
+              actions: actions,
+              requireInteraction: true,
+            })
+
+            notification.onclick = () => {
+              const url = payload.data?.url || "/"
+              window.open(url, "_blank")
+              notification.close()
+            }
           }
-        });
+        })
 
-        console.log("FCM initialized successfully");
+        console.log("FCM initialized successfully")
       } catch (error) {
-        console.error("Error initializing FCM:", error);
+        console.error("Error initializing FCM:", error)
       }
-    };
+    }
 
-    initializeFCM();
-  }, []);
+    initializeFCM()
+  }, [])
 
-  return null;
+  return null
 }

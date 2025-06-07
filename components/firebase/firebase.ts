@@ -50,6 +50,7 @@ export default function FCMHandler() {
               icon: "/assets/icons/maskable-icon.png",
               tag: payload.data?.tag || "default",
               data: payload.data,
+              // @ts-expect-error Actions are not standard across browsers yet
               actions: actions,
               requireInteraction: true,
             })

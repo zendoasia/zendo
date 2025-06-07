@@ -55,15 +55,15 @@ export const metadata: Metadata = {
       url: "mailto:aarush01111@gmail.com",
     },
   ],
-  assets: "https://zendo.pages.dev/assets/",
+  assets: `https://${process.env.NEXT_PUBLIC_ORIGIN}/assets/`,
   category: "Programming and Technology",
-  metadataBase: new URL("https://zendo.pages.dev/"),
+  metadataBase: new URL(`https://${process.env.NEXT_PUBLIC_ORIGIN}/`),
   referrer: "origin-when-cross-origin",
   openGraph: {
     title: "Zendo",
     description:
-      "Welcome to Zendo. This is a private website for covering my work, projects, and portfolio. Let's explore the world of technology together.",
-    url: "https://zendo.pages.dev/",
+      "Welcome to Zendo. This is a private website for covering my work, projects, and portfolio.",
+    url: `https://${process.env.NEXT_PUBLIC_ORIGIN}/`,
     siteName: "Zendo",
     determiner: "the",
   },
@@ -73,18 +73,11 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Zendo",
     description:
-      "Welcome to Zendo. This is a private website for covering my work, projects, and portfolio. Let's explore the world of technology together.",
+      "Welcome to Zendo. This is a private website for covering my work, projects, and portfolio.",
     creator: "@aarush01111",
   },
   pinterest: {
     richPin: true,
-  },
-  verification: {
-    google: "-q79a7PlxvBy3gr5cMmDHsT3av2Axtzrq1Vb6dcmSWA",
-    yandex: "a16a2e8a4fb0ad33",
-    other: {
-      "msvalidate.01": "969F0E11BC415787B2C7464A98FBDF02",
-    },
   },
   icons: [{ rel: "apple-touch-icon", url: "assets/icons/apple/apple-icon-180.png" }],
   appleWebApp: {

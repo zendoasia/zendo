@@ -58,6 +58,17 @@ export interface IOSInstallDialogProps {
 }
 
 /**
+ * Represents the environment variables required for EdgeRequest.
+ *
+ * @property JWT_SHARED_SECRET - The shared secret used for JWT authentication. May be undefined if not set.
+ * @property WORKER_URL - The URL of the worker service. May be undefined if not set.
+ */
+export interface EdgeRequestEnv {
+  JWT_SHARED_SECRET: string | undefined,
+  WORKER_URL: string | undefined
+}
+
+/**
  * Props for the SparklesHero component.
  */
 export type SparklesHeroProps = {

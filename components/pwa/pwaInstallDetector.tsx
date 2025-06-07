@@ -1,42 +1,44 @@
-"use client";
+"use client"
 
-import { useEffect, useState, useRef } from "react";
-import { isIOS, isMacOS, isSafari } from "@/lib/utils";
-import { IOSInstallDialog } from "@/components/pwa/iosInstallDialog";
-import sendToast from "@/components/modules/toast";
-import type { BeforeInstallPromptEvent } from "@/types";
-import { Button } from "@/components/ui/button";
-import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState, useRef } from "react"
+import { isIOS, isMacOS, isSafari } from "@/lib/utils"
+import { IOSInstallDialog } from "@/components/pwa/iosInstallDialog"
+import sendToast from "@/components/modules/toast"
+import type { BeforeInstallPromptEvent } from "@/types"
+import { Button } from "@/components/ui/button"
+import { AnimatePresence, motion } from "framer-motion"
 
 export default function PWAInstallDetector() {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
-  const [isInstallable, setIsInstallable] = useState(false);
-  const [isInstalled, setIsInstalled] = useState(false);
-  const [showIOSDialog, setShowIOSDialog] = useState(false);
-  const [cookieConsentVisible, setCookieConsentVisible] = useState(false);
-  const sessionUpdateInterval = useRef<NodeJS.Timeout | null>(null);
-  const cleanup = useRef<(() => void) | null>(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
+  const [isInstallable, setIsInstallable] = useState(false)
+  const [isInstalled, setIsInstalled] = useState(false)
+  const [showIOSDialog, setShowIOSDialog] = useState(false)
+  const [cookieConsentVisible, setCookieConsentVisible] = useState(false)
+  const [fcmToken, setFcmToken] = useState<string | null>(null)
+
+  // Refs to prevent multiple intervals and cleanup
+  const sessionUpdateInterval = useRef<NodeJS.Timeout | null>(null)
+  const toastShownRef = useRef(false)
 
   useEffect(() => {
     // Check if already installed
     const checkIfInstalled = () => {
-      const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
-      const isInApp =
-        (window.navigator as Navigator & { standalone?: boolean }).standalone === true;
-      const isInstalled = isStandalone || isInApp;
-      setIsInstalled(isInstalled);
-      return isInstalled;
-    };
+      const isStandalone = window.matchMedia("(display-mode: standalone)").matches
+      const isInApp = (window.navigator as Navigator & { standalone?: boolean }).standalone === true
+      const isInstalled = isStandalone || isInApp
+      setIsInstalled(isInstalled)
+      return isInstalled
+    }
 
-    const installed = checkIfInstalled();
+    const installed = checkIfInstalled()
 
     // Check if cookie consent is visible
     const checkCookieConsent = () => {
-      const cookieConsentElement = document.querySelector("[data-cookie-consent]");
-      const isVisible = cookieConsentElement !== null;
-      setCookieConsentVisible(isVisible);
-      return isVisible;
-    };
+      const cookieConsentElement = document.querySelector("[data-cookie-consent]")
+      const isVisible = cookieConsentElement !== null
+      setCookieConsentVisible(isVisible)
+      return isVisible
+    }
 
     // Check if any dialogs or prompts are open
     const checkForOpenDialogs = () => {
@@ -55,94 +57,176 @@ export default function PWAInstallDetector() {
         "[data-radix-dialog-content]",
         "[data-sonner-toaster]",
         ".sonner-toast",
-      ];
+      ]
 
       for (const selector of dialogSelectors) {
-        const elements = document.querySelectorAll(selector);
+        const elements = document.querySelectorAll(selector)
         for (const element of elements) {
-          const computedStyle = window.getComputedStyle(element);
+          const computedStyle = window.getComputedStyle(element)
           if (
             computedStyle.display !== "none" &&
             computedStyle.visibility !== "hidden" &&
             computedStyle.opacity !== "0"
           ) {
-            return true;
+            return true
           }
         }
       }
-      return false;
-    };
+      return false
+    }
+
+    // Handle page visibility changes
+    const handleVisibilityChange = async () => {
+      if ("serviceWorker" in navigator) {
+        try {
+          const registration = await navigator.serviceWorker.ready
+          registration.active?.postMessage({
+            type: "PAGE_VISIBILITY_CHANGE",
+            isVisible: !document.hidden,
+          })
+        } catch (error) {
+          console.error("Error sending visibility change:", error)
+        }
+      }
+    }
+
+    // Initialize FCM and get token
+    const initializeFCM = async () => {
+      try {
+        if ("Notification" in window && Notification.permission === "granted") {
+          const { initializeApp } = await import("firebase/app")
+          const { getMessaging, getToken } = await import("firebase/messaging")
+
+          const firebaseConfig = {
+            apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+            authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+            projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+            storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+            messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+            appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+          }
+
+          const app = initializeApp(firebaseConfig)
+          const messaging = getMessaging(app)
+
+          const token = await getToken(messaging, {
+            vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
+          })
+
+          if (token) {
+            setFcmToken(token)
+            console.log("FCM token obtained:", token)
+          }
+        }
+      } catch (error) {
+        console.error("Error initializing FCM:", error)
+      }
+    }
 
     // Initialize session manager for all platforms
     const initializeSessionManager = async () => {
-      if (installed) return;
+      if (installed) return
 
       if ("serviceWorker" in navigator) {
         try {
-          const registration = await navigator.serviceWorker.ready;
+          const registration = await navigator.serviceWorker.ready
 
           // Listen for messages from service worker
           navigator.serviceWorker.addEventListener("message", (event) => {
             if (event.data.type === "SHOW_INSTALL_TOAST") {
+              // Prevent multiple toasts with ref check
+              if (toastShownRef.current) {
+                console.log("Toast already shown, skipping")
+                return
+              }
+
               // Don't show if cookie consent is visible or other dialogs are open
               if (checkCookieConsent() || checkForOpenDialogs()) {
-                console.log("Delaying install toast - dialogs are open");
-                return;
+                console.log("Delaying install toast - dialogs are open")
+                return
               }
 
               if (isSafari() && (isIOS() || isMacOS())) {
-                const deviceType = isIOS() ? "iPhone/iPad" : "Mac";
+                toastShownRef.current = true
+                const deviceType = isIOS() ? "iPhone/iPad" : "Mac"
+
                 sendToast({
                   type: "neutral",
                   message: `Install Zendo on your ${deviceType} for the best experience!`,
                   action: {
                     label: "Show me how",
-                    onClick: () => setShowIOSDialog(true),
+                    onClick: () => {
+                      setShowIOSDialog(true)
+                      // Reset toast shown flag when action is taken
+                      setTimeout(() => {
+                        toastShownRef.current = false
+                      }, 1000)
+                    },
                   },
-                });
+                })
+
+                // Reset toast shown flag after 10 seconds
+                setTimeout(() => {
+                  toastShownRef.current = false
+                  // Notify service worker that toast was dismissed
+                  registration.active?.postMessage({
+                    type: "TOAST_DISMISSED",
+                  })
+                }, 10000)
               }
             } else if (event.data.type === "SHOW_INSTALL_PROMPT") {
               // Don't show if cookie consent is visible or other dialogs are open
               if (checkCookieConsent() || checkForOpenDialogs()) {
-                console.log("Delaying install prompt - dialogs are open");
-                return;
+                console.log("Delaying install prompt - dialogs are open")
+                return
               }
 
               // Show the stored beforeinstallprompt
               if (deferredPrompt) {
-                setIsInstallable(true);
+                setIsInstallable(true)
+              }
+            } else if (event.data.type === "GET_FCM_TOKEN") {
+              // Respond to service worker FCM token request
+              const port = event.ports[0]
+              if (port) {
+                port.postMessage({ token: fcmToken })
               }
             }
-          });
+          })
 
           // Set up periodic session updates to ensure timely prompts
+          if (sessionUpdateInterval.current) {
+            clearInterval(sessionUpdateInterval.current)
+          }
+
           sessionUpdateInterval.current = setInterval(async () => {
             if (installed || checkCookieConsent()) {
-              if (sessionUpdateInterval.current) clearInterval(sessionUpdateInterval.current);
-              return;
+              if (sessionUpdateInterval.current) {
+                clearInterval(sessionUpdateInterval.current)
+                sessionUpdateInterval.current = null
+              }
+              return
             }
 
             try {
-              const registration = await navigator.serviceWorker.ready;
+              const registration = await navigator.serviceWorker.ready
               registration.active?.postMessage({
                 type: "UPDATE_INSTALL_SESSION",
                 data: {
                   timestamp: Date.now(),
                   hasOpenDialogs: checkForOpenDialogs(),
                 },
-              });
+              })
             } catch (error) {
-              console.error("Error updating session:", error);
+              console.error("Error updating session:", error)
             }
-          }, 1000); // Update every second
+          }, 1000) // Update every second
 
-          // Clean up interval when component unmounts or conditions change
-          cleanup.current = () => {
-            if (sessionUpdateInterval.current) clearInterval(sessionUpdateInterval.current);
-          };
+          // Add page visibility change listener
+          document.addEventListener("visibilitychange", handleVisibilityChange)
 
-          // Store cleanup function for later use
-          window.addEventListener("beforeunload", cleanup.current!);
+          // Initialize FCM
+          await initializeFCM()
 
           // Only initialize session tracking if cookie consent is not visible
           if (!checkCookieConsent()) {
@@ -156,61 +240,59 @@ export default function PWAInstallDetector() {
                 cookieConsentVisible: false,
                 hasOpenDialogs: checkForOpenDialogs(),
               },
-            });
+            })
           }
         } catch (error) {
-          console.error("Error initializing session manager:", error);
+          console.error("Error initializing session manager:", error)
         }
       }
-    };
+    }
 
     // Handle beforeinstallprompt event (Chrome/Edge)
     const handleBeforeInstallPrompt = (e: Event) => {
-      const event = e as BeforeInstallPromptEvent;
-      e.preventDefault();
-      setDeferredPrompt(event);
+      const event = e as BeforeInstallPromptEvent
+      e.preventDefault()
+      setDeferredPrompt(event)
 
       // Don't show immediately if cookie consent is visible
       if (checkCookieConsent()) {
-        console.log("Storing install prompt - cookie consent is visible");
-        return;
+        console.log("Storing install prompt - cookie consent is visible")
+        return
       }
 
       // Store the prompt and let session manager handle timing
-      console.log("PWA install prompt stored for session management");
-    };
+      console.log("PWA install prompt stored for session management")
+    }
 
     // Handle app installed event
     const handleAppInstalled = async () => {
-      console.log("PWA was installed successfully");
-      setIsInstalled(true);
-      setIsInstallable(false);
-      setDeferredPrompt(null);
+      console.log("PWA was installed successfully")
+      setIsInstalled(true)
+      setIsInstallable(false)
+      setDeferredPrompt(null)
 
       // Notify service worker about installation
       if ("serviceWorker" in navigator) {
-        const registration = await navigator.serviceWorker.ready;
+        const registration = await navigator.serviceWorker.ready
         registration.active?.postMessage({
           type: "APP_INSTALLED",
           data: { timestamp: Date.now() },
-        });
+        })
       }
 
-      // Initialize FCM and send thank you notification
-      setTimeout(async () => {
-        await initializeFCMAndSendThankYou();
-      }, 1000);
-    };
+      // The service worker will handle the notification after installation
+      console.log("Install notification will be handled by service worker")
+    }
 
     // Listen for cookie consent events
     const handleCookieConsentAllow = () => {
-      setCookieConsentVisible(false);
-      console.log("Cookie consent allowed - starting session tracking");
+      setCookieConsentVisible(false)
+      console.log("Cookie consent allowed - starting session tracking")
 
       // Start session tracking now that consent is given
       setTimeout(async () => {
         if ("serviceWorker" in navigator) {
-          const registration = await navigator.serviceWorker.ready;
+          const registration = await navigator.serviceWorker.ready
           registration.active?.postMessage({
             type: "INIT_INSTALL_SESSION",
             data: {
@@ -221,19 +303,19 @@ export default function PWAInstallDetector() {
               cookieConsentVisible: false,
               hasOpenDialogs: checkForOpenDialogs(),
             },
-          });
+          })
         }
-      }, 500);
-    };
+      }, 500)
+    }
 
     const handleCookieConsentDeny = () => {
-      setCookieConsentVisible(false);
-      console.log("Cookie consent denied - starting session tracking anyway");
+      setCookieConsentVisible(false)
+      console.log("Cookie consent denied - starting session tracking anyway")
 
       // Still allow install prompts even if analytics denied
       setTimeout(async () => {
         if ("serviceWorker" in navigator) {
-          const registration = await navigator.serviceWorker.ready;
+          const registration = await navigator.serviceWorker.ready
           registration.active?.postMessage({
             type: "INIT_INSTALL_SESSION",
             data: {
@@ -244,32 +326,32 @@ export default function PWAInstallDetector() {
               cookieConsentVisible: false,
               hasOpenDialogs: checkForOpenDialogs(),
             },
-          });
+          })
         }
-      }, 500);
-    };
+      }, 500)
+    }
 
     // Add event listeners
-    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-    window.addEventListener("appinstalled", handleAppInstalled);
-    window.addEventListener("cookie-consent-allow", handleCookieConsentAllow);
-    window.addEventListener("cookie-consent-deny", handleCookieConsentDeny);
+    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt)
+    window.addEventListener("appinstalled", handleAppInstalled)
+    window.addEventListener("cookie-consent-allow", handleCookieConsentAllow)
+    window.addEventListener("cookie-consent-deny", handleCookieConsentDeny)
 
     // Initialize session manager only if cookie consent is not visible
-    initializeSessionManager();
+    initializeSessionManager()
 
     // Monitor cookie consent visibility
     const observer = new MutationObserver(() => {
-      const newCookieConsentState = checkCookieConsent();
+      const newCookieConsentState = checkCookieConsent()
       if (newCookieConsentState !== cookieConsentVisible) {
-        setCookieConsentVisible(newCookieConsentState);
+        setCookieConsentVisible(newCookieConsentState)
 
         // If cookie consent just disappeared, start session tracking
         if (!newCookieConsentState && cookieConsentVisible) {
-          console.log("Cookie consent disappeared - starting session tracking");
+          console.log("Cookie consent disappeared - starting session tracking")
           setTimeout(async () => {
             if ("serviceWorker" in navigator) {
-              const registration = await navigator.serviceWorker.ready;
+              const registration = await navigator.serviceWorker.ready
               registration.active?.postMessage({
                 type: "INIT_INSTALL_SESSION",
                 data: {
@@ -280,178 +362,54 @@ export default function PWAInstallDetector() {
                   cookieConsentVisible: false,
                   hasOpenDialogs: checkForOpenDialogs(),
                 },
-              });
+              })
             }
-          }, 500);
+          }, 500)
         }
       }
-    });
+    })
 
     observer.observe(document.body, {
       childList: true,
       subtree: true,
       attributes: true,
       attributeFilter: ["data-cookie-consent"],
-    });
+    })
 
     return () => {
-      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-      window.removeEventListener("appinstalled", handleAppInstalled);
-      window.removeEventListener("cookie-consent-allow", handleCookieConsentAllow);
-      window.removeEventListener("cookie-consent-deny", handleCookieConsentDeny);
-      observer.disconnect();
-      if (sessionUpdateInterval.current) clearInterval(sessionUpdateInterval.current);
-      if (cleanup.current) window.removeEventListener("beforeunload", cleanup.current);
-    };
-  }, [deferredPrompt, cookieConsentVisible]);
+      window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt)
+      window.removeEventListener("appinstalled", handleAppInstalled)
+      window.removeEventListener("cookie-consent-allow", handleCookieConsentAllow)
+      window.removeEventListener("cookie-consent-deny", handleCookieConsentDeny)
+      document.removeEventListener("visibilitychange", handleVisibilityChange)
+      observer.disconnect()
 
-  // Initialize FCM and send thank you notification
-  const initializeFCMAndSendThankYou = async () => {
-    try {
-      // Request notification permission first
-      if ("Notification" in window) {
-        let permission = Notification.permission;
-
-        if (permission === "default") {
-          permission = await Notification.requestPermission();
-        }
-
-        if (permission !== "granted") {
-          console.log("Notification permission denied");
-          // @ts-expect-error Notification actions are not yet standard in all browsers
-          if (permission === "granted") {
-            new Notification("Thank you for installing Zendo! 🎉", {
-              body: "Welcome to the Zendo experience! Consider supporting the project.",
-              icon: "/assets/icons/maskable-icon.png",
-              tag: "install-thank-you",
-              requireInteraction: true,
-            });
-          }
-          return;
-        }
-      }
-
-      // Initialize FCM
-      const { initializeApp } = await import("firebase/app");
-      const { getMessaging, getToken } = await import("firebase/messaging");
-
-      const firebaseConfig = {
-        apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-        authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-        storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-        messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-        appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-      };
-
-      const app = initializeApp(firebaseConfig);
-      const messaging = getMessaging(app);
-
-      // Get FCM token
-      const token = await getToken(messaging, {
-        vapidKey: process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY,
-      });
-
-      if (token) {
-        console.log("FCM token obtained:", token);
-
-        // Send token to server and trigger thank you notification
-        const response = await fetch("/api/fcm/send-install-thank-you", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            token,
-            title: "Thank you for installing Zendo! 🎉",
-            body: "Welcome to the Zendo experience! Consider supporting the project.",
-            data: {
-              url: "/kofi",
-              action: "support",
-            },
-          }),
-        });
-
-        if (response.ok) {
-          console.log("Install thank you notification sent via FCM");
-
-          // Also show a browser notification as immediate feedback
-          if (Notification.permission === "granted") {
-            const notification = new Notification("Thank you for installing Zendo! 🎉", {
-              body: "Welcome to the Zendo experience! Consider supporting the project.",
-              icon: "/assets/icons/maskable-icon.png",
-              tag: "install-thank-you",
-              requireInteraction: true,
-              // @ts-expect-error Notification actions are not yet standard in all browsers
-              actions: [
-                { action: "support", title: "Support on Ko-fi ☕" },
-                { action: "explore", title: "Explore App" },
-              ],
-            });
-
-            notification.onclick = () => {
-              window.open("/kofi", "_blank");
-              notification.close();
-            };
-          }
-        } else {
-          const errorData = await response.json();
-          console.error("Failed to send FCM notification:", errorData);
-
-          // Fallback to browser notification
-          if (Notification.permission === "granted") {
-            new Notification("Thank you for installing Zendo! 🎉", {
-              body: "Welcome to the Zendo experience! Consider supporting the project.",
-              icon: "/assets/icons/maskable-icon.png",
-              tag: "install-thank-you",
-            });
-          }
-        }
-      } else {
-        console.log("No FCM token available, using browser notification");
-
-        // Fallback to browser notification
-        if (Notification.permission === "granted") {
-          new Notification("Thank you for installing Zendo! 🎉", {
-            body: "Welcome to the Zendo experience! Consider supporting the project.",
-            icon: "/assets/icons/maskable-icon.png",
-            tag: "install-thank-you",
-          });
-        }
-      }
-    } catch (error) {
-      console.error("Error initializing FCM:", error);
-
-      // Fallback to browser notification
-      if (Notification.permission === "granted") {
-        new Notification("Thank you for installing Zendo! 🎉", {
-          body: "Welcome to the Zendo experience! Consider supporting the project.",
-          icon: "/assets/icons/maskable-icon.png",
-          tag: "install-thank-you",
-        });
+      if (sessionUpdateInterval.current) {
+        clearInterval(sessionUpdateInterval.current)
+        sessionUpdateInterval.current = null
       }
     }
-  };
+  }, [deferredPrompt, cookieConsentVisible, fcmToken])
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
+    if (!deferredPrompt) return
 
     try {
-      await deferredPrompt.prompt();
-      const choiceResult = await deferredPrompt.userChoice;
+      await deferredPrompt.prompt()
+      const choiceResult = await deferredPrompt.userChoice
 
       if (choiceResult.outcome === "accepted") {
-        console.log("User accepted the install prompt");
+        console.log("User accepted the install prompt")
       } else {
-        console.log("User dismissed the install prompt");
+        console.log("User dismissed the install prompt")
       }
 
-      setDeferredPrompt(null);
-      setIsInstallable(false);
+      setDeferredPrompt(null)
+      setIsInstallable(false)
     } catch (error) {
-      console.error("Error during installation:", error);
+      console.error("Error during installation:", error)
     }
-  };
+  }
 
   // Don't render Chrome install prompt if already installed or cookie consent is visible
   if (isInstalled) {
@@ -459,7 +417,7 @@ export default function PWAInstallDetector() {
       <>
         <IOSInstallDialog open={showIOSDialog} onOpenChangeAction={setShowIOSDialog} />
       </>
-    );
+    )
   }
 
   return (
@@ -493,9 +451,7 @@ export default function PWAInstallDetector() {
                   </div>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                    Install Zendo App
-                  </p>
+                  <p className="text-sm font-medium text-gray-900 dark:text-gray-100">Install Zendo App</p>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                     Get the full experience with offline access and notifications.
                   </p>
@@ -521,5 +477,5 @@ export default function PWAInstallDetector() {
       </AnimatePresence>
       <IOSInstallDialog open={showIOSDialog} onOpenChangeAction={setShowIOSDialog} />
     </>
-  );
+  )
 }

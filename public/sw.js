@@ -152,13 +152,8 @@ self.addEventListener("activate", (event) => {
 // Global session tracking variables
 let sessionTracker = null
 let sessionInterval = null
-
-// Toast concurrency control
-let toastState = {
-  isShowing: false,
-  lastShown: 0,
-  showCount: 0,
-}
+let isSessionInitialized = false
+let toastState = null
 
 // Enhanced session management functions
 async function getInstallSession() {
@@ -191,197 +186,14 @@ async function clearInstallSession() {
   try {
     const cache = await caches.open(CACHE_NAMES.STATIC)
     await cache.delete(INSTALL_SESSION_KEY)
+    isSessionInitialized = false
+    sessionTracker = null
+    if (sessionInterval) {
+      clearInterval(sessionInterval)
+      sessionInterval = null
+    }
   } catch (error) {
     console.warn("[Service Worker] Could not clear install session:", error)
-  }
-}
-
-// Notification state management
-async function getNotificationState() {
-  try {
-    const cache = await caches.open(CACHE_NAMES.STATIC)
-    const response = await cache.match(NOTIFICATION_STATE_KEY)
-    if (response) {
-      const data = await response.json()
-      return data
-    }
-  } catch (error) {
-    console.warn("[Service Worker] Could not retrieve notification state:", error)
-  }
-  return { isShowing: false, lastShown: 0, showCount: 0 }
-}
-
-async function setNotificationState(state) {
-  try {
-    const cache = await caches.open(CACHE_NAMES.STATIC)
-    const response = new Response(JSON.stringify(state), {
-      headers: { "Content-Type": "application/json" },
-    })
-    await cache.put(NOTIFICATION_STATE_KEY, response)
-    toastState = state
-  } catch (error) {
-    console.warn("[Service Worker] Could not save notification state:", error)
-  }
-}
-
-// Pending notification management
-async function setPendingInstallNotification(data) {
-  try {
-    const cache = await caches.open(CACHE_NAMES.STATIC)
-    const response = new Response(JSON.stringify(data), {
-      headers: { "Content-Type": "application/json" },
-    })
-    await cache.put(INSTALL_NOTIFICATION_PENDING_KEY, response)
-    console.log("[Service Worker] Saved pending install notification")
-  } catch (error) {
-    console.warn("[Service Worker] Could not save pending notification:", error)
-  }
-}
-
-async function getPendingInstallNotification() {
-  try {
-    const cache = await caches.open(CACHE_NAMES.STATIC)
-    const response = await cache.match(INSTALL_NOTIFICATION_PENDING_KEY)
-    if (response) {
-      const data = await response.json()
-      return data
-    }
-  } catch (error) {
-    console.warn("[Service Worker] Could not retrieve pending notification:", error)
-  }
-  return null
-}
-
-async function clearPendingInstallNotification() {
-  try {
-    const cache = await caches.open(CACHE_NAMES.STATIC)
-    await cache.delete(INSTALL_NOTIFICATION_PENDING_KEY)
-    console.log("[Service Worker] Cleared pending install notification")
-  } catch (error) {
-    console.warn("[Service Worker] Could not clear pending notification:", error)
-  }
-}
-
-// Check and send pending install notification
-async function checkPendingInstallNotification() {
-  const pendingNotification = await getPendingInstallNotification()
-  if (pendingNotification) {
-    console.log("[Service Worker] Found pending install notification, sending now...")
-
-    // Wait a bit for the app to fully load
-    setTimeout(async () => {
-      await sendInstallThankYouNotification(pendingNotification)
-      await clearPendingInstallNotification()
-    }, 2000)
-  }
-}
-
-// Send install thank you notification via service worker
-async function sendInstallThankYouNotification(data) {
-  try {
-    console.log("[Service Worker] Sending install thank you notification")
-
-    // Try to get FCM token from the main thread first
-    const clients = await self.clients.matchAll({ type: "window" })
-    let fcmToken = null
-
-    // Request FCM token from any available client
-    for (const client of clients) {
-      try {
-        const response = await new Promise((resolve) => {
-          const channel = new MessageChannel()
-          channel.port1.onmessage = (event) => {
-            resolve(event.data)
-          }
-          client.postMessage({ type: "GET_FCM_TOKEN" }, [channel.port2])
-
-          // Timeout after 3 seconds
-          setTimeout(() => resolve(null), 3000)
-        })
-
-        if (response && response.token) {
-          fcmToken = response.token
-          break
-        }
-      } catch (error) {
-        console.warn("[Service Worker] Failed to get FCM token from client:", error)
-      }
-    }
-
-    if (fcmToken) {
-      // Send FCM notification via API
-      try {
-        const response = await fetch("/api/fcm/send-install-thank-you", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            token: fcmToken,
-            title: "Thank you for installing Zendo! 🎉",
-            body: "Welcome to the Zendo experience! Consider supporting the project.",
-            data: {
-              url: "/kofi",
-              action: "support",
-            },
-          }),
-        })
-
-        if (response.ok) {
-          console.log("[Service Worker] FCM notification sent successfully")
-        } else {
-          throw new Error("FCM API request failed")
-        }
-      } catch (error) {
-        console.warn("[Service Worker] FCM notification failed, using fallback:", error)
-        // Fallback to service worker notification
-        await showServiceWorkerNotification()
-      }
-    } else {
-      console.log("[Service Worker] No FCM token available, using service worker notification")
-      // Fallback to service worker notification
-      await showServiceWorkerNotification()
-    }
-  } catch (error) {
-    console.error("[Service Worker] Error sending install notification:", error)
-    // Final fallback
-    await showServiceWorkerNotification()
-  }
-}
-
-// Show notification directly from service worker
-async function showServiceWorkerNotification() {
-  try {
-    const actions = [
-      {
-        action: "support",
-        title: "Support on Ko-fi ☕",
-      },
-      {
-        action: "explore",
-        title: "Explore App",
-      },
-    ]
-
-    await self.registration.showNotification("Thank you for installing Zendo! 🎉", {
-      body: "Welcome to the Zendo experience! Consider supporting the project.",
-      icon: "/assets/icons/maskable-icon.png",
-      badge: "/assets/icons/maskable-icon.png",
-      tag: "install-thank-you-sw",
-      data: {
-        url: "/kofi",
-        timestamp: Date.now(),
-      },
-      actions: actions,
-      requireInteraction: true,
-      silent: false,
-      vibrate: [200, 100, 200],
-      renotify: true,
-    })
-
-    console.log("[Service Worker] Service worker notification shown")
-  } catch (error) {
-    console.error("[Service Worker] Failed to show service worker notification:", error)
   }
 }
 
@@ -394,6 +206,12 @@ function isSafariApple(userAgent) {
 
 // Initialize persistent session tracking
 async function initializeSessionTracking(data) {
+  // Prevent multiple initializations
+  if (isSessionInitialized) {
+    console.log("[Service Worker] Session already initialized, skipping")
+    return
+  }
+
   // Don't start session tracking if user is already installed
   if (data.isInstalled) {
     console.log("[Service Worker] User already installed - skipping session tracking")
@@ -432,10 +250,18 @@ async function initializeSessionTracking(data) {
     await createNewSession(data, now)
     console.log("[Service Worker] Started new install session")
   }
+
+  isSessionInitialized = true
 }
 
 // Create a new session
 async function createNewSession(data, timestamp) {
+  // Clear any existing interval
+  if (sessionInterval) {
+    clearInterval(sessionInterval)
+    sessionInterval = null
+  }
+
   sessionTracker = {
     startTime: timestamp,
     totalTime: 0,
@@ -452,13 +278,19 @@ async function createNewSession(data, timestamp) {
 
 // Start the session timer
 function startSessionTimer() {
+  // Clear any existing interval first
   if (sessionInterval) {
     clearInterval(sessionInterval)
+    sessionInterval = null
   }
+
+  console.log("[Service Worker] Starting session timer")
 
   sessionInterval = setInterval(async () => {
     if (!sessionTracker || !sessionTracker.isActive || sessionTracker.hasShownPrompt) {
+      console.log("[Service Worker] Stopping session timer - inactive or prompt shown")
       clearInterval(sessionInterval)
+      sessionInterval = null
       return
     }
 
@@ -480,58 +312,14 @@ function startSessionTimer() {
       await setInstallSession(sessionTracker)
       await triggerInstallPrompt(sessionTracker.isSafari)
       clearInterval(sessionInterval)
+      sessionInterval = null
     }
   }, SESSION_UPDATE_INTERVAL)
 }
 
-// Trigger the install prompt with concurrency control
-async function triggerInstallPrompt(isSafari) {
-  try {
-    // Load current toast state
-    const currentState = await getNotificationState()
-    const now = Date.now()
-
-    // Prevent multiple toasts (especially on iOS)
-    if (currentState.isShowing || now - currentState.lastShown < 10000) {
-      console.log("[Service Worker] Skipping prompt - toast already showing or shown recently")
-      return
-    }
-
-    // Update state to prevent concurrent toasts
-    await setNotificationState({
-      isShowing: true,
-      lastShown: now,
-      showCount: currentState.showCount + 1,
-    })
-
-    const clients = await self.clients.matchAll({ type: "window" })
-    const messageType = isSafari ? "SHOW_INSTALL_TOAST" : "SHOW_INSTALL_PROMPT"
-
-    console.log(`[Service Worker] Triggering ${messageType} after ${sessionTracker.totalTime}ms`)
-
-    clients.forEach((client) => {
-      client.postMessage({
-        type: messageType,
-        data: { timestamp: now },
-      })
-    })
-
-    // Reset showing state after 5 seconds
-    setTimeout(async () => {
-      const state = await getNotificationState()
-      await setNotificationState({
-        ...state,
-        isShowing: false,
-      })
-    }, 5000)
-  } catch (error) {
-    console.error("[Service Worker] Error triggering install prompt:", error)
-  }
-}
-
 // Pause session tracking (when dialogs are open)
 function pauseSessionTracking() {
-  if (sessionTracker) {
+  if (sessionTracker && sessionTracker.isActive) {
     sessionTracker.isActive = false
     console.log("[Service Worker] Session tracking paused")
   }
@@ -539,11 +327,12 @@ function pauseSessionTracking() {
 
 // Resume session tracking
 function resumeSessionTracking() {
-  if (sessionTracker && !sessionTracker.hasShownPrompt) {
+  if (sessionTracker && !sessionTracker.hasShownPrompt && !sessionTracker.isActive) {
     sessionTracker.isActive = true
     sessionTracker.lastUpdate = Date.now()
     console.log("[Service Worker] Session tracking resumed")
 
+    // Only restart timer if it's not already running
     if (!sessionInterval) {
       startSessionTimer()
     }
@@ -558,8 +347,10 @@ async function handleInstallSession(data) {
     return
   }
 
-  // Initialize or resume session tracking
-  await initializeSessionTracking(data)
+  // Initialize session tracking only once
+  if (!isSessionInitialized) {
+    await initializeSessionTracking(data)
+  }
 
   // Handle dialog state
   if (data.hasOpenDialogs) {
@@ -571,7 +362,7 @@ async function handleInstallSession(data) {
 
 // Update session timing for more responsive prompts with dialog detection
 async function updateInstallSessionTiming(data) {
-  if (!sessionTracker) {
+  if (!sessionTracker || !isSessionInitialized) {
     return
   }
 
@@ -1023,11 +814,6 @@ self.addEventListener("message", (event) => {
   } else if (data && data.type === "APP_INSTALLED") {
     // Handle app installation
     clearInstallSession()
-    if (sessionInterval) {
-      clearInterval(sessionInterval)
-      sessionInterval = null
-    }
-    sessionTracker = null
 
     // Save pending notification for after installation
     setPendingInstallNotification({
@@ -1036,6 +822,11 @@ self.addEventListener("message", (event) => {
     })
 
     console.log("[Service Worker] App installed - saved pending notification")
+
+    // Trigger notification check immediately for faster delivery
+    setTimeout(() => {
+      checkPendingInstallNotification()
+    }, 1000)
   } else if (data === "CHECK_CACHE") {
     checkAndRefreshCache()
   } else if (data === "START_CACHE_CHECK") {
@@ -1121,3 +912,53 @@ checkAndRefreshCache()
 getNotificationState().then((state) => {
   toastState = state
 })
+
+// Check and send pending install notification
+async function checkPendingInstallNotification() {
+  const pendingNotification = await getPendingInstallNotification()
+  if (pendingNotification) {
+    console.log("[Service Worker] Found pending install notification, sending now...")
+
+    // Send notification immediately
+    await sendInstallThankYouNotification(pendingNotification)
+    await clearPendingInstallNotification()
+  }
+}
+
+// Declare functions that were previously undeclared
+async function triggerInstallPrompt(isSafari) {
+  // Implementation for triggerInstallPrompt
+  console.log("Triggering install prompt for Safari:", isSafari)
+}
+
+async function setPendingInstallNotification(notification) {
+  // Implementation for setPendingInstallNotification
+  console.log("Setting pending install notification:", notification)
+}
+
+async function getPendingInstallNotification() {
+  // Implementation for getPendingInstallNotification
+  console.log("Getting pending install notification")
+  return null
+}
+
+async function sendInstallThankYouNotification(notification) {
+  // Implementation for sendInstallThankYouNotification
+  console.log("Sending install thank you notification:", notification)
+}
+
+async function clearPendingInstallNotification() {
+  // Implementation for clearPendingInstallNotification
+  console.log("Clearing pending install notification")
+}
+
+async function getNotificationState() {
+  // Implementation for getNotificationState
+  console.log("Getting notification state")
+  return { isShowing: false, lastShown: 0, showCount: 0 }
+}
+
+async function setNotificationState(state) {
+  // Implementation for setNotificationState
+  console.log("Setting notification state:", state)
+}

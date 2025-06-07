@@ -46,6 +46,88 @@ export interface KoFiButtonProps {
 }
 
 /**
+ * Represents an action that can be performed from a toast notification.
+ *
+ * @property label - The text label for the action button.
+ * @property onClick - The callback function to execute when the action is triggered.
+ */
+export interface ToastAction {
+  label: string;
+  onClick: () => void;
+}
+
+/**
+ * Props for configuring a toaster notification component.
+ *
+ * @property type - The type of the toast notification. Can be "error", "success", "neutral", or "warning".
+ * @property message - The message to display in the toast notification.
+ * @property action - (Optional) An action associated with the toast, such as a button or callback.
+ */
+export interface ToasterProps {
+  type: "error" | "success" | "neutral" | "warning";
+  message: string;
+  action?: ToastAction;
+}
+
+/**
+ * Represents the style and behavior configuration for a toast notification.
+ *
+ * @property container - CSS class name(s) for the toast container.
+ * @property hoverAndFocus - CSS class name(s) applied on hover and focus states.
+ * @property iconColor - CSS class or color value for the toast icon.
+ * @property icon - Optional React node to render as the toast icon.
+ * @property toastFunction - Function to display a toast with given content and options.
+ *   @param content - The content to display inside the toast.
+ *   @param options - Optional settings for the toast appearance and behavior.
+ *     @property unstyled - If true, disables default styling.
+ *     @property className - Additional CSS class name(s) for the toast.
+ *     @property duration - Duration in milliseconds for which the toast is visible.
+ *   @returns A string or number identifier for the toast instance.
+ */
+/**
+ * A function that displays a toast notification.
+ *
+ * @param content - The content to display inside the toast, as a React node.
+ * @param options - Optional configuration for the toast.
+ * @param options.unstyled - If true, disables default styling for the toast.
+ * @param options.className - Additional CSS class names to apply to the toast.
+ * @param options.duration - Duration in milliseconds for which the toast is visible.
+ * @returns A string or number identifier for the toast instance.
+ */
+export interface ToastStyle {
+  container: string;
+  hoverAndFocus: string;
+  iconColor: string;
+  icon?: React.ReactNode;
+  toastFunction: (
+    content: React.ReactNode,
+    options?: { unstyled?: boolean; className?: string; duration?: number }
+  ) => string | number;
+}
+
+/**
+ * Props for the dynamic toast content component.
+ *
+ * @property message - The message to display in the toast.
+ * @property icon - Optional icon to display alongside the message.
+ * @property type - The type of toast (e.g., 'success', 'error', etc.).
+ * @property onDismiss - Callback function invoked when the toast is dismissed.
+ * @property iconColor - The color to apply to the icon.
+ * @property hoverAndFocus - CSS class or style for hover and focus states.
+ * @property action - Optional action button or element for the toast.
+ */
+export interface DynamicToastContentProps {
+  message: string;
+  icon?: React.ReactNode;
+  type: string;
+  onDismiss: () => void;
+  iconColor: string;
+  hoverAndFocus: string;
+  action?: ToastAction;
+}
+
+
+/**
  * Props for the iOS Install Dialog component.
  *
  * @property open - Indicates whether the dialog is currently open.
@@ -173,22 +255,6 @@ export interface SearchProps {
   open?: boolean;
   openS?: boolean;
   onCloseComplete?: () => void;
-}
-
-/**
- * Style and function for displaying a toast notification.
- */
-export interface ToastStyle {
-  /** CSS class for the toast container */
-  container: string;
-  /** CSS class for hover and focus states */
-  hoverAndFocus: string;
-  /** Color for the toast icon */
-  iconColor: string;
-  /** Optional icon element */
-  icon?: React.JSX.Element;
-  /** Toast function to use */
-  toastFunction: typeof toast.success | typeof toast.error | typeof toast.warning | typeof toast;
 }
 
 /**

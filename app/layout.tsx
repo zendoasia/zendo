@@ -298,20 +298,22 @@ export default function RootLayout({
         <link rel="preload" href={LogoWhite.src} as="image" type="image/svg+xml" />
         <link rel="preload" href={LogoBlack.src} as="image" type="image/svg+xml" />
       </Head>
-      <GAnalyticsConsent />
       <body
         className={cn(
           `scroll-smooth w-full p-0 m-0 overflow-x-clip ${geistSans.variable} ${spaceGrotesk.variable} ${geistMono.variable} ${menlo.variable} ${ubuntu.variable} ${jetbrainsMono.variable} ${consolas.variable} antialiased`
         )}
       >
+        <ThemeSanitizer />
+        <GAnalyticsConsent />
         <CookieConsent />
         <PWAInstallDetector />
         <ServiceWorkerRegister />
         <FCMHandler />
+        <CloudflareAnalytics />
         <noscript>
           <style>
             {`
-            #c301e48c-ae4c-4061-b1f9-d4f64d85d4dc {
+            #${process.env.NEXT_PUBLIC_APP_ID} {
               display: none !important;
             }
             #noscript-dialog {
@@ -345,14 +347,13 @@ export default function RootLayout({
             </div>
           </div>
         </noscript>
-        <div id="c301e48c-ae4c-4061-b1f9-d4f64d85d4dc">
+        <div id={`${process.env.NEXT_PUBLIC_APP_ID}`}>
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
             enableSystem
             disableTransitionOnChange
           >
-            <ThemeSanitizer />
             <ExternalLinkInterceptor />
             <Header />
             <main
@@ -368,7 +369,6 @@ export default function RootLayout({
             </section>
             <Footer />
           </ThemeProvider>
-          <CloudflareAnalytics />
         </div>
       </body>
     </html>

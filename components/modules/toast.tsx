@@ -6,38 +6,7 @@ import { FaCircleInfo } from "react-icons/fa6";
 import type React from "react";
 import { useRef, useLayoutEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-
-interface ToastAction {
-  label: string;
-  onClick: () => void;
-}
-
-interface ToasterProps {
-  type: "error" | "success" | "neutral" | "warning";
-  message: string;
-  action?: ToastAction;
-}
-
-interface ToastStyle {
-  container: string;
-  hoverAndFocus: string;
-  iconColor: string;
-  icon?: React.ReactNode;
-  toastFunction: (
-    content: React.ReactNode,
-    options?: { unstyled?: boolean; className?: string; duration?: number }
-  ) => string | number;
-}
-
-interface DynamicToastContentProps {
-  message: string;
-  icon?: React.ReactNode;
-  type: string;
-  onDismiss: () => void;
-  iconColor: string;
-  hoverAndFocus: string;
-  action?: ToastAction;
-}
+import { DynamicToastContentProps, ToastStyle, ToasterProps } from "@/types";
 
 function DynamicToastContent({
   message,

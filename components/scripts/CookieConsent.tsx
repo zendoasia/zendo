@@ -37,7 +37,7 @@ export default function CookieConsent() {
     document.body.style.overflow = "hidden";
 
     const mainSelectors = [
-      "div#c301e48c-ae4c-4061-b1f9-d4f64d85d4dc",
+      `div#${process.env.NEXT_PUBLIC_APP_ID}`,
       "main",
       "[role='main']",
       "header",

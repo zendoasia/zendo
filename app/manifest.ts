@@ -177,7 +177,7 @@ export default function manifest(): MetadataRoute.Manifest {
       "design",
       "management",
     ],
-    id: "c301e48c-ae4c-4061-b1f9-d4f64d85d4dc",
+    id: `${process.env.NEXT_PUBLIC_APP_ID}`,
     lang: "en-US",
     dir: "ltr",
     orientation: "portrait",

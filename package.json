@@ -8,7 +8,6 @@
     "build": "node static/minify.js && next build",
     "start": "next start -H 0.0.0.0 -p 3000",
     "lint": "next lint",
-    "prepare": "husky"
   },
   "repository": {
     "type": "git",

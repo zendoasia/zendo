@@ -1,18 +1,18 @@
-"use client"
+"use client";
 
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { isIOS } from "@/lib/utils"
-import { Share, Plus, Home, Download } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { isIOS } from "@/lib/utils";
+import { Share, Plus, Home, Download } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface IOSInstallDialogProps {
-  open: boolean
-  onOpenChangeAction: (open: boolean) => void
+  open: boolean;
+  onOpenChangeAction: (open: boolean) => void;
 }
 
 export function IOSInstallDialog({ open, onOpenChangeAction }: IOSInstallDialogProps) {
-  const deviceType = isIOS() ? "iOS" : "macOS"
-  const isPhone = isIOS()
+  const deviceType = isIOS() ? "iOS" : "macOS";
+  const isPhone = isIOS();
 
   const steps = isPhone
     ? [
@@ -48,7 +48,7 @@ export function IOSInstallDialog({ open, onOpenChangeAction }: IOSInstallDialogP
           title: "Confirm installation",
           description: 'Click "Add" to install Zendo in your Dock',
         },
-      ]
+      ];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChangeAction}>
@@ -64,14 +64,17 @@ export function IOSInstallDialog({ open, onOpenChangeAction }: IOSInstallDialogP
 
         <div className="space-y-4">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Follow these steps to install Zendo as an app on your {isPhone ? "iPhone or iPad" : "Mac"}:
+            Follow these steps to install Zendo as an app on your{" "}
+            {isPhone ? "iPhone or iPad" : "Mac"}:
           </p>
 
           <div className="space-y-4">
             {steps.map((step, index) => (
               <div key={index} className="flex items-start gap-3">
                 <div className="flex-shrink-0 w-8 h-8 bg-blue-50 dark:bg-blue-900/20 rounded-full flex items-center justify-center">
-                  <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">{index + 1}</span>
+                  <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">
+                    {index + 1}
+                  </span>
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
@@ -92,7 +95,8 @@ export function IOSInstallDialog({ open, onOpenChangeAction }: IOSInstallDialogP
               <div>
                 <p className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-1">Pro Tip</p>
                 <p className="text-xs text-blue-700 dark:text-blue-300">
-                  Once installed, Zendo will work offline and feel like a native app with faster loading times!
+                  Once installed, Zendo will work offline and feel like a native app with faster
+                  loading times!
                 </p>
               </div>
             </div>
@@ -110,5 +114,5 @@ export function IOSInstallDialog({ open, onOpenChangeAction }: IOSInstallDialogP
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

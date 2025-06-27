@@ -30,6 +30,6 @@
   submitting your PR to further confirm your changes. It might take
   weeks and months to verify your change, please be patient.
 
-   <a href="https://github.com/aarush0101/Zendo/discussions" target="_blank">
+   <a href="https://github.com/zendoasia/zendo/discussions" target="_blank">
      <img src="https://img.shields.io/badge/Zendo-Dicussions-white?style=flat&color=%23cb553f&logo=linuxcontainers" alt="Zendo Discussions">
    </a>

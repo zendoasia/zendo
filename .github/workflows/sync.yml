@@ -23,7 +23,12 @@ jobs:
 
       - name: Setup Git
         run: |
-          git config --global user.name "aarush0101"
+          GIT_USERNAME=$(git config --get user.name)
+          if [ -z "$GIT_USERNAME" ]; then
+            echo "No global name found in git config"
+            # Set a default name for the workflow to continue
+            git config --global user.name "GitHub Actions"
+          fi
 
       - name: Fetch all branches and Push
         run: |

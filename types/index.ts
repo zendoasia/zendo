@@ -126,7 +126,6 @@ export interface DynamicToastContentProps {
   action?: ToastAction;
 }
 
-
 /**
  * Props for the iOS Install Dialog component.
  *
@@ -146,8 +145,8 @@ export interface IOSInstallDialogProps {
  * @property WORKER_URL - The URL of the worker service. May be undefined if not set.
  */
 export interface EdgeRequestEnv {
-  JWT_SHARED_SECRET: string | undefined,
-  WORKER_URL: string | undefined
+  JWT_SHARED_SECRET: string | undefined;
+  WORKER_URL: string | undefined;
 }
 
 /**

@@ -19,13 +19,13 @@ Before getting started, if you are having trouble with any of the files, codes, 
 open an issue on the repository, or a discussion, we will be glad to help you.
 
 <p align="center">
-   <a href="https://zendo.pages.dev/" target="_blank">
+   <a href="https://zendo.asia/" target="_blank">
      <img src="https://img.shields.io/badge/Zendo-Website?style=flat&logo=github&logoColor=5865f2&label=Website" alt="Zendo Website">
    </a>
-   <a href="https://github.com/aarush0101/Zendo/discussions" target="_blank">
+   <a href="https://github.com/zendoasia/zendo/discussions" target="_blank">
      <img src="https://img.shields.io/badge/Zendo-Dicussions-white?style=flat&color=%23cb553f&logo=linuxcontainers" alt="Zendo Discussions">
    </a>
-   <a href="https://github.com/aarush0101/Zendo/issues" target="_blank">
+   <a href="https://github.com/zendoasia/zendo/issues" target="_blank">
      <img src="https://img.shields.io/badge/Zendo-Issues-white?style=flat&color=%23cb553f&logo=linuxcontainers&logoColor=green" alt="Zendo Discussions">
    </a>
 </p>

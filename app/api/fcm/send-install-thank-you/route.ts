@@ -43,8 +43,42 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    let body;
+    try {
+      body = await request.json();
+
+      if (!body || Object.keys(body).length === 0) {
+        return NextResponse.json(
+          {
+            code: 400,
+            message: "Request body is empty or invalid.",
+          },
+          { status: 400 }
+        );
+      }
+    } catch (err) {
+      console.log(`Error while decoding JSON body of notification: ${err}`);
+      return NextResponse.json(
+        {
+          code: 400,
+          message: "Malformed JSON body.",
+        },
+        { status: 400 }
+      );
+    }
+    const { title, body: notificationBody, data } = body;
+
     const response = await fetch(env.WORKER_URL, {
-      headers: { Authorization: `Bearer ${token}` },
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: title,
+        body: body.body,
+        data: data,
+      }),
     });
 
     if (response.ok) {

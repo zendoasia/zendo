@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack --port 3000 -H 0.0.0.0",
-    "build": "node static/minify.mjs && next build",
+    "build": "node static/prep.mjs && next build",
     "start": "next start -H 0.0.0.0 -p 3000",
     "lint": "next lint"
   },
@@ -70,6 +70,7 @@
     "@types/web-push": "^3.6.4",
     "autoprefixer": "^10.4.21",
     "cross-env": "^7.0.3",
+    "dotenv": "^16.5.0",
     "eslint": "^9.27.0",
     "eslint-config-next": "15.3.2",
     "eslint-config-prettier": "^10.1.5",

@@ -1,4 +1,4 @@
-import { JetBrains_Mono, Ubuntu, Geist, Geist_Mono, Space_Grotesk } from "next/font/google";
+import { JetBrains_Mono, Ubuntu, Geist, Geist_Mono, Space_Grotesk, Inter } from "next/font/google";
 import localFont from "next/font/local";
 
 export const menlo = localFont({
@@ -46,6 +46,12 @@ export const ubuntu = Ubuntu({
   variable: "--font-ubuntu",
   subsets: ["latin"],
   weight: ["300", "400", "500", "700"],
+  display: "swap",
+});
+
+export const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
   display: "swap",
 });
 

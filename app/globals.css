@@ -44,11 +44,14 @@
 }
 
 .app-gap {
-  @apply gap-[0.5rem];
+  @apply gap-2;
 }
 
 .app-border {
-  @apply border-l border-r dark:border-[color:var(--jet)] border-[color:var(--silver2)];
+  @apply border-l border-r border-[var(--silver2)];
+}
+.dark .app-border {
+  @apply border-l border-r border-[var(--jet)];
 }
 
 .rounded-right {
@@ -60,27 +63,67 @@
 }
 
 .nav-btn {
-  @apply bg-transparent cursor-pointer py-0 px-2 text-base rounded-[var(--radius)] border border-[color:var(--jet)] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)] hover:bg-[color:var(--primary-hover)] focus:bg-[color:var(--primary-hover)] transition-colors duration-400;
+  @apply bg-transparent cursor-pointer pt-0 pb-0 pl-2 pr-2 text-base rounded border border-[var(--jet)] text-[var(--text-dark)] transition-colors duration-400;
+}
+.dark .nav-btn {
+  @apply text-[var(--text-light)];
+}
+.nav-btn:hover,
+.nav-btn:focus {
+  @apply bg-[var(--primary-hover)];
 }
 
 .app-padding {
-  @apply py-0 px-2;
+  @apply pt-0 pb-0 pl-2 pr-2;
 }
 
 .app-font {
-  @apply font-[family-name:var(--font-text)] font-medium text-base;
+  font-family: var(--font-text);
+  @apply font-medium text-base;
 }
 
 .app-font-mono {
-  @apply font-[family-name:var(--font-text-mono)] font-medium text-base;
+  font-family: var(--font-text-mono);
+  @apply font-medium text-base;
 }
 
 .app-font-space {
-  @apply font-[family-name:var(--font-space-grotesk)] font-medium text-base;
+  font-family: var(--font-space-grotesk);
+  @apply font-medium text-base;
 }
 
 .app-font-code {
-  @apply font-[family-name:var(--font-code)] font-medium text-base;
+  font-family: var(--font-code);
+  @apply font-medium text-base;
+}
+
+.app-font-inter {
+  font-family: var(--font-inter);
+  @apply font-medium text-base;
+}
+
+.app-link-button {
+  @apply font-bold text-base pl-0 pr-0 transition-[color,background-color] duration-200 underline rounded-lg w-full justify-center text-indigo-600;
+}
+@media (min-width: 640px) {
+  .app-link-button {
+    @apply w-auto;
+  }
+}
+.app-link-button:hover {
+  @apply text-indigo-700;
+}
+.app-link-button:focus {
+  @apply outline-2 outline-indigo-500 outline-offset-2;
+}
+.dark .app-link-button {
+  @apply text-indigo-400;
+}
+.dark .app-link-button:hover {
+  @apply text-indigo-300;
+}
+.dark .app-link-button:focus {
+  @apply outline-2 outline-indigo-400 outline-offset-2 bg-zinc-900;
 }
 
 @media (max-width: 864px) {
@@ -126,6 +169,22 @@ body {
   --font-space-grotesk:
     "Space Grotesk", "Geist", "Geist Fallback", -apple-system, BlinkMacSystemFont, system-ui, Arial,
     sans-serif;
+  --font-inter:
+    "Inter", "Inter Fallback", -apple-system, BlinkMacSystemFont, system-ui, Arial,
+    sans-serif --bg-dark: oklch(10.137% 0.02263 238.424);
+  --bg: oklch(0.15 0.025 234);
+  --bg-light: oklch(20.053% 0.02529 235.066);
+  --text: oklch(0.96 0.05 234);
+  --text-muted: oklch(0.76 0.05 234);
+  --highlight: oklch(0.5 0.05 234);
+  --border: oklch(0.4 0.05 234);
+  --border-muted: oklch(0.3 0.05 234);
+  --primary3: oklch(0.76 0.1 234);
+  --secondary: oklch(0.76 0.1 54);
+  --danger: oklch(0.7 0.05 30);
+  --warning: oklch(0.7 0.05 100);
+  --success: oklch(0.7 0.05 160);
+  --info: oklch(0.7 0.05 260);
 
   /* Neutrals */
   --white: #ffffff;
@@ -197,7 +256,7 @@ body {
   --default-font-weight: "medium";
 
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
+  --background: oklch(89.911% 0.00216 14.587);
   --foreground: oklch(0.141 0.005 285.823);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.141 0.005 285.823);
@@ -231,7 +290,7 @@ body {
 }
 
 .dark {
-  --background: oklch(0.141 0.005 285.823);
+  --background: oklch(10.137% 0.02263 238.424);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.21 0.006 285.885);
   --card-foreground: oklch(0.985 0 0);

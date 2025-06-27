@@ -1,22 +1,32 @@
-"Dummy file to add Metadata to the 404 page while preserving the 404 page's client functionality.";
-
 import React from "react";
 import NotFound from "@/components/main/notFound";
 import type { Metadata } from "next";
-import Head from "next/head";
 import lonelyGhost from "@/public/assets/lonelyGhost.svg";
+import { generateMetadata } from "@/lib/generateBasicMetadata";
 
-export const metadata: Metadata = {
-  title: "404 - Zendo",
-  description: "The page you were looking for was not found here.",
-};
+export const metadata: Metadata = generateMetadata({
+  title: "Not Found - Zendo",
+  description: "Could not find the exact page you were looking for. What about some coffee?",
+  extra: {
+    robots: {
+      index: false,
+      follow: false,
+    },
+  },
+});
 
-export default function NotFoundSrv() {
+export default function notFound() {
   return (
     <>
-      <Head>
-        <link rel="preload" href={lonelyGhost.src} as="image" type="image/svg+xml" />
-      </Head>
+      <head>
+        <link
+          rel="preload"
+          href={lonelyGhost.src}
+          as="image"
+          type="image/svg+xml"
+          fetchPriority="high"
+        />
+      </head>
       <NotFound />
     </>
   );

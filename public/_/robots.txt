@@ -2,6 +2,7 @@
 # This was created in the AI era, the era which depressed everyone.
 
 User-agent: *
-Disallow:
+Disallow: /_next/
+Allow: /
 
-Sitemap: https://zendo.pages.dev/sitemap.xml
+Sitemap: https://zendo.asia/sitemap.xml

@@ -6,6 +6,7 @@ import {
 } from "@cloudflare/workers-types";
 import type { Dispatch, SetStateAction } from "react";
 import { motion } from "framer-motion";
+import { Metadata } from "next";
 
 /**
  * Props for a wrapper component around an article.
@@ -54,6 +55,90 @@ export interface KoFiButtonProps {
 export interface ToastAction {
   label: string;
   onClick: () => void;
+}
+
+/**
+ * Represents the properties of a schema object.
+ *
+ * @property title - The title of the schema.
+ * @property description - A brief description of the schema.
+ * @property url - The URL associated with the schema.
+ */
+export interface SchemaProps {
+  title: string;
+  description: string;
+  url: string;
+}
+
+/**
+ * Represents a Frequently Asked Question (FAQ) item with a question and its accepted answer.
+ *
+ * @property type - The type of the FAQ item, always "Question".
+ * @property name - The text of the question.
+ * @property acceptedAnswer - The accepted answer to the question.
+ * @property acceptedAnswer.type - The type of the answer, always "Answer".
+ * @property acceptedAnswer.text - The text content of the answer.
+ */
+export interface FAQItem {
+  type: "Question";
+  name: string;
+  acceptedAnswer: {
+    type: "Answer";
+    text: string;
+  };
+}
+
+/**
+ * Props for the FAQ schema component.
+ *
+ * @property questions - An array of FAQ items representing the questions and answers.
+ */
+export interface FAQSchemaProps {
+  questions: FAQItem[];
+}
+
+/**
+ * Represents the schema properties for an article.
+ *
+ * @property headline - The headline or title of the article.
+ * @property description - A brief summary or description of the article.
+ * @property image - The URL of the main image associated with the article.
+ * @property author - Information about the author of the article.
+ * @property author.name - The name of the article's author.
+ * @property publisher - Information about the publisher of the article.
+ * @property publisher.name - The name of the publisher.
+ * @property publisher.logoUrl - The URL of the publisher's logo image.
+ * @property datePublished - The publication date of the article in ISO format.
+ * @property dateModified - The last modification date of the article in ISO format.
+ */
+export interface ArticleSchemaProps {
+  headline: string;
+  description: string;
+  image: string;
+  author: {
+    name: string;
+  };
+  publisher: {
+    name: string;
+    logoUrl: string;
+  };
+  datePublished: string;
+  dateModified: string;
+}
+
+/**
+ * Represents the basic metadata information for an entity.
+ *
+ * @property title - The title of the entity.
+ * @property description - A brief description of the entity.
+ * @property path - (Optional) The path associated with the entity.
+ * @property extra - (Optional) Additional metadata as a partial `Metadata` object.
+ */
+export interface BasicMetadata {
+  title: string;
+  description: string;
+  path?: string;
+  extra?: Partial<Metadata>;
 }
 
 /**

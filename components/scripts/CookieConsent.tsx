@@ -1,21 +1,22 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import Cookies from "js-cookie";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Check, CheckCircle, XCircle } from "lucide-react";
+import { Check, X, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 
-const COOKIE_NAME = "cookie_consent_status";
+const COOKIE_NAME = "are_cookies_allowed";
 
 export default function CookieConsent() {
   const [mounted, setMounted] = useState(false);
   const [visible, setVisible] = useState(false);
   const [shouldRender, setShouldRender] = useState(false);
+  const [activeTab, setActiveTab] = useState("overview");
   const bannerRef = useRef<HTMLDivElement>(null);
   const EXIT_ANIMATION_DURATION = 400;
 
@@ -25,8 +26,11 @@ export default function CookieConsent() {
 
   useEffect(() => {
     if (!Cookies.get(COOKIE_NAME)) {
-      setVisible(true);
-      setShouldRender(true);
+      (async () => {
+        await new Promise((res) => setTimeout(res, 2000));
+        setVisible(true);
+        setShouldRender(true);
+      })();
     }
   }, []);
 
@@ -64,7 +68,6 @@ export default function CookieConsent() {
       });
     });
 
-    // Add pointer-events: none to prevent clicks on background elements
     const style = document.createElement("style");
     style.id = "cookie-consent-styles";
     style.textContent = `
@@ -77,56 +80,15 @@ export default function CookieConsent() {
     `;
     document.head.appendChild(style);
 
-    // Simple focus trap - much more reliable than libraries
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Tab") {
-        const focusableElements = bannerRef.current?.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
-
-        if (!focusableElements || focusableElements.length === 0) return;
-
-        const firstElement = focusableElements[0];
-        const lastElement = focusableElements[focusableElements.length - 1];
-
-        if (e.shiftKey) {
-          // Shift + Tab
-          if (document.activeElement === firstElement) {
-            e.preventDefault();
-            lastElement.focus();
-          }
-        } else {
-          // Tab
-          if (document.activeElement === lastElement) {
-            e.preventDefault();
-            firstElement.focus();
-          }
-        }
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-
-    // Focus first interactive element
-    setTimeout(() => {
-      const firstFocusable = bannerRef.current?.querySelector<HTMLElement>(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      firstFocusable?.focus();
-    }, 100);
-
     return () => {
       document.body.classList.remove("cookie-consent-active");
       document.body.style.overflow = "";
-      document.removeEventListener("keydown", handleKeyDown);
 
-      // Remove aria-hidden from elements
       elementsToHide.forEach((element) => {
         element.removeAttribute("aria-hidden");
         element.removeAttribute("data-cookie-hidden");
       });
 
-      // Remove styles
       const styleElement = document.getElementById("cookie-consent-styles");
       styleElement?.remove();
     };
@@ -143,11 +105,80 @@ export default function CookieConsent() {
     window.dispatchEvent(new Event("cookie-consent-allow"));
   };
 
-  const handleDeny = () => {
-    Cookies.set(COOKIE_NAME, "deny", { expires: 365 });
-    closeBanner();
-    window.dispatchEvent(new Event("cookie-consent-deny"));
-  };
+  const handleDeny = useCallback(() => {
+  Cookies.set(COOKIE_NAME, "deny", { expires: 365 });
+  closeBanner();
+  window.dispatchEvent(new Event("cookie-consent-deny"));
+}, []);
+
+  useEffect(() => {
+    if (!visible) return;
+
+    const backgroundFocusable = document.querySelectorAll<HTMLElement>(
+      'button:not([data-cookie-consent] *), a:not([data-cookie-consent] *), input:not([data-cookie-consent] *), select:not([data-cookie-consent] *), textarea:not([data-cookie-consent] *), [tabindex]:not([tabindex="-1"]):not([data-cookie-consent] *)'
+    );
+
+    const originalTabIndexes = new Map<HTMLElement, string | null>();
+
+    backgroundFocusable.forEach((element) => {
+      originalTabIndexes.set(element, element.getAttribute("tabindex"));
+      element.setAttribute("tabindex", "-1");
+    });
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Tab") {
+        const focusableElements = bannerRef.current?.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]):not([disabled])'
+        );
+
+        if (!focusableElements || focusableElements.length === 0) return;
+
+        const focusableArray = Array.from(focusableElements);
+        const firstElement = focusableArray[0];
+        const lastElement = focusableArray[focusableArray.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement.focus();
+          }
+        }
+      }
+
+      if (e.key === "Escape") {
+        handleDeny();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    const focusTimer = setTimeout(() => {
+      const firstFocusable = bannerRef.current?.querySelector<HTMLElement>(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]):not([disabled])'
+      );
+      firstFocusable?.focus();
+    }, 150);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      clearTimeout(focusTimer);
+
+      // Restore original tabindex values
+      backgroundFocusable.forEach((element) => {
+        const originalValue = originalTabIndexes.get(element);
+        if (originalValue === null || originalValue === undefined) {
+          element.removeAttribute("tabindex");
+        } else {
+          element.setAttribute("tabindex", originalValue);
+        }
+      });
+    };
+  }, [visible, activeTab, handleDeny]);
 
   if (!mounted) return null;
   if (!shouldRender) return null;
@@ -160,7 +191,7 @@ export default function CookieConsent() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[9999] bg-black/20 backdrop-blur-sm"
+            className="fixed inset-0 z-[9999] bg-black/50 backdrop-blur-sm"
             data-cookie-consent
             aria-hidden="true"
           />
@@ -171,210 +202,137 @@ export default function CookieConsent() {
             aria-modal="true"
             aria-label="Cookie consent"
             data-cookie-consent
-            initial={{ opacity: 0, y: 48, scale: 0.98 }}
+            initial={{ opacity: 0, y: 48, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 48, scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 350, damping: 32, duration: 0.38 }}
+            exit={{ opacity: 0, y: 48, scale: 0.95 }}
+            transition={{ type: "spring", stiffness: 300, damping: 30 }}
             className={cn(
-              "fixed bottom-6 left-1/2 z-[10000] w-[95vw] max-w-xl min-h-[260px] h-auto rounded-2xl p-5 backdrop-blur-lg",
-              "flex flex-col-reverse app-font glassmorphism",
-              "bg-white/95 border-gray-200/60 shadow-lg shadow-indigo-500/10",
-              "dark:bg-zinc-900/70 dark:border-white/20 dark:shadow-2xl dark:shadow-indigo-500/20",
-              "-translate-x-1/2 "
+              "fixed bottom-6 left-1/2 z-[10000] w-[95vw] max-w-lg",
+              "rounded-2xl p-6 -translate-x-1/2",
+              "bg-white/95 dark:bg-zinc-900/95",
+              "backdrop-blur-xl backdrop-saturate-150",
+              "border border-zinc-200/50 dark:border-zinc-700/50",
+              "shadow-2xl shadow-black/10 dark:shadow-black/30",
+              "flex flex-col gap-4 app-font"
             )}
           >
-            <Tabs defaultValue="overview" className="w-full h-full flex flex-col flex-1">
-              <div>
-                <TabsList className="mb-0 w-full justify-start">
-                  <TabsTrigger value="overview">Overview</TabsTrigger>
-                  <TabsTrigger value="advance">Advance</TabsTrigger>
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+              <div className="space-y-3">
+                <TabsList className="grid w-full grid-cols-2 bg-zinc-100 dark:bg-zinc-800">
+                  <TabsTrigger
+                    value="overview"
+                    className="data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-700"
+                  >
+                    Overview
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="advance"
+                    className="data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-700"
+                  >
+                    Advanced
+                  </TabsTrigger>
                 </TabsList>
-                <Separator className="my-2" />
-              </div>
-              <div className="flex-1 flex flex-col-reverse justify-between min-h-0">
-                <div className="flex items-center justify-between mt-6 w-full flex-wrap gap-y-2 sm:flex-nowrap sm:gap-y-0">
-                  <div className="flex-1 flex flex-col sm:flex-row justify-center sm:justify-start gap-2 sm:gap-3 order-1 sm:order-none">
-                    <Button
-                      size="sm"
-                      variant="default"
-                      className={cn(
-                        "flex app-font-space items-center gap-1 font-semibold shadow-sm transition-all duration-200",
-                        "bg-emerald-600 hover:bg-emerald-700 text-white focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2",
-                        "dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-500 dark:focus:ring-offset-zinc-900",
-                        "w-full sm:w-auto justify-center"
-                      )}
-                      onClick={handleAllow}
-                      aria-label="Allow cookies"
-                    >
-                      <CheckCircle size="1.2rem" className="text-white" /> Allow
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="secondary"
-                      className={cn(
-                        "flex app-font-space items-center gap-1 font-semibold shadow-sm transition-all duration-200",
-                        "bg-red-500 hover:bg-red-600 text-white border-red-500 focus:ring-2 focus:ring-red-500 focus:ring-offset-2",
-                        "dark:bg-red-600 dark:hover:bg-red-700 dark:border-red-600 dark:focus:ring-red-500 dark:focus:ring-offset-zinc-900",
-                        "w-full sm:w-auto justify-center"
-                      )}
-                      onClick={handleDeny}
-                      aria-label="Deny cookies"
-                    >
-                      <XCircle size="1.2rem" className="text-white" /> Deny
-                    </Button>
-                  </div>
-                  <div className="flex-1 flex justify-center sm:justify-end order-2 sm:order-none mt-2 sm:mt-0">
-                    <Button
-                      asChild
-                      variant="link"
-                      size="sm"
-                      className={cn(
-                        "app-font px-0 transition-colors duration-200 underline rounded-lg",
-                        "text-indigo-600 hover:text-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded-sm",
-                        "dark:text-indigo-400 dark:hover:text-indigo-300 dark:focus:ring-indigo-400 dark:focus:ring-offset-zinc-900",
-                        "w-full sm:w-auto justify-center"
-                      )}
-                    >
-                      <span className="flex items-center gap-2 justify-center">
-                        <Check
-                          aria-hidden="true"
-                          size="1.2rem"
-                          className="text-emerald-600 dark:text-green-500"
-                        />
-                        <Link
-                          href="/privacy"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label="Privacy Policy"
-                        >
-                          Privacy Policy
-                        </Link>
-                      </span>
-                    </Button>
-                  </div>
-                </div>
-                <div className="flex-1 min-h-0 flex flex-col">
-                  <div className="pb-4 flex-1 min-h-0">
-                    <TabsContent value="overview">
-                      <div className="text-base font-medium text-gray-800 dark:text-zinc-100">
-                        We use cookies for preferences and analytics. You can check what we really
-                        use in the
-                        <span
-                          className="font-semibold ml-1 mr-1 "
-                          style={{
-                            background:
-                              "linear-gradient(132deg, rgb(2, 106, 122) 0.00%, rgb(242, 78, 163) 100.00%)",
-                            WebkitBackgroundClip: "text",
-                            WebkitTextFillColor: "transparent",
-                            backgroundClip: "text",
-                            color: "transparent",
-                            position: "relative",
-                            display: "inline-block",
-                          }}
-                        >
-                          Advance
-                          <span
-                            aria-hidden={true}
-                            style={{
-                              content: "''",
-                              position: "absolute",
-                              left: 0,
-                              right: 0,
-                              bottom: 0,
-                              height: "2px",
-                              background:
-                                "linear-gradient(132deg, rgb(0,255,157) 0%, rgb(227,43,175) 100%)",
-                              borderRadius: "2px",
-                              width: "100%",
-                              display: "block",
-                            }}
-                          />
-                        </span>
-                        tab.
-                      </div>
-                    </TabsContent>
-                    <TabsContent value="advance">
-                      <div className="text-base font-medium text-gray-800 dark:text-zinc-100">
-                        We use
-                        <Link
-                          data-no-prompt
-                          href="https://support.google.com/analytics/answer/6004245"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="font-semibold ml-1 mr-1"
-                          style={{
-                            background:
-                              "linear-gradient(132deg, rgb(0,255,157) 0%, rgb(227,43,175) 100%)",
-                            WebkitBackgroundClip: "text",
-                            WebkitTextFillColor: "transparent",
-                            backgroundClip: "text",
-                            color: "transparent",
-                            position: "relative",
-                            display: "inline-block",
-                          }}
-                        >
-                          Google Analytics
-                          <span
-                            aria-hidden={true}
-                            style={{
-                              content: "''",
-                              position: "absolute",
-                              left: 0,
-                              right: 0,
-                              bottom: 0,
-                              height: "2px",
-                              background:
-                                "linear-gradient(132deg, rgb(0,255,157) 0%, rgb(227,43,175) 100%)",
-                              borderRadius: "2px",
-                              width: "100%",
-                              display: "block",
-                            }}
-                          />
-                        </Link>
-                        and
-                        <Link
-                          data-no-prompt
-                          href="https://www.cloudflare.com/privacypolicy/"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="font-semibold ml-1"
-                          style={{
-                            background:
-                              "linear-gradient(132deg, rgb(250,170,0) 0%, rgb(237,19,19) 50%, rgb(213,74,255) 100%)",
-                            WebkitBackgroundClip: "text",
-                            WebkitTextFillColor: "transparent",
-                            backgroundClip: "text",
-                            color: "transparent",
-                            position: "relative",
-                            display: "inline-block",
-                          }}
-                        >
-                          Cloudflare Insights
-                          <span
-                            aria-hidden={true}
-                            style={{
-                              content: "''",
-                              position: "absolute",
-                              left: 0,
-                              right: 0,
-                              bottom: 0,
-                              height: "2px",
-                              background:
-                                "linear-gradient(132deg, rgb(250,170,0) 0%, rgb(237,19,19) 50%, rgb(213,74,255) 100%)",
-                              borderRadius: "2px",
-                              width: "100%",
-                              display: "block",
-                            }}
-                          />
-                        </Link>{" "}
-                        for analytics and performance monitoring. For more details on what data is
-                        collected, please refer to our privacy policy.
-                      </div>
-                    </TabsContent>
-                  </div>
+
+                <div className="min-h-[120px]">
+                  <TabsContent value="overview" className="mt-0">
+                    <div className="text-base leading-relaxed">
+                      We use cookies for preferences and analytics. You can check what we really use
+                      in the Advanced tab. To access this website, please make a choice on whether
+                      to allow cookies or not.
+                    </div>
+                  </TabsContent>
+
+                  <TabsContent value="advance" className="mt-0">
+                    <div className="text-base leading-relaxed">
+                      We use{" "}
+                      <Link
+                        href="https://support.google.com/analytics/answer/6004245"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline underline-offset-2 transition-colors"
+                      >
+                        Google Analytics
+                      </Link>{" "}
+                      and{" "}
+                      <Link
+                        href="https://www.cloudflare.com/privacypolicy/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline underline-offset-2 transition-colors"
+                      >
+                        Cloudflare Insights
+                      </Link>{" "}
+                      for analytics and performance monitoring. For more details on what data is
+                      collected, please refer to our privacy policy.
+                    </div>
+                  </TabsContent>
                 </div>
               </div>
             </Tabs>
+
+            <Separator className="bg-zinc-200 dark:bg-zinc-700" />
+
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                <Button
+                  size="sm"
+                  onClick={handleAllow}
+                  className={cn(
+                    "flex items-center gap-2 font-medium transition-all duration-200",
+                    "bg-emerald-600 hover:bg-emerald-700 text-white",
+                    "focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2",
+                    "dark:bg-emerald-600 dark:hover:bg-emerald-700",
+                    "dark:focus:ring-emerald-400 dark:focus:ring-offset-zinc-900",
+                    "shadow-sm hover:shadow-md",
+                    "w-full sm:w-auto justify-center"
+                  )}
+                  aria-label="Allow cookies"
+                >
+                  <Check size={16} />
+                  Allow
+                </Button>
+
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={handleDeny}
+                  className={cn(
+                    "flex items-center gap-2 font-medium transition-all duration-200",
+                    "border-red-200 text-red-700 hover:bg-red-50 hover:border-red-300",
+                    "focus:ring-2 focus:ring-red-500 focus:ring-offset-2",
+                    "dark:border-red-800 dark:text-red-400 dark:hover:bg-red-950/50 dark:hover:border-red-700",
+                    "dark:focus:ring-red-400 dark:focus:ring-offset-zinc-900",
+                    "w-full sm:w-auto justify-center"
+                  )}
+                  aria-label="Deny cookies"
+                >
+                  <X size={16} />
+                  Deny
+                </Button>
+              </div>
+
+              <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                className={cn(
+                  "text-zinc-600 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200",
+                  "hover:bg-zinc-100 dark:hover:bg-zinc-800 focus:bg-zinc-100 dark:focus:bg-zinc-800",
+                  "transition-colors duration-200",
+                  "w-full sm:w-auto justify-center"
+                )}
+              >
+                <Link
+                  href="/privacy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2"
+                >
+                  <Info size={16} />
+                  Privacy Policy
+                </Link>
+              </Button>
+            </div>
           </motion.div>
         </>
       )}

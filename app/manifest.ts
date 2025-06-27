@@ -5,11 +5,11 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Zendo - Intuition",
     short_name: "Zendo",
     description:
-      "Welcome to Zendo. This is a private website for covering my work, projects, and portfolio. Let's explore the world of technology together.",
+      "Welcome to Zendo. This is a upcoming startup aiming to make the world a better place for everyone to live in. Come, join us on our journey.",
     start_url: "/",
     display: "standalone",
-    background_color: "#000000",
-    theme_color: "#000000",
+    background_color: "#000409",
+    theme_color: "#0a1820",
     icons: [
       {
         src: "assets/icons/maskable-icon.png",
@@ -94,24 +94,10 @@ export default function manifest(): MetadataRoute.Manifest {
     ],
     shortcuts: [
       {
-        name: "View Projects",
-        short_name: "Projects",
-        url: "/projects",
-        description: "View Projects of mine.",
-        icons: [
-          {
-            src: "assets/icons/maskable-icon.png",
-            sizes: "512x512",
-            type: "image/png",
-            purpose: "maskable",
-          },
-        ],
-      },
-      {
-        name: "Contact Me",
+        name: "Contact Us",
         short_name: "Contact",
         url: "/contact",
-        description: "Get in touch with me.",
+        description: "Get in touch with us.",
         icons: [
           {
             src: "assets/icons/maskable-icon.png",
@@ -125,7 +111,7 @@ export default function manifest(): MetadataRoute.Manifest {
         name: "View Blogs",
         short_name: "Blogs",
         url: "/blogs",
-        description: "View Blogs of mine.",
+        description: "View our blogs.",
         icons: [
           {
             src: "assets/icons/maskable-icon.png",
@@ -136,24 +122,10 @@ export default function manifest(): MetadataRoute.Manifest {
         ],
       },
       {
-        name: "View Portfolio",
-        short_name: "Portfolio",
-        url: "/portfolio",
-        description: "View Portfolio of mine.",
-        icons: [
-          {
-            src: "assets/icons/maskable-icon.png",
-            sizes: "512x512",
-            type: "image/png",
-            purpose: "maskable",
-          },
-        ],
-      },
-      {
-        name: "About Me",
+        name: "About",
         short_name: "About",
         url: "/about",
-        description: "Learn more about me.",
+        description: "Learn more about the startup.",
         icons: [
           {
             src: "assets/icons/maskable-icon.png",
@@ -167,15 +139,13 @@ export default function manifest(): MetadataRoute.Manifest {
     categories: [
       "portfolio",
       "productivity",
-      "technology",
+      "tech",
       "aarush",
       "master",
       "projects",
       "zendo",
-      "programming",
-      "development",
-      "design",
-      "management",
+      "zeal",
+      "startup",
     ],
     id: `${process.env.NEXT_PUBLIC_APP_ID}`,
     lang: "en-US",

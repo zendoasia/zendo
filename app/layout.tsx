@@ -4,8 +4,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "sonner";
 import Footer from "@/components/main/footer";
 import ExternalLinkInterceptor from "@/components/scripts/externalLinkInterceptor";
-import PWAInstallDetector from "@/components/pwa/pwaInstallDetector";
-import FCMHandler from "@/components/firebase/firebase";
 import {
   geistSans,
   geistMono,
@@ -13,275 +11,274 @@ import {
   consolas,
   jetbrainsMono,
   ubuntu,
+  inter,
   spaceGrotesk,
-} from "@/components/fonts";
+} from "@/lib/fonts";
 import LightModeTipAlert from "@/components/lightModeTip";
 import Header from "@/components/main/header";
-import Head from "next/head";
 import LogoBlack from "@/public/assets/LogoBlack.svg";
 import LogoWhite from "@/public/assets/LogoWhite.svg";
 import { cn } from "@/lib/utils";
 import ThemeSanitizer from "@/components/modules/themeSanitizer";
-import CookieConsent from "@/components/scripts/CookieConsent";
+import CookieConsent from "@/components/scripts/cookieConsent";
 import GAnalyticsConsent from "@/components/scripts/GAnalyticsConsent";
 import { Viewport } from "next";
-import ServiceWorkerRegister from "@/components/scripts/serviceWorkerRegister";
 import CloudflareAnalytics from "@/components/scripts/cloudflareInsights";
+import { OrganizationSchema, SiteSearchSchema } from "@/lib/setScheme";
+import { generateMetadata } from "@/lib/generateBasicMetadata";
 
 export const metadata: Metadata = {
-  title: "Zendo - Intuition",
-  description:
-    "Welcome to Zendo. This is a private website for covering my work, projects, and portfolio. Let's explore the world of technology together.",
+  ...generateMetadata({
+    title: "Zendo - Start Using Today!",
+    description:
+      "Welcome to Zendo. This is a upcoming startup aiming to make the world a better place for everyone to live in. Come, join us on our journey.",
+    path: "/",
+  }),
   keywords: [
     "portfolio",
     "productivity",
-    "technology",
+    "tech",
     "aarush",
     "master",
     "projects",
     "zendo",
-    "programming",
-    "development",
-    "design",
-    "management",
+    "zeal",
+    "startup",
   ],
   authors: [
     {
-      name: "Aarush Master",
-      url: "https://github.com/aarush0101",
+      name: "Zendo Support",
+      url: `mailto:support@${process.env.NEXT_PUBLIC_ORIGIN}`,
     },
     {
-      name: "Aarush Master",
-      url: "mailto:aarush01111@gmail.com",
+      name: "Zendo Admin",
+      url: `mailto:admin@${process.env.NEXT_PUBLIC_ORIGIN}`,
     },
   ],
   assets: `https://${process.env.NEXT_PUBLIC_ORIGIN}/assets/`,
-  category: "Programming and Technology",
+  category: "software",
   metadataBase: new URL(`https://${process.env.NEXT_PUBLIC_ORIGIN}/`),
   referrer: "origin-when-cross-origin",
-  openGraph: {
-    title: "Zendo",
-    description:
-      "Welcome to Zendo. This is a private website for covering my work, projects, and portfolio.",
-    url: `https://${process.env.NEXT_PUBLIC_ORIGIN}/`,
-    siteName: "Zendo",
-    determiner: "the",
-  },
+
   robots: "/robots.txt",
   manifest: "/manifest.webmanifest",
-  twitter: {
-    card: "summary_large_image",
-    title: "Zendo",
-    description:
-      "Welcome to Zendo. This is a private website for covering my work, projects, and portfolio.",
-    creator: "@aarush01111",
-  },
   pinterest: {
     richPin: true,
   },
-  icons: [{ rel: "apple-touch-icon", url: "assets/icons/apple/apple-icon-180.png" }],
+  icons: [{ rel: "apple-touch-icon", url: "/assets/icons/apple/apple-icon-180.png" }],
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
     title: "Zendo",
     startupImage: [
       {
-        url: "assets/icons/apple/apple-splash-2048-2732.jpg",
+        url: "/assets/icons/apple/apple-splash-2048-2732.jpg",
         media:
           "(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)",
       },
       {
-        url: "assets/icons/apple/apple-splash-2732-2048.jpg",
+        url: "/assets/icons/apple/apple-splash-2732-2048.jpg",
         media:
           "(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)",
       },
       {
-        url: "assets/icons/apple/apple-splash-1668-2388.jpg",
+        url: "/assets/icons/apple/apple-splash-1668-2388.jpg",
         media:
           "(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)",
       },
       {
-        url: "assets/icons/apple/apple-splash-2388-1668.jpg",
+        url: "/assets/icons/apple/apple-splash-2388-1668.jpg",
         media:
           "(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)",
       },
       {
-        url: "assets/icons/apple/apple-splash-1536-2048.jpg",
+        url: "/assets/icons/apple/apple-splash-1536-2048.jpg",
         media:
           "(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)",
       },
       {
-        url: "assets/icons/apple/apple-splash-2048-1536.jpg",
+        url: "/assets/icons/apple/apple-splash-2048-1536.jpg",
         media:
           "(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)",
       },
       {
-        url: "assets/icons/apple/apple-splash-1640-2360.jpg",
+        url: "/assets/icons/apple/apple-splash-1640-2360.jpg",
         media:
           "(device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)",
       },
       {
-        url: "assets/icons/apple/apple-splash-2360-1640.jpg",
+        url: "/assets/icons/apple/apple-splash-2360-1640.jpg",
         media:
           "(device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)",
       },
       {
-        url: "assets/icons/apple/apple-splash-1668-2224.jpg",
+        url: "/assets/icons/apple/apple-splash-1668-2224.jpg",
         media:
           "(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)",
       },
       {
-        url: "assets/icons/apple/apple-splash-2224-1668.jpg",
+        url: "/assets/icons/apple/apple-splash-2224-1668.jpg",
         media:
           "(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)",
       },
       {
-        url: "assets/icons/apple/apple-splash-1620-2160.jpg",
+        url: "/assets/icons/apple/apple-splash-1620-2160.jpg",
         media:
           "(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)",
       },
       {
-        url: "assets/icons/apple/apple-splash-2160-1620.jpg",
+        url: "/assets/icons/apple/apple-splash-2160-1620.jpg",
         media:
           "(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)",
       },
       {
-        url: "assets/icons/apple/apple-splash-1488-2266.jpg",
+        url: "/assets/icons/apple/apple-splash-1488-2266.jpg",
         media:
           "(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)",
       },
       {
-        url: "assets/icons/apple/apple-splash-2266-1488.jpg",
+        url: "/assets/icons/apple/apple-splash-2266-1488.jpg",
         media:
           "(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)",
       },
       {
-        url: "assets/icons/apple/apple-splash-1320-2868.jpg",
+        url: "/assets/icons/apple/apple-splash-1320-2868.jpg",
         media:
           "(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)",
       },
       {
-        url: "assets/icons/apple/apple-splash-2868-1320.jpg",
+        url: "/assets/icons/apple/apple-splash-2868-1320.jpg",
         media:
           "(device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)",
       },
       {
-        url: "assets/icons/apple/apple-splash-1206-2622.jpg",
+        url: "/assets/icons/apple/apple-splash-1206-2622.jpg",
         media:
           "(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)",
       },
       {
-        url: "assets/icons/apple/apple-splash-2622-1206.jpg",
+        url: "/assets/icons/apple/apple-splash-2622-1206.jpg",
         media:
           "(device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)",
       },
       {
-        url: "assets/icons/apple/apple-splash-1290-2796.jpg",
+        url: "/assets/icons/apple/apple-splash-1290-2796.jpg",
         media:
           "(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)",
       },
       {
-        url: "assets/icons/apple/apple-splash-2796-1290.jpg",
+        url: "/assets/icons/apple/apple-splash-2796-1290.jpg",
         media:
           "(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)",
       },
       {
-        url: "assets/icons/apple/apple-splash-1179-2556.jpg",
+        url: "/assets/icons/apple/apple-splash-1179-2556.jpg",
         media:
           "(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)",
       },
       {
-        url: "assets/icons/apple/apple-splash-2556-1179.jpg",
+        url: "/assets/icons/apple/apple-splash-2556-1179.jpg",
         media:
           "(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)",
       },
       {
-        url: "assets/icons/apple/apple-splash-1170-2532.jpg",
+        url: "/assets/icons/apple/apple-splash-1170-2532.jpg",
         media:
           "(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)",
       },
       {
-        url: "assets/icons/apple/apple-splash-2532-1170.jpg",
+        url: "/assets/icons/apple/apple-splash-2532-1170.jpg",
         media:
           "(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)",
       },
       {
-        url: "assets/icons/apple/apple-splash-1284-2778.jpg",
+        url: "/assets/icons/apple/apple-splash-1284-2778.jpg",
         media:
           "(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)",
       },
       {
-        url: "assets/icons/apple/apple-splash-2778-1284.jpg",
+        url: "/assets/icons/apple/apple-splash-2778-1284.jpg",
         media:
           "(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)",
       },
       {
-        url: "assets/icons/apple/apple-splash-1125-2436.jpg",
+        url: "/assets/icons/apple/apple-splash-1125-2436.jpg",
         media:
           "(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)",
       },
       {
-        url: "assets/icons/apple/apple-splash-2436-1125.jpg",
+        url: "/assets/icons/apple/apple-splash-2436-1125.jpg",
         media:
           "(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)",
       },
       {
-        url: "assets/icons/apple/apple-splash-1242-2688.jpg",
+        url: "/assets/icons/apple/apple-splash-1242-2688.jpg",
         media:
           "(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)",
       },
       {
-        url: "assets/icons/apple/apple-splash-2688-1242.jpg",
+        url: "/assets/icons/apple/apple-splash-2688-1242.jpg",
         media:
           "(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)",
       },
       {
-        url: "assets/icons/apple/apple-splash-828-1792.jpg",
+        url: "/assets/icons/apple/apple-splash-828-1792.jpg",
         media:
           "(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)",
       },
       {
-        url: "assets/icons/apple/apple-splash-1792-828.jpg",
+        url: "/assets/icons/apple/apple-splash-1792-828.jpg",
         media:
           "(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)",
       },
       {
-        url: "assets/icons/apple/apple-splash-1242-2208.jpg",
+        url: "/assets/icons/apple/apple-splash-1242-2208.jpg",
         media:
           "(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)",
       },
       {
-        url: "assets/icons/apple/apple-splash-2208-1242.jpg",
+        url: "/assets/icons/apple/apple-splash-2208-1242.jpg",
         media:
           "(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)",
       },
       {
-        url: "assets/icons/apple/apple-splash-750-1334.jpg",
+        url: "/assets/icons/apple/apple-splash-750-1334.jpg",
         media:
           "(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)",
       },
       {
-        url: "assets/icons/apple/apple-splash-1334-750.jpg",
+        url: "/assets/icons/apple/apple-splash-1334-750.jpg",
         media:
           "(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)",
       },
       {
-        url: "assets/icons/apple/apple-splash-640-1136.jpg",
+        url: "/assets/icons/apple/apple-splash-640-1136.jpg",
         media:
           "(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)",
       },
       {
-        url: "assets/icons/apple/apple-splash-1136-640.jpg",
+        url: "/assets/icons/apple/apple-splash-1136-640.jpg",
         media:
           "(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)",
       },
     ],
   },
+  verification: {
+    yandex: "9607922371501871",
+    google: "yOQ3jINn11q4_dw5H4k_DtCOFF-fzOLeJMk0_mt9SQc",
+    other: {
+      "msvalidate.01": "5f6aa8bb4a96ea6221109a3d49c5f1f8",
+    },
+    yahoo: "5f6aa8bb4a96ea6221109a3d49c5f1f8",
+  },
+  alternates: {
+    canonical: `https://${process.env.NEXT_PUBLIC_ORIGIN}/`,
+  },
 };
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+    { media: "(prefers-color-scheme: dark)", color: "#000409" },
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
   ],
   colorScheme: "dark",
@@ -294,21 +291,32 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <Head>
-        <link rel="preload" href={LogoWhite.src} as="image" type="image/svg+xml" />
-        <link rel="preload" href={LogoBlack.src} as="image" type="image/svg+xml" />
-      </Head>
+      <head>
+        <link
+          rel="preload"
+          href={LogoWhite.src}
+          fetchPriority="high"
+          as="image"
+          type="image/svg+xml"
+        />
+        <link
+          rel="preload"
+          href={LogoBlack.src}
+          fetchPriority="high"
+          as="image"
+          type="image/svg+xml"
+        />
+        <OrganizationSchema />
+        <SiteSearchSchema />
+      </head>
       <body
         className={cn(
-          `scroll-smooth w-full p-0 m-0 overflow-x-clip ${geistSans.variable} ${spaceGrotesk.variable} ${geistMono.variable} ${menlo.variable} ${ubuntu.variable} ${jetbrainsMono.variable} ${consolas.variable} antialiased`
+          `scroll-smooth w-full p-0 m-0 overflow-x-clip ${inter.variable} ${geistSans.variable} ${spaceGrotesk.variable} ${geistMono.variable} ${menlo.variable} ${ubuntu.variable} ${jetbrainsMono.variable} ${consolas.variable} antialiased`
         )}
       >
         <ThemeSanitizer />
         <GAnalyticsConsent />
         <CookieConsent />
-        <PWAInstallDetector />
-        <ServiceWorkerRegister />
-        <FCMHandler />
         <CloudflareAnalytics />
         <noscript>
           <style>
@@ -365,7 +373,7 @@ export default function RootLayout({
             </main>
             <section className="text-base" aria-label="Notifications and Tips">
               <LightModeTipAlert />
-              <Toaster position="bottom-right" richColors={true} />
+              <Toaster position="bottom-right" theme="system" visibleToasts={16} />
             </section>
             <Footer />
           </ThemeProvider>

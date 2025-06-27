@@ -11,7 +11,9 @@ export async function GET(request: Request) {
     const url = new URL(request.url);
     const localUrl = `${url.origin}/_/sitemap.xml`;
 
-    const res = await fetch(localUrl);
+    const res = await fetch(localUrl, {
+    cache: "no-cache"
+  });
 
     if (!res.ok) {
       return new Response("Failed to load sitemap.xml", { status: 500 });

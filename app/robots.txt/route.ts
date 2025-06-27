@@ -11,7 +11,9 @@ export async function GET(request: Request) {
   }
 
   const baseUrl = `https://${host}`;
-  const res = await fetch(`${baseUrl}/_/robots.txt`);
+  const res = await fetch(`${baseUrl}/_/robots.txt`, {
+    cache: "no-cache"
+  });
 
   if (!res.ok) {
     return new Response("Failed to load robots.txt", { status: 500 });

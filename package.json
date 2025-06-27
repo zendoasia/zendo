@@ -44,7 +44,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "focus-trap-react": "^11.0.4",
-    "framer-motion": "^12.15.0",
+    "framer-motion": "^12.19.2",
     "jose": "^6.0.11",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.511.0",

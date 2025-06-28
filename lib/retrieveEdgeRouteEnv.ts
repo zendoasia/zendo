@@ -11,3 +11,8 @@ export async function getEdgeEnvironmentVariables(): Promise<EdgeRequestEnv> {
     WORKER_URL: WORKER_URL,
   };
 }
+
+export async function getEnvVariable(variableName: string): Promise<string | undefined> {
+  const value = process.env[variableName.toUpperCase()];
+  return value;
+}

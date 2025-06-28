@@ -21,7 +21,7 @@ export async function GET(request: Request) {
     const localUrl = `https://${origin}/_/robots.txt`;
     const res = await fetch(localUrl, {
       next: {
-        revalidate: 86400, 
+        revalidate: 86400,
       },
     });
 

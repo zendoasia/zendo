@@ -14,8 +14,11 @@ export async function GET(request: Request) {
     }
 
     const localUrl = `https://${origin}/_/sitemap.xml`;
-
-    const res = await fetch(localUrl);
+    const res = await fetch(localUrl, {
+      next: {
+        revalidate: 86400, 
+      },
+    });
 
     const text = await res.text();
 

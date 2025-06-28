@@ -106,10 +106,10 @@ export default function CookieConsent() {
   };
 
   const handleDeny = useCallback(() => {
-  Cookies.set(COOKIE_NAME, "deny", { expires: 365 });
-  closeBanner();
-  window.dispatchEvent(new Event("cookie-consent-deny"));
-}, []);
+    Cookies.set(COOKIE_NAME, "deny", { expires: 365 });
+    closeBanner();
+    window.dispatchEvent(new Event("cookie-consent-deny"));
+  }, []);
 
   useEffect(() => {
     if (!visible) return;

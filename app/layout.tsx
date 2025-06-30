@@ -34,14 +34,7 @@ export const metadata: Metadata = {
       "Welcome to Zendo. This is a upcoming startup aiming to make the world a better place for everyone to live in. Come, join us on our journey.",
     path: "/",
   }),
-  keywords: [
-    "productivity",
-    "tech",
-    "projects",
-    "zendo",
-    "zeal",
-    "startup",
-  ],
+  keywords: ["productivity", "tech", "projects", "zendo", "zeal", "startup"],
   authors: [
     {
       name: "Zendo Support",

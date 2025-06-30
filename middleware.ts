@@ -20,16 +20,15 @@ const isBot = (userAgent: string): boolean => {
 };
 
 export async function middleware(request: NextRequest) {
-  const userAgent = request.headers.get("user-agent") || "";
-
   try {
+    const userAgent = request.headers.get("user-agent") || "";
     const host = request.headers.get("host");
     const origin = await getEnvVariable("NEXT_PUBLIC_ORIGIN");
 
+    if (request.nextUrl.pathname === "/robots.txt") return NextResponse.next();
+
     const isLocalhost =
-      host?.startsWith("localhost") ||
-      host?.startsWith("127.") ||
-      host === "[::1]";
+      host?.startsWith("localhost") || host?.startsWith("127.") || host === "[::1]";
 
     if (origin && host && host !== origin && !host.endsWith(`.${origin}`) && !isLocalhost) {
       const url = new URL(request.nextUrl.pathname + request.nextUrl.search, `https://${origin}`);

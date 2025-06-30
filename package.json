@@ -1,7 +1,7 @@
 {
   "name": "zendo",
   "version": "0.1.5",
-  "description": "The zendo website.",
+  "description": "The zendo website template.",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack --port 3000 -H 0.0.0.0",
@@ -11,18 +11,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "zendo"
+    "url": "https://github.com/zendoasia/zendo"
   },
   "keywords": [
-    "website",
-    "sleek",
-    "modern",
+    "productivity",
+    "tech",
     "projects",
-    "showcase",
-    "portfolio"
+    "zendo",
+    "zeal",
+    "startup"
   ],
   "author": "aarush0101",
-  "license": "MIT",
   "dependencies": {
     "@icons-pack/react-simple-icons": "^12.9.0",
     "@next/third-parties": "^15.3.2",
@@ -43,9 +42,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
-    "focus-trap-react": "^11.0.4",
     "framer-motion": "^12.15.0",
-    "jose": "^6.0.11",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.511.0",
     "motion": "^12.15.0",

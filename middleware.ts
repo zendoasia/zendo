@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { getEnvVariable } from "@/lib/retrieveEdgeRouteEnv";
 
 const isAncientBrowser = (userAgent: string): boolean => {
   if (/MSIE \d|Trident.*rv:/.test(userAgent)) return true;
@@ -18,22 +19,33 @@ const isBot = (userAgent: string): boolean => {
   return /bot|crawl|spider|slurp|bing|baidu|yandex/i.test(userAgent);
 };
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
+  const userAgent = request.headers.get("user-agent") || "";
+
   try {
+    const host = request.headers.get("host");
+    const origin = await getEnvVariable("NEXT_PUBLIC_ORIGIN");
+
+    const isLocalhost =
+      host?.startsWith("localhost") ||
+      host?.startsWith("127.") ||
+      host === "[::1]";
+
+    if (origin && host && host !== origin && !host.endsWith(`.${origin}`) && !isLocalhost) {
+      const url = new URL(request.nextUrl.pathname + request.nextUrl.search, `https://${origin}`);
+      return NextResponse.redirect(url.toString(), 301);
+    }
+
     if (!request.nextUrl.pathname.startsWith("/fallback")) {
-      const userAgent = request.headers.get("user-agent") || "";
-      // Basic header validation to prevent header injection
       if (userAgent.length > 512 || /[\r\n]/.test(userAgent)) {
         return NextResponse.redirect(`${request.nextUrl.origin}/fallback/unsupported`);
       }
-      if (userAgent && !isBot(userAgent) && isAncientBrowser(userAgent)) {
+      if (!isBot(userAgent) && isAncientBrowser(userAgent)) {
         return NextResponse.redirect(`${request.nextUrl.origin}/fallback/unsupported`);
       }
     }
   } catch (err) {
-    // Fallback in case of unexpected errors (attack or bug)
     if (!request.nextUrl.pathname.startsWith("/fallback")) {
-      // Pass error message in header (truncated for safety)
       const errorMsg = (err instanceof Error ? err.message : String(err)).slice(0, 256);
       const response = NextResponse.redirect(`${request.nextUrl.origin}/fallback/error`);
       response.headers.set("x-zendo-error", encodeURIComponent(errorMsg));

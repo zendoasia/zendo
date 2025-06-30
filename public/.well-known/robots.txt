@@ -1,8 +1,0 @@
-# Robots file for Zendo.
-# This was created in the AI era, the era which depressed everyone.
-
-User-agent: *
-Disallow: /_next/
-Allow: /
-
-Sitemap: https://zendo.asia/sitemap.xml

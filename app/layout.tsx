@@ -35,11 +35,8 @@ export const metadata: Metadata = {
     path: "/",
   }),
   keywords: [
-    "portfolio",
     "productivity",
     "tech",
-    "aarush",
-    "master",
     "projects",
     "zendo",
     "zeal",

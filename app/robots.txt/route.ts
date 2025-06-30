@@ -8,7 +8,7 @@ export async function GET(request: Request) {
     const host = request.headers.get("host");
     const origin = await getEnvVariable("NEXT_PUBLIC_ORIGIN");
 
-    if (host !== origin) {
+    if (!host?.endsWith(`.${origin}`) && host !== origin) {
       return new NextResponse("User-agent: *\nDisallow: /", {
         status: 200,
         headers: {

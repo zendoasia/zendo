@@ -1,3 +1,14 @@
+/**
+ * types/index.ts
+ * --------------
+ *
+ * Implements the types for the app. Needs rework
+ * @todo: Rework this file.
+ *
+ * @license MIT - see LICENSE for more details
+ * @copyright © 2025–present AARUSH MASTER and Zendo - see package.json for more details
+ */
+
 import { toast } from "sonner";
 import {
   DurableObjectNamespace,
@@ -125,6 +136,9 @@ export interface ArticleSchemaProps {
   datePublished: string;
   dateModified: string;
 }
+
+export type SearchNavItem = { label: string; path: string };
+export type SearchNavGroups = Record<string, SearchNavItem[]> | { error: true };
 
 /**
  * Represents the basic metadata information for an entity.
@@ -445,3 +459,6 @@ export interface AnimatedSectionProps {
   className?: string;
   as?: TagType;
 }
+
+// Navigation sections type for quick-links JSON
+export type NavSections = Record<string, Array<{ label: string; path: string }>>;

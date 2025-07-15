@@ -1,4 +1,12 @@
-"Dummy file to add Metadata to the koIf page while preserving the page's client functionality.";
+/**
+ * app/kofi/page.tsx
+ * ------------------
+ *
+ * Adds metadata to the koFi page while preserving the page's client functionality.
+ *
+ * @license MIT - see LICENSE for more details
+ * @copyright © 2025–present AARUSH MASTER and Zendo - see package.json for more details
+ */
 
 import React from "react";
 import KoFiPage from "@/components/pages/kofi.page";

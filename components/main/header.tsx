@@ -1,146 +1,120 @@
+/**
+ * components/main/header.tsx
+ * --------------------------
+ *
+ * Implements the main header for the app
+ *
+ * @license MIT - see LICENSE for more details
+ * @copyright © 2025–present AARUSH MASTER and Zendo - see package.json for more details
+ */
+
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { ModeToggle } from "@/components/modules/modes";
-import { Menu, X, Search } from "lucide-react";
+import { Menu, X, Search, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
+import { RxDividerVertical } from "react-icons/rx";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import LogoBlack from "@/public/assets/LogoBlack.svg";
 import LogoWhite from "@/public/assets/LogoWhite.svg";
 import Link from "next/link";
-import { SiGithub } from "@icons-pack/react-simple-icons";
-import { detectOS, stripOS } from "@/lib/utils";
-import dynamic from "next/dynamic";
 import { cn } from "@/lib/utils";
-import SearchSkeleton from "@/components/skeletons/searchSkeleton";
-import MobileMenuSkeleton from "@/components/skeletons/mobileMenuSkeleton";
-import { useTheme } from "next-themes";
+import { useMenuStore } from "@/store/menuStore";
+import { useComponentLifecycle } from "@/hooks/useComponentLifecycle";
+import dynamic from "next/dynamic";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import SearchSkeleton from "@/components/skeletons/searchSkeleton";
+import type { HeaderNavLink } from "@/lib/cache/header-cacher";
+import HeaderNavLinks from "@/components/modules/headerNavLinks";
 
-const LazyMobileMenu = dynamic(() => import("@/components/modules/mobileMenu"), {
-  loading: () => <MobileMenuSkeleton />,
+// Lazy load components only when needed
+const MobileMenu = dynamic(() => import("@/components/modules/mobileMenu"), {
   ssr: false,
 });
 
-const LazySearchBar = dynamic(() => import("@/components/modules/search"), {
+const SearchBar = dynamic(() => import("@/components/modules/search"), {
+  ssr: false,
   loading: () => <SearchSkeleton />,
-  ssr: false,
 });
 
-export default function Header() {
-  const os = useMemo(() => detectOS(), []);
-  const strippedOS = useMemo(() => {
-    return stripOS(os);
-  }, [os]);
-
-  const [mounted, setMounted] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [openS, setOpenS] = useState(false);
-  const [shouldRender, setShouldRender] = useState(false);
-  const { theme, systemTheme } = useTheme();
+export default function Header({ links }: { links: HeaderNavLink[] | null }) {
+  const { setOpen, setOpenS, open, openS, strippedOS } = useMenuStore();
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [shouldRenderS, setShouldRenderS] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
+  const shouldRenderMobileMenu = useComponentLifecycle(open);
+  const shouldRenderSearchBar = useComponentLifecycle(openS);
+  const handleOpenMenu = useCallback(() => setOpen(true), [setOpen]);
+  const handleOpenSearch = useCallback(() => setOpenS(true), [setOpenS]);
+  const handleBrandingImageLoad = useCallback(() => setImageLoaded(true), []);
+  const handleSkipNavigation = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    const main = document.getElementById("main");
+    if (main) {
+      main.scrollIntoView({ behavior: "smooth" });
+      main.focus();
+    } else {
+      console.error("Failed to find the main element on the page.");
+    }
   }, []);
 
-  useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        if (openS) {
-          setOpenS(false);
-          return;
-        }
-        if (open) {
-          setOpen(false);
-        }
-      }
-    };
+  // Memoize keyboard shortcut display (same as mobile menu)
+  const keyboardShortcut = useMemo(() => {
+    const srText =
+      strippedOS === "mac"
+        ? "Command key plus K"
+        : strippedOS === "windows"
+          ? "Control key plus K"
+          : strippedOS === "phone"
+            ? "Press to search"
+            : "Please Refresh the Page";
 
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [open, openS]);
+    const displayText =
+      strippedOS === "mac" ? (
+        <>{"\u2318"} K</>
+      ) : strippedOS === "windows" ? (
+        <>CTRL K</>
+      ) : strippedOS === "phone" ? (
+        <>PRESS</>
+      ) : (
+        <>REFRESH</>
+      );
 
-  useEffect(() => {
-    const downS = (e: KeyboardEvent) => {
-      if (e.key.toLowerCase() === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        if (open) {
-          setOpen(false);
-        } else {
-          setOpenS((prev) => !prev);
-        }
-      }
-    };
+    return { srText, displayText };
+  }, [strippedOS]);
 
-    document.addEventListener("keydown", downS);
-    return () => document.removeEventListener("keydown", downS);
-  }, [open, openS]);
-
-  useEffect(() => {
-    if (openS) {
-      // When opening, immediately render
-      setShouldRenderS(true);
-    }
-    if (open) {
-      // When opening, immediately render
-      setShouldRender(true);
-    }
-    // When closing, we'll let the component itself tell us when to unmount
-  }, [open, openS]);
-
-  if (!mounted) return null;
-  const currentTheme = theme === "system" ? systemTheme : theme;
+  const GITHUB_URL =
+    process.env.NEXT_PUBLIC_GITHUB_SOURCE_CODE || "https://github.com/zendoasia/zendo";
 
   return (
     <>
       <header
         aria-label="Primary Header"
         className={cn(
-          "sticky top-0 left-0 right-0 z-50 flex items-center border-0 border-b-[0.1rem] gap-y-2 backdrop-blur-md app-font min-h-0",
+          "sticky top-0 left-0 right-0 z-50 flex items-center border-0 border-b-[0.1rem] border-black dark:border-muted gap-y-2 backdrop-blur-md app-font min-h-0",
           "fixed br:w-full",
           "will-change-transform transform-gpu backface-hidden"
         )}
+        style={{ height: "60px", minHeight: "60px", maxHeight: "60px" }}
       >
         <div className={cn("py-2.5 px-2.5 w-full flex items-center")}>
-          <Button
-            aria-label="Skip Navigation"
-            variant="ghost"
-            asChild
+          <button
+            onClick={handleSkipNavigation}
             className={cn(
-              "sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 z-50 nav-btn px-4 py-2.5 rounded-[var(--radius)]"
+              "sr-only",
+              "focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50",
+              "!p-1 rounded bg-primary shadow-lg transition button-scaler text-white dark:!text-black"
             )}
+            tabIndex={0}
           >
-            <Link
-              aria-label="Skip to main content"
-              href="#main"
-              onClick={(e) => {
-                e.preventDefault();
-                const main = document.getElementById("main");
-                if (main) {
-                  main.scrollIntoView({ behavior: "smooth" });
-                  main.focus();
-                } else {
-                  console.error(
-                    "Failed to find the main element on the page. Are you sure there is a main tag with id='main'?"
-                  );
-                }
-              }}
-              className={cn("w-full h-full flex items-center justify-center")}
-            >
-              Skip Navigation
-            </Link>
-          </Button>
+            Skip to main content
+          </button>
 
           <Button
             variant="ghost"
             asChild
             className={cn("flex items-center transition-colors bg-transparent duration-400")}
           >
-            {/* Preload both logos at once to prevent network requests */}
             <Link key="logo-link" href="/" className="relative w-[140px] aspect-[140/30]">
               {!imageLoaded && <Skeleton className="absolute inset-0 w-full h-full rounded-full" />}
 
@@ -149,102 +123,80 @@ export default function Header() {
                 alt="Zendo Logo Black"
                 fill
                 loading="lazy"
-                onLoad={() => setImageLoaded(true)}
+                onLoad={handleBrandingImageLoad}
                 className={cn(
-                  "absolute inset-0 object-contain transition-opacity duration-300",
-                  currentTheme === "light" ? "opacity-100" : "opacity-0"
+                  "absolute inset-0 object-contain transition-opacity duration-400",
+                  "opacity-100",
+                  "block dark:hidden"
                 )}
               />
               <Image
                 src={LogoWhite}
-                alt="Zendo Logo Light"
+                alt="Zendo Logo White"
                 fill
                 loading="lazy"
-                onLoad={() => setImageLoaded(true)}
+                onLoad={handleBrandingImageLoad}
                 className={cn(
-                  "absolute inset-0 object-contain transition-opacity duration-300",
-                  currentTheme === "dark" ? "opacity-100" : "opacity-0"
+                  "absolute inset-0 object-contain transition-opacity duration-400",
+                  "opacity-100",
+                  "hidden dark:block"
                 )}
               />
             </Link>
           </Button>
 
-          <nav
-            aria-label="Primary Navigation and Inter-Links"
-            className={cn("hidden br:flex items-center app-gap ml-7")}
-          >
-            {["About", "Portfolio", "Projects", "Contact"].map((label) => (
-              <Button size="lg" key={label} variant="ghost" className={cn("nav-btn")} asChild>
-                <Link href={`/${label.toLowerCase()}`}>{label}</Link>
-              </Button>
-            ))}
+          <RxDividerVertical
+            className={cn(
+              "accessibility-detail-color",
+              "ml-3 hidden br:flex",
+              "scale-y-210" // slightly scale vertically
+            )}
+            size="1.2rem"
+          />
+
+          <nav aria-label="Primary Navigation" className={cn("hidden br:flex items-center ")}>
+            <HeaderNavLinks links={links} />
+            <Button size="sm" variant="link" className="text-unimportant" asChild>
+              <Link target="_blank" href={GITHUB_URL}>
+                <span className="inline-flex items-center gap-1">
+                  GitHub
+                  <ArrowUpRight
+                    className="accessibility-detail-color relative -mt-3"
+                    style={{ verticalAlign: "middle" }}
+                  />
+                </span>
+              </Link>
+            </Button>
           </nav>
           <div className={cn("flex-grow")} />
           <section
-            aria-label="Secondary Navigation - Search and themes"
+            aria-label="Secondary Navigation"
             className={cn(
               "hidden br:flex items-center app-gap br:ml-auto w-full br:w-auto justify-center br:justify-end"
             )}
           >
             <Button
-              size="lg"
-              variant="ghost"
-              onClick={() => setOpenS(true)}
-              className={cn("ml-6 group inline-flex items-center justify-center app-gap nav-btn")}
+              size="sm"
+              onClick={handleOpenSearch}
+              className={cn(
+                "group inline-flex items-center justify-center button-scaler hover:cursor-pointer"
+              )}
             >
               <Search size="1.2rem" />
               <span className={cn("flex items-center gap-3")}>
                 <span className={cn("text-sm")}>Search</span>
                 <kbd
                   className={cn(
-                    "px-1.5 py-[2px] rounded bg-muted/30 border border-border text-[10px] font-medium font-mono text-muted-foreground backdrop-blur-sm"
+                    "px-1.5 rounded bg-white dark:bg-black border border-border text-[10px] font-medium accessibility-detail-color backdrop-blur-md !text-xs app-font-mono"
                   )}
                 >
-                  <span className="sr-only">
-                    {strippedOS === "mac"
-                      ? "Command key plus K"
-                      : strippedOS === "windows"
-                        ? "Control key plus K"
-                        : strippedOS === "phone"
-                          ? "Press to search"
-                          : "Please Refresh the Page"}
+                  <span className="text-black dark:text-white">
+                    <span className="sr-only">{keyboardShortcut.srText}</span>
+                    {keyboardShortcut.displayText}
                   </span>
-                  {strippedOS === "mac" ? (
-                    <>{"\u2318"} K</>
-                  ) : strippedOS === "windows" ? (
-                    <>CTRL K</>
-                  ) : strippedOS === "phone" ? (
-                    <>PRESS</>
-                  ) : !strippedOS ? (
-                    <>REFRESH</>
-                  ) : null}
                 </kbd>
               </span>
             </Button>
-
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className={cn("nav-btn")}
-                    asChild
-                    key="github-repository"
-                  >
-                    <Link href="https://github.com/aarush0101/zendo" target="_blank">
-                      <span className="flex items-center justify-center">
-                        <span className="sr-only">GitHub Repository</span>
-                        <SiGithub size="1.2rem" />
-                      </span>
-                    </Link>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent className={cn("text-balance text-base")}>
-                  Visit Website Repository
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
 
             <ModeToggle />
           </section>
@@ -253,12 +205,11 @@ export default function Header() {
             <Button
               aria-label="Mobile Menu Button"
               key="mobile-menu"
-              onClick={() => {
-                setOpen(!open);
-              }}
-              variant="ghost"
+              onClick={handleOpenMenu}
               size="icon"
-              className={cn("flex justify-center items-center app-gap nav-btn br:hidden")}
+              className={cn(
+                "flex justify-center items-center app-gap hover:cursor-pointer button-scaler br:hidden"
+              )}
             >
               <AnimatePresence mode="wait" initial={false}>
                 {open ? (
@@ -296,29 +247,8 @@ export default function Header() {
         </div>
       </header>
 
-      {shouldRender && (
-        <LazyMobileMenu
-          open={open}
-          setOpenAction={setOpen}
-          setOpenSAction={setOpenS}
-          strippedOS={strippedOS}
-          onCloseComplete={() => {
-            if (!open) setShouldRender(false);
-          }}
-        />
-      )}
-
-      {shouldRenderS && (
-        <LazySearchBar
-          open={open}
-          setOpenAction={setOpen}
-          openS={openS}
-          setOpenSAction={setOpenS}
-          onCloseComplete={() => {
-            if (!openS) setShouldRender(false);
-          }}
-        />
-      )}
+      {shouldRenderMobileMenu && <MobileMenu />}
+      {shouldRenderSearchBar && <SearchBar />}
     </>
   );
 }

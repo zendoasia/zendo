@@ -1,3 +1,13 @@
+/**
+ * app/globals.css
+ * ---------------
+ *
+ * Implements the global styles for the app
+ *
+ * @license MIT - see LICENSE for more details
+ * @copyright © 2025–present AARUSH MASTER and Zendo - see package.json for more details
+ */
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -63,8 +73,29 @@
 }
 
 .nav-btn {
-  @apply bg-transparent cursor-pointer pt-0 pb-0 pl-2 pr-2 text-base rounded border border-[var(--jet)] text-[var(--text-dark)] transition-colors duration-400;
+  @apply bg-transparent cursor-pointer pt-0 pb-0 pl-2 pr-2 text-base rounded-md border border-[var(--jet)] text-[var(--text-dark)] transition-colors duration-400;
 }
+
+.button-scaler {
+  /* Tailwind equivalents for transform, will-change, and font smoothing */
+  @apply transition-transform duration-400 hover:scale-[1.05] active:scale-[0.95] will-change-transform backface-hidden translate-z-0 antialiased;
+  /* Fallbacks and non-Tailwind properties */
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  /* Try to preserve crispness on scaling */
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  /* For text, try to preserve sharpness */
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.accessibility-detail-color {
+  @apply text-muted-foreground dark:text-muted;
+}
+
 .dark .nav-btn {
   @apply text-[var(--text-light)];
 }
@@ -100,6 +131,10 @@
 .app-font-inter {
   font-family: var(--font-inter);
   @apply font-medium text-base;
+}
+
+.text-unimportant {
+  @apply text-[var(--text-white-muted)] dark:text-muted-foreground;
 }
 
 .app-link-button {
@@ -156,6 +191,7 @@ body {
   -webkit-tap-highlight-color: transparent;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -moz-background-clip: text;
 }
 
 :root {
@@ -170,8 +206,13 @@ body {
     "Space Grotesk", "Geist", "Geist Fallback", -apple-system, BlinkMacSystemFont, system-ui, Arial,
     sans-serif;
   --font-inter:
-    "Inter", "Inter Fallback", -apple-system, BlinkMacSystemFont, system-ui, Arial,
-    sans-serif --bg-dark: oklch(10.137% 0.02263 238.424);
+    "Inter", "Inter Fallback", -apple-system, BlinkMacSystemFont, system-ui, Arial, sans-serif;
+  --betterstacks-green: rgb(16, 185, 129);
+  --betterstacks-yellow: rgb(250, 204, 21);
+  --betterstacks-red: rgb(239, 68, 68);
+  --betterstacks-blue: rgb(59, 130, 246);
+  --text-white-muted: hsl(0, 0%, 40%);
+  --bg-dark: oklch(10.137% 0.02263 238.424);
   --bg: oklch(0.15 0.025 234);
   --bg-light: oklch(20.053% 0.02529 235.066);
   --text: oklch(0.96 0.05 234);

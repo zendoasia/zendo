@@ -1,3 +1,14 @@
+/**
+ * app/layout.tsx
+ * --------------
+ *
+ * Implements the main layout for the app
+ *
+ * @license MIT - see LICENSE for more details
+ * @copyright © 2025–present AARUSH MASTER and Zendo - see package.json for more details
+ */
+
+import type React from "react";
 import type { Metadata } from "next";
 import "@/app/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -22,19 +33,32 @@ import { cn } from "@/lib/utils";
 import ThemeSanitizer from "@/components/modules/themeSanitizer";
 import CookieConsent from "@/components/scripts/cookieConsent";
 import GAnalyticsConsent from "@/components/scripts/GAnalyticsConsent";
-import { Viewport } from "next";
+import type { Viewport } from "next";
 import CloudflareAnalytics from "@/components/scripts/cloudflareInsights";
 import { OrganizationSchema, SiteSearchSchema } from "@/lib/setScheme";
 import { generateMetadata } from "@/lib/generateBasicMetadata";
+import { KeyboardShortcutsProvider } from "@/components/providers/keyboardShortcutProvider";
+import { OSDetectionProvider } from "@/components/providers/osDetectionProvider";
+import { Suspense } from "react";
+import { getFooterLinks, getStatusUptime } from "@/lib/cache/footer-cacher";
+import { getHeaderNavLinks } from "@/lib/cache/header-cacher";
 
 export const metadata: Metadata = {
   ...generateMetadata({
     title: "Zendo - Start Using Today!",
-    description:
-      "Welcome to Zendo. This is a upcoming startup aiming to make the world a better place for everyone to live in. Come, join us on our journey.",
+    description: "For those who 'Dare to be different'. Checkout our latest services and products.",
     path: "/",
   }),
-  keywords: ["productivity", "tech", "projects", "zendo", "zeal", "startup"],
+  keywords: [
+    "productivity",
+    "tech",
+    "projects",
+    "zendo",
+    "zeal",
+    "startup",
+    "services",
+    "products",
+  ],
   authors: [
     {
       name: "Zendo Support",
@@ -49,7 +73,6 @@ export const metadata: Metadata = {
   category: "software",
   metadataBase: new URL(`https://${process.env.NEXT_PUBLIC_ORIGIN}/`),
   referrer: "origin-when-cross-origin",
-
   robots: "/robots.txt",
   manifest: "/manifest.webmanifest",
   pinterest: {
@@ -274,11 +297,17 @@ export const viewport: Viewport = {
   colorScheme: "dark",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [footerSections, uptime, headerNavLinks] = await Promise.all([
+    getFooterLinks(),
+    getStatusUptime(),
+    getHeaderNavLinks(),
+  ]);
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -301,73 +330,87 @@ export default function RootLayout({
       </head>
       <body
         className={cn(
-          `scroll-smooth w-full p-0 m-0 overflow-x-clip ${inter.variable} ${geistSans.variable} ${spaceGrotesk.variable} ${geistMono.variable} ${menlo.variable} ${ubuntu.variable} ${jetbrainsMono.variable} ${consolas.variable} antialiased`
+          `scroll-smooth p-0 m-0 overflow-y-scroll box-border ${inter.variable} ${geistSans.variable} ${spaceGrotesk.variable} ${geistMono.variable} ${menlo.variable} ${ubuntu.variable} ${jetbrainsMono.variable} ${consolas.variable} antialiased`
         )}
       >
-        <ThemeSanitizer />
-        <GAnalyticsConsent />
-        <CookieConsent />
-        <CloudflareAnalytics />
-        <noscript>
-          <style>
-            {`
-            #${process.env.NEXT_PUBLIC_APP_ID} {
-              display: none !important;
-            }
-            #noscript-dialog {
-              position: fixed;
-              inset: 0;
-              z-index: 99999;        
-              background-color: rgba(0, 0, 0, 0.85);
-              color: white;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              padding: 2rem;
-              font-family: sans-serif;
-              text-align: center;
-            }
-            #noscript-dialog > div {
-              background: #111;
-              padding: 2rem;
-              max-width: 400px;
-            }
-          `}
-          </style>
-          <div id="noscript-dialog">
-            <div>
-              <h2 style={{ marginBottom: "1rem", fontSize: "1.25rem" }}>JavaScript Required</h2>
-              <p>
-                This site needs JavaScript to function properly. Please enable it in your browser
-                settings. Or, upgrade to a new system and a modern browser to enjoy the full
-                experience.
-              </p>
+        {/* Dedicated portal root for overlays/menus */}
+        <div id="portal-root" />
+        <Suspense fallback={null}>
+          <ThemeSanitizer />
+          <GAnalyticsConsent />
+          <CookieConsent />
+          <CloudflareAnalytics />
+          <noscript>
+            <style>
+              {`
+              #${process.env.NEXT_PUBLIC_APP_ID} {
+                display: none !important;
+              }
+              #noscript-dialog {
+                position: fixed;
+                inset: 0;
+                z-index: 99999;        
+                background-color: rgba(0, 0, 0, 0.85);
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 2rem;
+                font-family: sans-serif;
+                text-align: center;
+              }
+              #noscript-dialog > div {
+                background: #111;
+                padding: 2rem;
+                max-width: 400px;
+              }
+            `}
+            </style>
+            <div id="noscript-dialog">
+              <div>
+                <h2 style={{ marginBottom: "1rem", fontSize: "1.25rem" }}>JavaScript Required</h2>
+                <p>
+                  This site needs JavaScript to function properly. Please enable it in your browser
+                  settings. Or, upgrade to a new system and a modern browser to enjoy the full
+                  experience.
+                </p>
+              </div>
             </div>
-          </div>
-        </noscript>
-        <div id={`${process.env.NEXT_PUBLIC_APP_ID}`}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <ExternalLinkInterceptor />
-            <Header />
-            <main
-              tabIndex={-1}
-              id="main"
-              className={cn("text-base outline-none app-font", "pt-[3.5rem]")}
+          </noscript>
+          <div id={`${process.env.NEXT_PUBLIC_APP_ID}`}>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="dark"
+              enableSystem
+              disableTransitionOnChange
             >
-              {children}
-            </main>
-            <section className="text-base" aria-label="Notifications and Tips">
-              <LightModeTipAlert />
-              <Toaster position="bottom-right" theme="system" visibleToasts={16} />
-            </section>
-            <Footer />
-          </ThemeProvider>
-        </div>
+              <OSDetectionProvider>
+                <KeyboardShortcutsProvider>
+                  <ExternalLinkInterceptor />
+                  <Header links={headerNavLinks} />
+                  <main
+                    tabIndex={-1}
+                    id="main"
+                    className={cn("text-base outline-none app-font", "pt-[3.5rem]")}
+                  >
+                    {children}
+                  </main>
+                  <section className="text-base" aria-label="Notifications and Tips">
+                    <LightModeTipAlert />
+                    <Toaster
+                      position="bottom-right"
+                      theme="system"
+                      visibleToasts={4}
+                      richColors={true}
+                      closeButton={true}
+                    />
+                  </section>
+                  <Footer footerSections={footerSections} uptime={uptime} />
+                </KeyboardShortcutsProvider>
+              </OSDetectionProvider>
+            </ThemeProvider>
+          </div>
+        </Suspense>
       </body>
     </html>
   );

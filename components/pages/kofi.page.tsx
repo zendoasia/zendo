@@ -1,3 +1,15 @@
+/**
+ * components/pages/kofi.page.tsx
+ * ------------------------------
+ *
+ * Implements the Ko-fi page for the app
+ *
+ * @license MIT - see LICENSE for more details
+ * @copyright © 2025–present AARUSH MASTER and Zendo - see package.json for more details
+ */
+
+"use client";
+
 import KoFiButton from "@/components/modules/kofiButton";
 import ArticleWrapper from "@/components/articleWrapper";
 import { CheckIcon, Mail } from "lucide-react";

@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import React, { useEffect, useState, useContext, type ReactNode } from "react";
 import { Command as CommandPrimitive } from "cmdk";
 import { Search } from "lucide-react";
 
@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dialog";
 
 const Command = React.forwardRef<
-  React.ElementRef<typeof CommandPrimitive>,
+  HTMLDivElement,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive>
 >(({ className, ...props }, ref) => (
   <CommandPrimitive
@@ -53,10 +53,10 @@ const CommandDialog = ({
 };
 
 const CommandInput = React.forwardRef<
-  React.ElementRef<typeof CommandPrimitive.Input>,
+  HTMLInputElement,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>
->(({ className, ...props }, ref) => (
-  <div className="flex items-center border-b px-3" cmdk-input-wrapper="">
+>(({ className, ...props }, ref: React.ForwardedRef<HTMLInputElement>) => (
+  <div className="flex items-center px-3" cmdk-input-wrapper="">
     <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
     <CommandPrimitive.Input
       ref={ref}
@@ -71,30 +71,80 @@ const CommandInput = React.forwardRef<
 
 CommandInput.displayName = CommandPrimitive.Input.displayName;
 
-const CommandList = React.forwardRef<
-  React.ElementRef<typeof CommandPrimitive.List>,
-  React.ComponentPropsWithoutRef<typeof CommandPrimitive.List>
->(({ className, ...props }, ref) => (
-  <CommandPrimitive.List
-    ref={ref}
-    className={cn("app-font max-h-[300px] overflow-y-auto overflow-x-hidden", className)}
-    {...props}
-  />
-));
+// Add a context to track if any CommandItem is rendered
+const CommandItemsRenderedContext = React.createContext<{
+  rendered: boolean;
+  setRendered: (_v: boolean) => void;
+  loading?: boolean;
+  error?: boolean;
+} | null>(null);
 
-CommandList.displayName = CommandPrimitive.List.displayName;
+function CommandItemsRenderedProvider({
+  children,
+  loading,
+  error,
+}: {
+  children: ReactNode;
+  loading?: boolean;
+  error?: boolean;
+}) {
+  const [rendered, setRendered] = useState(false);
+  useEffect(() => {
+    setRendered(false);
+  }, [children]);
+  return (
+    <CommandItemsRenderedContext.Provider value={{ rendered, setRendered, loading, error }}>
+      {children}
+    </CommandItemsRenderedContext.Provider>
+  );
+}
 
-const CommandEmpty = React.forwardRef<
-  React.ElementRef<typeof CommandPrimitive.Empty>,
+// Patch CommandItem to set context when rendered
+const PatchedCommandItem = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item>
+>((props, ref: React.ForwardedRef<HTMLDivElement>) => {
+  const ctx = useContext(CommandItemsRenderedContext);
+  useEffect(() => {
+    if (ctx && !ctx.rendered) ctx.setRendered(true);
+  }, [ctx]);
+  return <CommandPrimitive.Item ref={ref} {...props} />;
+});
+PatchedCommandItem.displayName = CommandPrimitive.Item.displayName;
+
+// Custom CommandEmpty that only shows if no items rendered
+const PatchedCommandEmpty = React.forwardRef<
+  HTMLDivElement,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Empty>
->((props, ref) => (
-  <CommandPrimitive.Empty ref={ref} className="app-font py-6 text-center text-sm" {...props} />
-));
+>((props, ref: React.ForwardedRef<HTMLDivElement>) => {
+  const ctx = useContext(CommandItemsRenderedContext);
+  if (ctx && (ctx.rendered || ctx.loading || ctx.error)) return null;
+  return (
+    <CommandPrimitive.Empty ref={ref} className="app-font py-6 text-center text-sm" {...props} />
+  );
+});
+PatchedCommandEmpty.displayName = CommandPrimitive.Empty.displayName;
 
-CommandEmpty.displayName = CommandPrimitive.Empty.displayName;
+// Patch CommandList to wrap children in provider and reset rendered state on each render
+const PatchedCommandList = React.forwardRef<
+  HTMLDivElement,
+  React.ComponentPropsWithoutRef<typeof CommandPrimitive.List> & {
+    loading?: boolean;
+    error?: boolean;
+  }
+>(({ children, loading, error, ...props }, ref: React.ForwardedRef<HTMLDivElement>) => {
+  return (
+    <CommandItemsRenderedProvider loading={loading} error={error}>
+      <CommandPrimitive.List ref={ref} {...props}>
+        {children}
+      </CommandPrimitive.List>
+    </CommandItemsRenderedProvider>
+  );
+});
+PatchedCommandList.displayName = CommandPrimitive.List.displayName;
 
 const CommandGroup = React.forwardRef<
-  React.ElementRef<typeof CommandPrimitive.Group>,
+  HTMLDivElement,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Group>
 >(({ className, ...props }, ref) => (
   <CommandPrimitive.Group
@@ -110,7 +160,7 @@ const CommandGroup = React.forwardRef<
 CommandGroup.displayName = CommandPrimitive.Group.displayName;
 
 const CommandSeparator = React.forwardRef<
-  React.ElementRef<typeof CommandPrimitive.Separator>,
+  HTMLDivElement,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Separator>
 >(({ className, ...props }, ref) => (
   <CommandPrimitive.Separator
@@ -122,7 +172,7 @@ const CommandSeparator = React.forwardRef<
 CommandSeparator.displayName = CommandPrimitive.Separator.displayName;
 
 const CommandItem = React.forwardRef<
-  React.ElementRef<typeof CommandPrimitive.Item>,
+  HTMLDivElement,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Item>
 >(({ className, ...props }, ref) => (
   <CommandPrimitive.Item
@@ -151,10 +201,10 @@ export {
   Command,
   CommandDialog,
   CommandInput,
-  CommandList,
-  CommandEmpty,
+  PatchedCommandList as CommandList,
+  PatchedCommandEmpty as CommandEmpty,
   CommandGroup,
-  CommandItem,
+  PatchedCommandItem as CommandItem,
   CommandShortcut,
   CommandSeparator,
 };

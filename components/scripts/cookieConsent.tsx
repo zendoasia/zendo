@@ -1,3 +1,13 @@
+/**
+ * components/scripts/cookieConsent.tsx
+ * ------------------------------------
+ *
+ * Handles cookie consent and tracking consent.
+ *
+ * @license MIT - see LICENSE for more details
+ * @copyright © 2025–present AARUSH MASTER and Zendo - see package.json for more details
+ */
+
 "use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";
@@ -10,7 +20,7 @@ import Link from "next/link";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 
-const COOKIE_NAME = "are_cookies_allowed";
+const COOKIE_CONSENT_COOKIE_NAME = "cookie_status";
 
 export default function CookieConsent() {
   const [mounted, setMounted] = useState(false);
@@ -25,7 +35,7 @@ export default function CookieConsent() {
   }, []);
 
   useEffect(() => {
-    if (!Cookies.get(COOKIE_NAME)) {
+    if (!Cookies.get(COOKIE_CONSENT_COOKIE_NAME)) {
       (async () => {
         await new Promise((res) => setTimeout(res, 2000));
         setVisible(true);
@@ -100,13 +110,13 @@ export default function CookieConsent() {
   };
 
   const handleAllow = () => {
-    Cookies.set(COOKIE_NAME, "allow", { expires: 365 });
+    Cookies.set(COOKIE_CONSENT_COOKIE_NAME, "allow", { expires: 365 });
     closeBanner();
     window.dispatchEvent(new Event("cookie-consent-allow"));
   };
 
   const handleDeny = useCallback(() => {
-    Cookies.set(COOKIE_NAME, "deny", { expires: 365 });
+    Cookies.set(COOKIE_CONSENT_COOKIE_NAME, "deny", { expires: 365 });
     closeBanner();
     window.dispatchEvent(new Event("cookie-consent-deny"));
   }, []);
@@ -191,7 +201,7 @@ export default function CookieConsent() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[9999] bg-black/50 backdrop-blur-sm"
+            className="fixed inset-0 z-[9999] bg-black/30 backdrop-blur-md"
             data-cookie-consent
             aria-hidden="true"
           />
@@ -208,37 +218,69 @@ export default function CookieConsent() {
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             className={cn(
               "fixed bottom-6 left-1/2 z-[10000] w-[95vw] max-w-lg",
-              "rounded-2xl p-6 -translate-x-1/2",
-              "bg-white/95 dark:bg-zinc-900/95",
+              "rounded-[var(--radius)] p-5 -translate-x-1/2",
+              "bg-[color:var(--background)]",
               "backdrop-blur-xl backdrop-saturate-150",
-              "border border-zinc-200/50 dark:border-zinc-700/50",
+              "border border-[color:var(--border)]",
               "shadow-2xl shadow-black/10 dark:shadow-black/30",
-              "flex flex-col gap-4 app-font"
+              "flex flex-col gap-2 app-font"
             )}
           >
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <div className="space-y-3">
-                <TabsList className="grid w-full grid-cols-2 bg-zinc-100 dark:bg-zinc-800">
-                  <TabsTrigger
-                    value="overview"
-                    className="data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-700"
-                  >
-                    Overview
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="advance"
-                    className="data-[state=active]:bg-white dark:data-[state=active]:bg-zinc-700"
-                  >
-                    Advanced
-                  </TabsTrigger>
+                <TabsList className="grid w-full grid-cols-2 ">
+                  <TabsTrigger value="overview">Overview</TabsTrigger>
+                  <TabsTrigger value="advance">Advanced</TabsTrigger>
                 </TabsList>
 
                 <div className="min-h-[120px]">
                   <TabsContent value="overview" className="mt-0">
                     <div className="text-base leading-relaxed">
-                      We use cookies for preferences and analytics. You can check what we really use
-                      in the Advanced tab. To access this website, please make a choice on whether
-                      to allow cookies or not.
+                      We use cookies to enhance preferences and analyze site performance. We comply
+                      with the{" "}
+                      <Link
+                        href="https://gdpr-info.eu/"
+                        target="_blank"
+                        data-no-prompt
+                        className="underline underline-offset-2 transition-colors font-bold bg-clip-text text-transparent"
+                        style={{
+                          background:
+                            "linear-gradient(132deg, rgb(59, 55, 106) 0.00%, rgb(0, 143, 186) 50.00%, rgb(255, 149, 213) 100.00%)",
+                          WebkitBackgroundClip: "text",
+                          backgroundClip: "text",
+                          WebkitTextFillColor: "transparent",
+                          color: "rgb(59, 55, 106)",
+                          textDecorationColor: "rgb(59, 55, 106)",
+                          textDecorationThickness: "2px",
+                          textDecorationStyle: "solid",
+                          textDecorationLine: "underline",
+                        }}
+                      >
+                        GDPR
+                      </Link>{" "}
+                      and{" "}
+                      <Link
+                        href="https://oag.ca.gov/privacy/ccpa"
+                        target="_blank"
+                        data-no-prompt
+                        className="underline underline-offset-2 transition-colors font-bold bg-clip-text text-transparent"
+                        style={{
+                          background:
+                            "linear-gradient(132deg, rgb(3, 148, 108) 0.00%, rgb(33, 35, 34) 100.00%)",
+                          WebkitBackgroundClip: "text",
+                          backgroundClip: "text",
+                          WebkitTextFillColor: "transparent",
+                          color: "rgb(3, 148, 108)",
+                          textDecorationColor: "rgb(3, 148, 108)",
+                          textDecorationThickness: "2px",
+                          textDecorationStyle: "solid",
+                          textDecorationLine: "underline",
+                        }}
+                      >
+                        CCPA
+                      </Link>{" "}
+                      regulations and respect your privacy. We only collect data necessary for
+                      analytics and performance monitoring.
                     </div>
                   </TabsContent>
 
@@ -248,8 +290,20 @@ export default function CookieConsent() {
                       <Link
                         href="https://support.google.com/analytics/answer/6004245"
                         target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline underline-offset-2 transition-colors"
+                        data-no-prompt
+                        className="underline underline-offset-2 transition-colors font-bold bg-clip-text text-transparent"
+                        style={{
+                          background:
+                            "linear-gradient(132deg, rgb(34, 181, 254) 0%, rgb(255, 186, 214) 100%)",
+                          WebkitBackgroundClip: "text",
+                          backgroundClip: "text",
+                          WebkitTextFillColor: "transparent",
+                          color: "rgb(34, 181, 254)",
+                          textDecorationColor: "rgb(34, 181, 254)",
+                          textDecorationThickness: "2px",
+                          textDecorationStyle: "solid",
+                          textDecorationLine: "underline",
+                        }}
                       >
                         Google Analytics
                       </Link>{" "}
@@ -258,33 +312,43 @@ export default function CookieConsent() {
                         href="https://www.cloudflare.com/privacypolicy/"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline underline-offset-2 transition-colors"
+                        data-no-prompt
+                        className="underline underline-offset-2 transition-colors font-bold bg-clip-text text-transparent"
+                        style={{
+                          background:
+                            "linear-gradient(132deg, rgb(255, 0, 0) 0%, rgb(255, 213, 0) 100%)",
+                          WebkitBackgroundClip: "text",
+                          backgroundClip: "text",
+                          WebkitTextFillColor: "transparent",
+                          color: "rgb(255, 94, 0)",
+                          textDecorationColor: "rgb(255, 94, 0)",
+                          textDecorationThickness: "2px",
+                          textDecorationStyle: "solid",
+                          textDecorationLine: "underline",
+                        }}
                       >
                         Cloudflare Insights
                       </Link>{" "}
-                      for analytics and performance monitoring. For more details on what data is
-                      collected, please refer to our privacy policy.
+                      for analytics and performance monitoring. Please review their privacy policies
+                      for more information.
                     </div>
                   </TabsContent>
                 </div>
               </div>
             </Tabs>
 
-            <Separator className="bg-zinc-200 dark:bg-zinc-700" />
+            <Separator className="my-2 bg-muted-foreground/40 dark:bg-muted-foreground/40" />
 
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="flex flex-col sm:flex-row items-center justify-between">
               <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                 <Button
                   size="sm"
                   onClick={handleAllow}
                   className={cn(
                     "flex items-center gap-2 font-medium transition-all duration-200",
-                    "bg-emerald-600 hover:bg-emerald-700 text-white",
-                    "focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2",
-                    "dark:bg-emerald-600 dark:hover:bg-emerald-700",
-                    "dark:focus:ring-emerald-400 dark:focus:ring-offset-zinc-900",
-                    "shadow-sm hover:shadow-md",
-                    "w-full sm:w-auto justify-center"
+                    "button-scaler hover:cursor-pointer",
+                    "w-full sm:w-auto justify-center",
+                    "bg-emerald-500 hover:bg-emerald-600 text-white"
                   )}
                   aria-label="Allow cookies"
                 >
@@ -294,15 +358,13 @@ export default function CookieConsent() {
 
                 <Button
                   size="sm"
-                  variant="outline"
+                  variant="destructive"
                   onClick={handleDeny}
                   className={cn(
                     "flex items-center gap-2 font-medium transition-all duration-200",
-                    "border-red-200 text-red-700 hover:bg-red-50 hover:border-red-300",
-                    "focus:ring-2 focus:ring-red-500 focus:ring-offset-2",
-                    "dark:border-red-800 dark:text-red-400 dark:hover:bg-red-950/50 dark:hover:border-red-700",
-                    "dark:focus:ring-red-400 dark:focus:ring-offset-zinc-900",
-                    "w-full sm:w-auto justify-center"
+                    "button-scaler hover:cursor-pointer",
+                    "w-full sm:w-auto justify-center",
+                    "!bg-red-500 !hover:bg-red-600 text-white"
                   )}
                   aria-label="Deny cookies"
                 >
@@ -322,13 +384,8 @@ export default function CookieConsent() {
                   "w-full sm:w-auto justify-center"
                 )}
               >
-                <Link
-                  href="/privacy"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2"
-                >
-                  <Info size={16} />
+                <Link href="/privacy" target="_blank" className="flex items-center gap-2">
+                  <Info size={"1.2rem"} />
                   Privacy Policy
                 </Link>
               </Button>

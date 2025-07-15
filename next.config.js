@@ -14,7 +14,8 @@ const nextConfig = {
           {
             key: "Content-Security-Policy",
             value: [
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://backend.zendo.asia https://cdn.zendo.asia https://www.googletagmanager.com https://cloudflareinsights.com https://www.google-analytics.com https://firebase.googleapis.com https://www.gstatic.com/ https://fonts.gstatic.com/ https://fonts.googleapis.com https://www.googleapis.com https://static.cloudflareinsights.com;",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://uptime.betterstack.com https://status.zendo.asia https://backend.zendo.asia https://cdn.zendo.asia https://www.googletagmanager.com https://cloudflareinsights.com https://www.google-analytics.com https://firebase.googleapis.com https://www.gstatic.com/ https://fonts.gstatic.com/ https://fonts.googleapis.com https://www.googleapis.com https://static.cloudflareinsights.com;",
+              "frame-src 'self' 'unsafe-inline' 'unsafe-eval' https://uptime.betterstack.com https://status.zendo.asia;",
               "object-src 'none';",
               "base-uri 'self';",
               "form-action 'self';",
@@ -22,8 +23,9 @@ const nextConfig = {
           },
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
-          { key: "Cross-Origin-Embedder-Policy", value: "require-corp" },
+          { key: "Cross-Origin-Embedder-Policy", value: "credentialless" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Cross-Origin-Resource-Policy", value: "same-site" },
         ],
       },
     ];

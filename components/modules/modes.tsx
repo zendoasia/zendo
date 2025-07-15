@@ -1,3 +1,13 @@
+/**
+ * components/modules/modes.tsx
+ * ----------------------------
+ *
+ * Implements the theme toggle for the app
+ *
+ * @license MIT - see LICENSE for more details
+ * @copyright © 2025–present AARUSH MASTER and Zendo - see package.json for more details
+ */
+
 "use client";
 
 import { Moon, Sun, Monitor, Check } from "lucide-react";
@@ -19,8 +29,8 @@ export function ModeToggle() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button size="icon" variant="ghost" className={cn("nav-btn")}>
-          <span className={cn("text-black dark:text-white")}>
+        <Button size="sm" className="button-scaler hover:cursor-pointer">
+          <span className={cn("text-white dark:text-black")}>
             {theme === "system" ? (
               <Monitor size="1.2rem" />
             ) : resolvedTheme === "light" ? (

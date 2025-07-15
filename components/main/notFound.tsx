@@ -1,26 +1,28 @@
+/**
+ * components/main/notFound.tsx
+ * ----------------------------
+ *
+ * Implements the 404 page for the app
+ *
+ * @license MIT - see LICENSE for more details
+ * @copyright © 2025–present AARUSH MASTER and Zendo - see package.json for more details
+ */
+
 "use client";
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { CircleHelp } from "lucide-react";
+import { CircleHelp, Home } from "lucide-react";
 import Link from "next/link";
 import lonelyGhost from "@/public/assets/lonelyGhost.svg";
 import Image from "next/image";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { ContainerTextFlip } from "@/components/ui/container-text-flip";
-import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
-import {
-  Accordion,
-  AccordionItem,
-  AccordionTrigger,
-  AccordionContent,
-} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import ArticleWrapper from "@/components/articleWrapper";
 
-export default function NotFound() {
-  const [imageLoaded, setImageLoaded] = useState(false);
+export default function NotFoundPage() {
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   return (
     <ArticleWrapper
@@ -33,16 +35,16 @@ export default function NotFound() {
         animate={{ y: ["0%", "-10%", "0%"] }}
         transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
       >
-        <div className={cn("relative w-full max-w-[400px]")}>
-          {!imageLoaded && <Skeleton className={cn("w-full aspect-[1/1] rounded-xl")} />}
+        <div className={cn("relative w-full max-w-[400px] aspect-[1/1]")}>
+          {!isImageLoaded && <Skeleton className={cn("w-full aspect-[1/1] rounded-xl")} />}
           <Image
             src={lonelyGhost}
             alt="Lonely Ghost"
-            onLoad={() => setImageLoaded(true)}
+            onLoad={() => setIsImageLoaded(true)}
             loading="lazy"
             className={cn(
               `object-contain w-full h-auto min-h-[150px] transition-opacity duration-500 ${
-                imageLoaded ? "opacity-100" : "opacity-0"
+                isImageLoaded ? "opacity-100" : "opacity-0"
               }`
             )}
           />
@@ -50,50 +52,37 @@ export default function NotFound() {
       </motion.div>
 
       <div className={cn("flex flex-col items-center br:items-start gap-[2rem] max-w-xl")}>
-        <div className="flex items-center gap-[0.3rem]">
-          <CircleHelp size="2.5rem" className="text-rose-600" />
-          <h1 className="text-xl font-[family-name:var(--font-space-grotesk)] font-extrabold">
-            Hey Buddy! Seems like you are lost?
+        <div className="flex items-center gap-[0.5rem]">
+          <CircleHelp size="2rem" className="text-rose-600" />
+          <h1
+            className={cn(
+              "text-xl font-[family-name:var(--font-space-grotesk)] font-extrabold",
+              "bg-gradient-to-r from-rose-500 to-violet-600 bg-clip-text text-transparent"
+            )}
+            style={{
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              textShadow: "0 1px 6px rgba(236, 72, 153, 0.3)",
+            }}
+          >
+            Houston, we have a problem.
           </h1>
         </div>
-        <section>
-          <span className="text-lg">
-            Sorry but we are not able to find the page you are looking for. Maybe checkout our
-            <span className="inline-block text-sm mr-2 ml-2">
-              <Link href="/">
-                <ContainerTextFlip words={["homepage", "hub", "start"]} aria-label="Home Page" />
-              </Link>
-            </span>
-            for finding something truly awesome.
-          </span>
+        <section
+          className="text-lg leading-relaxed text-balance text-muted-foreground"
+          style={{ lineHeight: 1.6 }}
+        >
+          Looks like you are lost. But don&apos;t worry, we&apos;ll help you find your way back
+          home. Alternatively, the greatest discoveries start by first getting lost into the void.
         </section>
 
-        <section className="hidden br:block">
-          <HoverCard>
-            <HoverCardTrigger asChild>
-              <Button className="px-4 py-2.5 text-md border border-[color:var(--jet)] transition-colors duration-400">
-                What do you mean?
-              </Button>
-            </HoverCardTrigger>
-            <HoverCardContent className="text-sm font-[family-name:var(--font-space-grotesk)] leading-relaxed">
-              The page you are visiting was either moved or does not exist at this location. Please
-              check the URL you are visiting and retry.
-            </HoverCardContent>
-          </HoverCard>
-        </section>
-
-        <section className="block br:hidden w-full">
-          <Accordion type="single" collapsible>
-            <AccordionItem value="info">
-              <AccordionTrigger className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 text-md rounded-[radius:var(--radius)] border border-[color:var(--jet)] transition-colors duration-400 [&>svg]:text-[var(--primary2)] [&>svg]:w-[1.2rem] [&>svg]:h-[1.2rem]">
-                What do you mean?
-              </AccordionTrigger>
-              <AccordionContent className="text-sm font-[family-name:var(--font-space-grotesk)] leading-relaxed px-1 pt-2 pb-4">
-                The page you are visiting was either moved or does not exist at this location.
-                Please check the URL you are visiting and retry.
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+        <section className="flex justify-center">
+          <Button size="lg" className={cn("text-md button-scaler")}>
+            <Link href="/" className="flex items-center gap-2">
+              <Home size="1.2rem" />
+              Go Back Home
+            </Link>
+          </Button>
         </section>
       </div>
     </ArticleWrapper>

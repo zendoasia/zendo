@@ -1,24 +1,28 @@
+/**
+ * components/modules/kofiButton.tsx
+ * ---------------------------------
+ *
+ * A button that links to the Ko-fi page of the user. This is used to support the development of the project.
+ *
+ * @license MIT - see LICENSE for more details
+ * @copyright © 2025–present AARUSH MASTER and Zendo - see package.json for more details
+ */
+
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import type { KoFiButtonProps } from "@/types";
 
 export default function KoFiButton({ username, className = "" }: KoFiButtonProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
   return (
     <Link
       href={`https://kofi.com/${username}`}
       target="_blank"
-      rel="noopener noreferrer"
-      className={`inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#ff5f5f] hover:bg-[#e55555] text-white font-medium rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 ${className}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      className={`group inline-flex items-center justify-center gap-2 px-4 py-2 bg-[#ff5f5f] hover:bg-[#e55555] text-white font-medium rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:scale-105 ${className}`}
     >
       <span className="flex items-center justify-center w-full gap-2">
         <svg
-          className={`w-5 h-5 transition-transform duration-200 ${isHovered ? "scale-110" : ""}`}
+          className="w-5 h-5 transition-transform duration-200 group-hover:scale-110"
           viewBox="0 0 24 24"
           fill="currentColor"
         >
@@ -26,9 +30,7 @@ export default function KoFiButton({ username, className = "" }: KoFiButtonProps
         </svg>
         <span>Support on kofi</span>
         <svg
-          className={`w-4 h-4 transition-transform duration-200 ${
-            isHovered ? "translate-x-1" : ""
-          }`}
+          className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"

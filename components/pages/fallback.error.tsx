@@ -1,3 +1,13 @@
+/**
+ * components/pages/fallback.error.tsx
+ * -----------------------------------
+ *
+ * Implements the fallback error page for the app
+ *
+ * @license MIT - see LICENSE for more details
+ * @copyright © 2025–present AARUSH MASTER and Zendo - see package.json for more details
+ */
+
 "use client";
 
 import { useState, useEffect } from "react";

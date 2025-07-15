@@ -1,3 +1,13 @@
+/**
+ * components/scripts/cloudflareInsights.tsx
+ * -----------------------------------------
+ *
+ * Handles Cloudflare Insights. This is used to track user behavior on the site.
+ *
+ * @license MIT - see LICENSE for more details
+ * @copyright © 2025–present AARUSH MASTER and Zendo - see package.json for more details
+ */
+
 "use client";
 
 import Script from "next/script";

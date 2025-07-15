@@ -1,3 +1,13 @@
+/**
+ * components/scripts/externalLinkInterceptor.tsx
+ * ----------------------------------------------
+ *
+ * Intercepts external links and prompts the user to proceed.
+ *
+ * @license MIT - see LICENSE for more details
+ * @copyright © 2025–present AARUSH MASTER and Zendo - see package.json for more details
+ */
+
 "use client";
 
 import {
@@ -59,18 +69,14 @@ export default function ExternalLinkInterceptor() {
   const [linkHref, setLinkHref] = useState<string | null>(null);
   const linkElementRef = useRef<HTMLAnchorElement | null>(null);
   const isMobile = useIsMobile();
-  const [mounted, setMounted] = useState(false);
   const lastClickedUrlRef = useRef<string | null>(null);
   const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
     const handleClick = (event: MouseEvent) => {
       if (timeoutIdRef.current) {
-        clearTimeout(timeoutIdRef.current); // Clear the previous timeout if any
+        clearTimeout(timeoutIdRef.current);
+        timeoutIdRef.current = null;
       }
 
       const path = event.composedPath() as HTMLElement[];
@@ -140,7 +146,6 @@ export default function ExternalLinkInterceptor() {
     const handleCustomOpen = (e: CustomEvent<{ href: string; target?: string; rel?: string }>) => {
       const { href, target = "_self", rel = "" } = e.detail;
 
-      // Create a dummy anchor for consistency
       const a = document.createElement("a");
       a.href = href;
       a.target = target;
@@ -156,43 +161,29 @@ export default function ExternalLinkInterceptor() {
       window.removeEventListener("open-external-link", handleCustomOpen as EventListener);
   }, []);
 
-  if (!mounted) return null; // Prevents hydration error
-
   const stat = () => {
-    if (linkHref?.includes("https://")) {
+    if (linkHref?.startsWith("https://")) {
       return (
-        <span
-          className={cn(
-            "flex items-center gap-[1rem] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)]"
-          )}
-        >
-          <Check size="1.2rem" className={cn("text-[color:var(--success)]")} />
+        <span className={cn("flex items-center gap-[1rem] text-black dark:text-white")}>
+          <Check size={"1.2rem"} className={cn("text-[color:var(--success)] flex-shrink-0")} />
           <span className={cn("text-xs sm:text-sm flex flex-row items-center gap-2.5")}>
-            HTTPS <ArrowRight size="1.2rem" />
+            HTTPS <ArrowRight size="1.2rem" className={cn("flex-shrink-0")} />
             <span
-              className={cn(
-                "font-[family-name:var(--font-code)] break-all max-w-full overflow-hidden text-ellipsis"
-              )}
+              className={cn("app-font-code break-all max-w-full overflow-hidden text-ellipsis")}
             >
               {linkHref}
             </span>
           </span>
         </span>
       );
-    } else if (linkHref?.includes("http://")) {
+    } else if (linkHref?.startsWith("http://")) {
       return (
-        <span
-          className={cn(
-            "flex items-center gap-[1rem] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)]"
-          )}
-        >
-          <X size="1.2rem" className={cn("text-[color:var(--danger)]")} />
-          <span className={cn("text-xs sm:text-sm flex flex-row items-center gap-2.5")}>
-            HTTP <ArrowRight size="1.2rem" />
+        <span className={cn("flex items-center gap-[1rem] text-black  dark:text-white")}>
+          <X size={"1.2rem"} className={cn("text-[color:var(--danger)] flex-shrink-0")} />
+          <span className={cn("text-xs flex flex-row items-center gap-2.5")}>
+            HTTP <ArrowRight size="1.2rem" className={cn("flex-shrink-0")} />
             <span
-              className={cn(
-                "font-[family-name:var(--font-code)] break-all max-w-full overflow-hidden text-ellipsis"
-              )}
+              className={cn("app-font-code break-all max-w-full overflow-hidden text-ellipsis")}
             >
               {linkHref}
             </span>
@@ -201,18 +192,12 @@ export default function ExternalLinkInterceptor() {
       );
     } else {
       return (
-        <span
-          className={cn(
-            "flex items-center gap-[1rem] text-[color:var(--text-dark)] dark:text-[color:var(--text-light)]"
-          )}
-        >
-          <Info size="1.2rem" className={cn("text-[color:var(--warning)]")} />
-          <span className={cn("text-xs sm:text-sm flex flex-row items-center gap-2.5")}>
-            Unknown <ArrowRight size="1.2rem" />
+        <span className={cn("flex items-center gap-[1rem] text-black dark:text-white")}>
+          <Info size={"1.2rem"} className={cn("text-[color:var(--warning)] flex-shrink-0")} />
+          <span className={cn("text-xs flex flex-row items-center gap-2.5")}>
+            Unknown <ArrowRight size="1.2rem" className={cn("flex-shrink-0")} />
             <span
-              className={cn(
-                "font-[family-name:var(--font-code)] break-all max-w-full overflow-hidden text-ellipsis"
-              )}
+              className={cn("app-font-code break-all max-w-full overflow-hidden text-ellipsis")}
             >
               {linkHref}
             </span>
@@ -221,11 +206,6 @@ export default function ExternalLinkInterceptor() {
       );
     }
   };
-
-  // ————————————————————————————————————————
-  // 🖥️ DESKTOP: AlertDialog
-  // 📱 MOBILE: Drawer(a drawer is a better for UX)
-  // ————————————————————————————————————————
 
   return isMobile ? (
     <Drawer
@@ -236,15 +216,11 @@ export default function ExternalLinkInterceptor() {
     >
       <DrawerContent
         className={cn(
-          "flex flex-col items-center justify-center rounded-[radius:var(--radius)] px-4 pt-4 pb-6 transition-transform font-[family-name:var(--font-text)]"
+          "flex flex-col items-center justify-center rounded px-4 pt-4 pb-6 transition-transform app-font"
         )}
       >
         <DrawerHeader className={cn("space-y-1")}>
-          <DrawerTitle
-            className={cn(
-              "flex items-center gap-[0.5rem] text-base font-[weight:var(--default-font-weight)]"
-            )}
-          >
+          <DrawerTitle className={cn("flex items-center gap-[0.5rem] text-base")}>
             <OctagonAlert
               size="1.2rem"
               className={cn("text-destructive")}
@@ -259,19 +235,19 @@ export default function ExternalLinkInterceptor() {
         </DrawerHeader>
         <div
           className={cn(
-            "bg-muted p-[1.2rem] rounded-[radius:var(--radius)] text-foreground text-sm flex items-center gap-2 mt-2 max-w-full sm:max-w-[calc(100%-2rem)] md:max-w-[calc(100%-3rem)]"
+            "bg-muted rounded-lg px-4 py-2 text-foreground text-sm flex items-center gap-2 mt-2 w-full break-words"
           )}
         >
           {stat()}
         </div>
 
-        <DrawerFooter className={cn("pt-4 flex flex-col sm:flex-row gap-[0.5rem]")}>
+        <DrawerFooter className={cn("pt-4 flex flex-col sm:flex-row gap-1")}>
           <DrawerClose asChild>
-            <Button variant="secondary" className={cn("w-full sm:w-auto")}>
+            <Button size="sm" variant="secondary" className={cn("w-full sm:w-auto")}>
               Cancel
             </Button>
           </DrawerClose>
-          <Button type="button" onClick={proceed} className={cn("w-full sm:w-auto")}>
+          <Button size="sm" onClick={proceed} className={cn("w-full sm:w-auto")}>
             Proceed
           </Button>
         </DrawerFooter>
@@ -304,7 +280,13 @@ export default function ExternalLinkInterceptor() {
             controlled by us. Continue only if you trust the source.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <div className={cn("bg-muted p-[1.2rem] rounded-[radius:var(--radius)]")}>{stat()}</div>
+        <div
+          className={cn(
+            "bg-muted rounded-lg px-4 py-2 text-foreground text-sm flex items-center gap-2 mt-2 w-full break-words"
+          )}
+        >
+          {stat()}
+        </div>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={proceed}>Proceed</AlertDialogAction>

@@ -1,3 +1,13 @@
+/**
+ * app/robots.txt/route.ts
+ * -----------------------
+ *
+ * Implements the robots.txt route for the app
+ *
+ * @license MIT - see LICENSE for more details
+ * @copyright © 2025–present AARUSH MASTER and Zendo - see package.json for more details
+ */
+
 import { getEnvVariable } from "@/lib/retrieveEdgeRouteEnv";
 import { NextResponse } from "next/server";
 

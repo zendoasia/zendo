@@ -1,4 +1,12 @@
-// The component should always be loaded lazily on demand, as it is very heavy and uses complex UI and icons.
+/**
+ * components/modules/mobileMenu.tsx
+ * ---------------------------------
+ *
+ * Implements the mobile menu for the app
+ *
+ * @license MIT - see LICENSE for more details
+ * @copyright © 2025–present AARUSH MASTER and Zendo - see package.json for more details
+ */
 
 "use client";
 
@@ -6,10 +14,9 @@ import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/modules/modes";
-import { Briefcase, Folder, Home, Info, Mail, Search } from "lucide-react";
+import Link from "next/link";
+import { Home, Search, SquareMenu, ArrowUpRight, LoaderCircle } from "lucide-react";
 import { SiGithub } from "@icons-pack/react-simple-icons";
-import { BiSolidBellRing } from "react-icons/bi";
-import { openExternalLinkManually } from "@/components/scripts/externalLinkInterceptor";
 import {
   Accordion,
   AccordionItem,
@@ -18,201 +25,267 @@ import {
 } from "@/components/ui/accordion";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
-import { useEffect, useState } from "react";
-import type { MobileMenuProps, NavGroups } from "@/types";
+import { useMenuStore } from "@/store/menuStore";
+import { createPortal } from "react-dom";
+import React, { useCallback, useMemo } from "react";
+import { use as usePromise } from "react"; // React 19+ use() API
+import { Suspense } from "react";
+import type { NavSections } from "@/types";
 
-export default function MobileMenu({
-  setOpenAction,
-  setOpenSAction,
-  strippedOS,
-  open = true, // Default to true for backward compatibility
-  onCloseComplete,
-}: MobileMenuProps) {
-  const router = useRouter();
-  const [isClosing, setIsClosing] = useState(false);
+let navLinksPromise: Promise<NavSections | { error: true }> | null = null;
 
-  useEffect(() => {
-    if (!open && !isClosing) {
-      setIsClosing(true);
-      const timer = setTimeout(() => {
-        if (onCloseComplete) onCloseComplete();
-        setIsClosing(false);
-      }, 300);
+function getNavLinksPromise(): Promise<NavSections | { error: true }> {
+  if (!navLinksPromise) {
+    navLinksPromise = fetch("/api/quick-links", {
+      // Set cache to revalidate after 24 hours (86400 seconds)
+      next: { revalidate: 86400 },
+    })
+      .then<NavSections | { error: true }>(async (res) => {
+        if (!res.ok) return { error: true };
+        const data = await res.json().then((json) => json.data);
+        if (!data || typeof data !== "object") return { error: true };
 
-      return () => clearTimeout(timer);
-    }
-  }, [open, isClosing, onCloseComplete]);
+        const sections: NavSections = {};
 
-  const navItems: NavGroups = {
-    links: [
-      { label: "About", icon: Info, path: "/about" },
-      { label: "Portfolio", icon: Briefcase, path: "/portfolio" },
-      { label: "Projects", icon: Folder, path: "/projects" },
-      { label: "Contact", icon: Mail, path: "/contact" },
-    ],
-  };
+        for (const [section, items] of Object.entries(data)) {
+          if (!Array.isArray(items)) continue;
+          sections[section] = items
+            .map((item: { label?: unknown; path?: unknown }) =>
+              typeof item.label === "string" && typeof item.path === "string"
+                ? { label: item.label, path: item.path }
+                : null
+            )
+            .filter(Boolean) as { label: string; path: string }[];
+        }
 
-  const handleNavigate = (path: string) => {
-    setOpenAction(false);
-    setTimeout(() => router.push(path), 250);
-  };
+        return sections;
+      })
+      .catch(() => ({ error: true }));
+  }
+  return navLinksPromise ?? Promise.resolve({ error: true });
+}
 
-  const sectionKeys = Object.keys(navItems);
+function useNavLinks(): NavSections | { error: true } {
+  return usePromise(getNavLinksPromise());
+}
 
+function MobileMenuNavLinksContent({ onNavigate }: { onNavigate: (_path: string) => void }) {
+  const navItems = useNavLinks();
+  const hasLinks =
+    Object.keys(navItems).length > 0 &&
+    Object.values(navItems).some((links) => Array.isArray(links) && links.length > 0);
+  if (typeof window !== "undefined" && !hasLinks) {
+    return (
+      <div className="text-destructive text-center p-4 text-balance leading-relaxed">
+        Could not fetch quick links. Please try again later or contact support.
+      </div>
+    );
+  }
+  if (!hasLinks) {
+    // On the server or first render, let Suspense fallback handle loading
+    return null;
+  }
   return (
-    <Sheet open={open} onOpenChange={setOpenAction}>
+    <Accordion type="multiple" defaultValue={Object.keys(navItems)}>
+      {Object.entries(navItems).map(([sectionKey, sectionLinks]) => (
+        <AccordionItem key={sectionKey} value={sectionKey}>
+          <AccordionTrigger
+            className={cn(
+              "app-font-mono !text-xs text-muted-foreground tracking-widest font-bold flex items-center gap-2 overflow-hidden"
+            )}
+          >
+            <span className="relative inline-block">
+              <span className="text-balance leading-relaxed text-black dark:text-white">
+                {sectionKey.toUpperCase()}
+              </span>
+              <span
+                className="block h-0.5 bg-muted-foreground/40 mt-1 rounded mx-auto"
+                style={{ width: "min(6rem, 100%)" }}
+                aria-hidden="true"
+              />
+            </span>
+          </AccordionTrigger>
+          <AccordionContent className="flex flex-col app-gap">
+            {Array.isArray(sectionLinks) &&
+              sectionLinks.map(({ label, path }) => (
+                <Button
+                  key={label}
+                  size="lg"
+                  className="justify-start text-base text-balance leading-relaxed flex-row button-scaler hover:cursor-pointer"
+                  asChild
+                >
+                  <Link href={path} onClick={() => onNavigate(path)} scroll>
+                    {label}
+                  </Link>
+                </Button>
+              ))}
+          </AccordionContent>
+        </AccordionItem>
+      ))}
+    </Accordion>
+  );
+}
+
+function MobileMenuNavLinks({ onNavigate }: { onNavigate: (_path: string) => void }) {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center w-full p-4">
+          <LoaderCircle className="animate-spin text-muted-foreground" size={24} />
+        </div>
+      }
+    >
+      <MobileMenuNavLinksContent onNavigate={onNavigate} />
+    </Suspense>
+  );
+}
+
+const MobileMenu = React.memo(function MobileMenu() {
+  const { open, setOpen, setOpenS, strippedOS } = useMenuStore();
+  const router = useRouter();
+
+  const handleNavigate = useCallback(
+    (path: string) => {
+      setOpen(false);
+      // Fix: Reset navLinksPromise on navigation to allow refetch if needed
+      navLinksPromise = null;
+      setTimeout(() => router.push(path), 250);
+    },
+    [setOpen, router]
+  );
+
+  const handleOpenChange = useCallback(
+    (newOpen: boolean) => {
+      setOpen(newOpen);
+    },
+    [setOpen]
+  );
+
+  const handleHomeClick = useCallback(() => {
+    setOpen(false);
+    navLinksPromise = null;
+    setTimeout(() => router.push("/"), 250);
+  }, [setOpen, router]);
+
+  const handleSearchClick = useCallback(() => setOpenS(true), [setOpenS]);
+
+  const keyboardShortcut = useMemo(() => {
+    const srText =
+      strippedOS === "mac"
+        ? "Command key plus K"
+        : strippedOS === "windows"
+          ? "Control key plus K"
+          : strippedOS === "phone"
+            ? "Press to search"
+            : "Please Refresh the Page";
+
+    const displayText =
+      strippedOS === "mac" ? (
+        <>{"\u2318"} K</>
+      ) : strippedOS === "windows" ? (
+        <>CTRL K</>
+      ) : strippedOS === "phone" ? (
+        <>PRESS</>
+      ) : (
+        <>REFRESH</>
+      );
+
+    return { srText, displayText };
+  }, [strippedOS]);
+
+  return createPortal(
+    <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetContent
         aria-label="Mobile Menu"
         side="left"
         className={cn(
-          "z-50 border-r border-b border-t border-[color:var(--jet)] rounded-r-lg p-0 app-font flex flex-col h-full",
+          "z-50 border-r border-b border-t border-black dark:border-muted rounded-r-xl p-0 app-font flex flex-col h-full",
           "w-[85%] max-w-xs sm:w-[60%] md:w-[50%]",
-          "transition-all duration-300 ease-in-out transform-gpu will-change-transform backface-hidden"
+          "transition-all duration-200 ease-in-out transform-gpu will-change-transform backface-hidden"
         )}
       >
-        <div className={cn("flex flex-col px-[1.2rem] pt-4 pb-3")}>
-          <div className={cn("flex items-center gap-2")}>
-            <BiSolidBellRing
-              size="1.25rem"
-              className={cn("text-emerald-700 dark:text-emerald-500")}
-            />
-            <SheetTitle className={cn("text-lg font-semibold app-font-space")}>
+        <div className="flex flex-col px-[1.2rem] pt-4 pb-1">
+          <div className="flex items-center gap-1">
+            <SquareMenu size="1.25rem" className="text-emerald-700 dark:text-emerald-500" />
+            <SheetTitle
+              className={cn(
+                "font-medium text-base",
+                "sm:text-lg sm:font-semibold",
+                "md:text-xl md:font-bold"
+              )}
+            >
               Quick Access
             </SheetTitle>
           </div>
-          <p className={cn("text-sm text-muted-foreground mt-1")}>Quick links and tools</p>
+          <p className="text-md text-unimportant mt-1">Important Links And Tools</p>
         </div>
 
-        <Separator className={cn("my-[0.5]")} />
+        <Separator className="my-2 bg-muted-foreground/40 dark:bg-muted-foreground/40" />
 
         <nav
-          className={cn(
-            "flex-1 overflow-y-auto px-[1.2rem] pt-[1.2rem] pb-[1.2rem] scroll-smooth no-scrollbar"
-          )}
-          aria-label="Primary Navigation and Inter-Links"
+          className="flex-1 overflow-y-auto px-[1.2rem] scroll-smooth no-scrollbar mt-0"
+          aria-label="Primary Navigation"
         >
-          <Accordion type="multiple" defaultValue={sectionKeys}>
-            {sectionKeys.map((sectionKey) => (
-              <AccordionItem key={sectionKey} value={sectionKey}>
-                <AccordionTrigger
-                  className={cn(
-                    "!app-font-mono !text-xs text-muted-foreground tracking-widest !font-semibold px-1 py-[0.7rem] flex items-center hover:bg-emerald-100 dark:hover:bg-emerald-800 rounded-lg transition-all"
-                  )}
-                >
-                  {sectionKey.toUpperCase()}
-                </AccordionTrigger>
-                <AccordionContent className={cn("flex flex-col gap-[0.7rem] pt-[0.7rem]")}>
-                  {navItems[sectionKey].map(({ label, icon: Icon, path }) => (
-                    <Button
-                      key={label}
-                      size="lg"
-                      variant="ghost"
-                      className={cn(
-                        "justify-start text-base flex-row nav-btn overflow-hidden transition-all rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-800"
-                      )}
-                      onClick={() => handleNavigate(path)}
-                    >
-                      <Icon size="1.2rem" />
-                      {label}
-                    </Button>
-                  ))}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+          <MobileMenuNavLinks onNavigate={handleNavigate} />
         </nav>
 
-        <Separator className={cn("my-[0.5]")} />
+        <Separator className="my-2 bg-muted-foreground/40 dark:bg-muted-foreground/40" />
 
-        <section
-          className={cn(
-            "px-[0.7rem] pt-[1.5rem] py-[0.7rem] flex flex-col gap-4",
-            "mt-auto pb-[2.5rem] sm:pb-[3rem] md:pb-[4rem]"
-          )}
-        >
+        <section className="px-[0.7rem] pt-[1.5rem] py-[0.7rem] flex flex-col gap-4 mt-auto pb-[1.5rem]">
           <Button
-            variant="ghost"
-            size="lg"
-            onClick={() => setOpenSAction(true)}
-            className={cn(
-              "group items-center inline-flex justify-start gap-3 nav-btn overflow-hidden rounded-lg transition-all hover:bg-emerald-100 dark:hover:bg-emerald-800"
-            )}
+            size="sm"
+            onClick={handleSearchClick}
+            className="group items-center inline-flex justify-start button-scaler hover:cursor-pointer overflow-hidden"
           >
             <Search size="1.2rem" />
-            <span className={cn("text-sm")}>Search</span>
-            <kbd
-              className={cn(
-                "px-1.5 py-[2px] rounded bg-muted/30 border border-border text-[10px] font-medium font-mono text-muted-foreground backdrop-blur-sm ml-auto !text-xs br:inline-block app-font-mono"
-              )}
-            >
-              <span className="sr-only">
-                {strippedOS === "mac"
-                  ? "Command key plus K"
-                  : strippedOS === "windows"
-                    ? "Control key plus K"
-                    : strippedOS === "phone"
-                      ? "Press to search"
-                      : "Please Refresh the Page"}
+            <span className="text-sm">Search</span>
+            <kbd className="px-1.5 py-[2px] rounded border border-border text-[10px] font-medium font-mono !text-xs app-font-mono ml-auto bg-white dark:bg-black accessibility-detail-color backdrop-blur-md">
+              <span className="text-black dark:text-white">
+                <span className="sr-only">{keyboardShortcut.srText}</span>
+                {keyboardShortcut.displayText}
               </span>
-              {strippedOS === "mac" ? (
-                <>{"\u2318"} K</>
-              ) : strippedOS === "windows" ? (
-                <>CTRL K</>
-              ) : strippedOS === "phone" ? (
-                <>PRESS</>
-              ) : (
-                <>REFRESH</>
-              )}
             </kbd>
           </Button>
 
-          <Button
-            variant="ghost"
-            size="lg"
-            key="github-repository"
-            data-no-prompt
-            onClick={() => {
-              setOpenAction(false);
-              setTimeout(() => {
-                openExternalLinkManually({
-                  href: "https://github.com/aarush0101/zendo",
-                  target: "_blank",
-                });
-              }, 650);
-            }}
-            className={cn(
-              "nav-btn overflow-hidden rounded-lg transition-all hover:bg-emerald-100 dark:hover:bg-emerald-800"
-            )}
-          >
-            <div className={cn("flex items-center justify-center")}>
-              <span className={cn("sr-only")}>GitHub Repository</span>
-              <SiGithub size="1.2rem" />
-            </div>
+          <Button size="sm" className="hover:cursor-pointer button-scaler overflow-hidden" asChild>
+            <Link target="_blank" href={process.env.NEXT_PUBLIC_GITHUB_SOURCE_CODE as string}>
+              <span className="inline-flex items-center gap-1 relative">
+                <SiGithub size="1.2rem" className="accessibility-detail-color" />
+                <span className="relative">
+                  GitHub
+                  <span
+                    className="absolute left-0 right-0 -bottom-0.5 h-[1.5px] bg-current rounded"
+                    style={{ opacity: 0.6 }}
+                  />
+                </span>
+                <ArrowUpRight
+                  className="accessibility-detail-color relative -mt-3"
+                  style={{ verticalAlign: "middle" }}
+                />
+              </span>
+            </Link>
           </Button>
 
-          <div className={cn("flex justify-between")}>
+          <div className="flex justify-between">
             <ModeToggle />
             <Button
               key="home-page"
               data-no-prompt
-              variant="ghost"
-              size="icon"
-              onClick={() => {
-                setOpenAction(false);
-                setTimeout(() => router.push("/"), 250);
-              }}
-              className={cn(
-                "nav-btn overflow-hidden rounded-lg transition-all hover:bg-emerald-100 dark:hover:bg-emerald-800"
-              )}
+              size="sm"
+              onClick={handleHomeClick}
+              className="hover:cursor-pointer button-scaler overflow-hidden"
             >
-              <div className={cn("flex items-center justify-center")}>
-                <span className={cn("sr-only")}>Home page</span>
+              <div className="flex items-center justify-center">
+                <span className="sr-only">Home page</span>
                 <Home size="1.2rem" />
               </div>
             </Button>
           </div>
         </section>
       </SheetContent>
-    </Sheet>
+    </Sheet>,
+    document.getElementById("portal-root") || document.body
   );
-}
+});
+
+export default MobileMenu;

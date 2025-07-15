@@ -1,4 +1,15 @@
+/**
+ * components/scripts/GAnalyticsConsent.tsx
+ * ----------------------------------------
+ *
+ * Handles Google Analytics consent and tracking.
+ *
+ * @license MIT - see LICENSE for more details
+ * @copyright © 2025–present AARUSH MASTER and Zendo - see package.json for more details
+ */
+
 "use client";
+
 import { useEffect } from "react";
 import Cookies from "js-cookie";
 
@@ -32,7 +43,7 @@ function removeGASnippets() {
 declare global {
   interface Window {
     dataLayer?: unknown[];
-    gtag?: (...args: unknown[]) => void;
+    gtag?: (..._args: unknown[]) => void;
   }
 }
 

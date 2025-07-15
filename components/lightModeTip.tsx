@@ -1,3 +1,13 @@
+/**
+ * components/lightModeTip.tsx
+ * ---------------------------
+ *
+ * Implements Light Mode Tip Alert for the app
+ *
+ * @license MIT - see LICENSE for more details
+ * @copyright © 2025–present AARUSH MASTER and Zendo - see package.json for more details
+ */
+
 "use client";
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -10,17 +20,26 @@ import { Button } from "@/components/ui/button";
 import { useHandleThemeChange } from "@/hooks/useThemeChanger";
 import { cn } from "@/lib/utils";
 
+const LIGHT_MODE_TIP_COOKIE_NAME = "has_seen_light_mode_tip";
 export default function LightModeTipAlert() {
   const { handleThemeChange, resolvedTheme, mounted } = useHandleThemeChange();
 
   const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
-    const seenTip = Cookies.get("seenTip");
+    const seenTip = Cookies.get(LIGHT_MODE_TIP_COOKIE_NAME);
 
-    if (!seenTip && resolvedTheme?.toLocaleLowerCase() === "light") {
+    // Check if the tip has not been seen and the effective theme is light,
+    // including when the theme is set to 'system' and the system is light.
+    if (
+      !seenTip &&
+      (resolvedTheme?.toLocaleLowerCase() === "light" ||
+        (resolvedTheme?.toLocaleLowerCase() === "system" &&
+          window.matchMedia &&
+          window.matchMedia("(prefers-color-scheme: light)").matches))
+    ) {
       setShowAlert(true);
-      Cookies.set("seenTip", "true", { expires: 365 });
+      Cookies.set(LIGHT_MODE_TIP_COOKIE_NAME, "true", { expires: 365 });
       const autoDismiss = setTimeout(() => {}, 6000);
 
       return () => clearTimeout(autoDismiss);
@@ -56,7 +75,7 @@ export default function LightModeTipAlert() {
                 <span className={cn("inline-flex flex-wrap items-center gap-1")}>
                   It is better to view the page in dark mode. Please switch to
                   <Button
-                    className="px-1 pl-0.8 pr-0.8 py-[1rem] cursor-pointer"
+                    className="px-1 pl-0.8 pr-0.8 py-[1rem] button-scaler hover:cursor-pointer"
                     size="sm"
                     onClick={(e) => {
                       e.currentTarget.blur();

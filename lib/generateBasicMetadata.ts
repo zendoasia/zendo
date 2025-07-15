@@ -1,3 +1,13 @@
+/**
+ * lib/generateBasicMetadata.ts
+ * ----------------------------
+ *
+ * Implements the basic metadata for the app
+ *
+ * @license MIT - see LICENSE for more details
+ * @copyright © 2025–present AARUSH MASTER and Zendo - see package.json for more details
+ */
+
 import { BasicMetadata } from "@/types";
 import type { Metadata } from "next";
 

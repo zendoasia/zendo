@@ -1,3 +1,13 @@
+/**
+ * lib/fonts.ts
+ * ------------
+ *
+ * Implements the fonts for the app
+ *
+ * @license MIT - see LICENSE for more details
+ * @copyright © 2025–present AARUSH MASTER and Zendo - see package.json for more details
+ */
+
 import { JetBrains_Mono, Ubuntu, Geist, Geist_Mono, Space_Grotesk, Inter } from "next/font/google";
 import localFont from "next/font/local";
 

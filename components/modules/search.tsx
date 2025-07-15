@@ -1,3 +1,13 @@
+/**
+ * components/modules/search.tsx
+ * -----------------------------
+ *
+ * Implements the search bar for the app
+ *
+ * @license MIT - see LICENSE for more details
+ * @copyright © 2025–present AARUSH MASTER and Zendo - see package.json for more details
+ */
+
 "use client";
 
 import {
@@ -7,90 +17,139 @@ import {
   CommandItem,
   CommandEmpty,
   CommandGroup,
+  CommandSeparator,
 } from "@/components/ui/command";
-import { useState } from "react";
-import { useEffect } from "react";
-import { Info, Bot } from "lucide-react";
-import { NavGroups, SearchProps } from "@/types";
+import { useMenuStore } from "@/store/menuStore";
+import { createPortal } from "react-dom";
+import React, { useCallback, useState, Fragment } from "react";
+import { LoaderCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Separator } from "@/components/ui/separator";
+import { Suspense } from "react";
+import type { SearchNavGroups, SearchNavItem } from "@/types";
+import { use } from "react"; // React 19+ use API
 
-export default function SearchBar({
-  setOpenAction,
-  setOpenSAction,
-  openS = true, // Default to true for backward compatibility
-  open,
-  onCloseComplete,
-}: SearchProps) {
-  const [search, setSearch] = useState("");
-  const [isClosing, setIsClosing] = useState(false);
-  const router = useRouter();
+// Fetch navItems for search from CDN
+let searchNavPromise: Promise<SearchNavGroups> | null = null;
+function getSearchNavPromise(): Promise<SearchNavGroups> {
+  if (!searchNavPromise) {
+    searchNavPromise = fetch(`/api/search`, {
+      next: { revalidate: 86400 },
+    })
+      .then(async (res) => {
+        if (!res.ok) return { error: true } as const;
+        const json = await res.json();
+        const data = json && typeof json === "object" && json.data ? json.data : null;
+        if (!data || typeof data !== "object") return { error: true } as const;
+        // Validate structure: all values should be arrays of items with label, path
+        for (const section of Object.values(data)) {
+          if (!Array.isArray(section)) return { error: true } as const;
+          for (const item of section) {
+            if (typeof item.label !== "string" || typeof item.path !== "string") {
+              return { error: true } as const;
+            }
+          }
+        }
+        return data as Record<string, SearchNavItem[]>;
+      })
+      .catch(() => ({ error: true }) as const);
+  }
+  return searchNavPromise ?? Promise.resolve({ error: true } as const);
+}
+function useSearchNavItems(): SearchNavGroups {
+  return use(getSearchNavPromise());
+}
 
-  const navItems: NavGroups = {
-    links: [{ label: "About", icon: Info, path: "/about" }],
-    projects: [{ label: "Pixelite", icon: Bot, path: "/projects/pixelite" }],
-  };
-
-  const sectionKeys = Object.keys(navItems);
-  useEffect(() => {
-    if (!openS && !isClosing) {
-      setIsClosing(true);
-      const timer = setTimeout(() => {
-        if (onCloseComplete) onCloseComplete();
-        setIsClosing(false);
-      }, 300);
-
-      return () => clearTimeout(timer);
-    }
-  }, [openS, isClosing, onCloseComplete]);
-
-  const handleNavigate = (path: string) => {
-    if (open) setOpenAction(false);
-    setOpenSAction(false);
-    setTimeout(() => router.push(path), 250);
-  };
-
+function SearchNavContent({ onNavigate }: { onNavigate: (_path: string) => void }) {
+  const navItems = useSearchNavItems();
+  if (!navItems || "error" in navItems) {
+    // Always render the same fallback on both server and client
+    return (
+      <div className="text-destructive text-center p-4 leading-relaxed w-full">
+        Could not fetch search links. Please try again later or contact support.
+      </div>
+    );
+  }
+  // Filter out empty groups
+  const sectionEntries = Object.entries(navItems).filter(
+    ([, items]) => Array.isArray(items) && items.length > 0
+  );
+  if (sectionEntries.length === 0) return null;
   return (
-    <CommandDialog open={openS} onOpenChange={setOpenSAction}>
-      <CommandInput
-        placeholder="Search all across my work"
-        value={search}
-        onValueChange={setSearch}
-        className={cn("p-2")}
-      />
-      <CommandList className={cn("pb-2 pt-2")}>
-        <CommandEmpty>
-          No results found for your query. Please check your query and try again.
-        </CommandEmpty>
-        {sectionKeys.map((sectionKey, index) => (
-          <div key={sectionKey}>
-            <CommandGroup
-              heading={
-                <span
-                  className={cn("!app-font-mono !text-xs !font-semibold text-muted-foreground")}
-                >
-                  {sectionKey.toUpperCase()}
-                </span>
-              }
-            >
-              {navItems[sectionKey].map(({ label, icon: Icon, path }) => (
-                <CommandItem
-                  key={label}
-                  onSelect={() => handleNavigate(path)}
-                  className={cn("flex items-center gap-2")}
-                >
-                  <Icon size="1.2rem" />
-                  {label}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-
-            {/* Add separator unless it's the last group */}
-            {index < sectionKeys.length - 1 && <Separator className={cn("my-1")} />}
-          </div>
-        ))}
-      </CommandList>
-    </CommandDialog>
+    <>
+      <CommandSeparator />
+      {sectionEntries.map(([sectionKey, items], index) => (
+        <Fragment key={sectionKey}>
+          <CommandGroup
+            heading={
+              <span className="text-balance leading-relaxed text-muted-foreground">
+                {sectionKey.toUpperCase()}
+              </span>
+            }
+          >
+            {(items as SearchNavItem[]).map(({ label, path }) => (
+              <CommandItem
+                key={label}
+                onSelect={() => onNavigate(path)}
+                className={cn("flex items-center")}
+              >
+                {label}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+          {index < sectionEntries.length - 1 && <CommandSeparator />}
+        </Fragment>
+      ))}
+    </>
   );
 }
+
+const SearchBar = React.memo(function SearchBar() {
+  const { open, setOpen, openS, setOpenS } = useMenuStore();
+  const [search, setSearch] = useState("");
+  const router = useRouter();
+
+  const handleNavigate = useCallback(
+    (path: string) => {
+      if (open) setOpen(false);
+      setOpenS(false);
+      setTimeout(() => router.push(path), 250);
+    },
+    [open, setOpen, setOpenS, router]
+  );
+
+  const handleOpenChange = useCallback(
+    (newOpen: boolean) => {
+      setOpenS(newOpen);
+    },
+    [setOpenS]
+  );
+
+  return createPortal(
+    <CommandDialog open={openS} onOpenChange={handleOpenChange}>
+      <CommandInput
+        placeholder="Find"
+        value={search}
+        onValueChange={setSearch}
+        className={cn("!p-0")}
+      />
+      <Suspense
+        fallback={
+          <div className="flex items-center justify-center w-full p-4">
+            <LoaderCircle className="animate-spin text-muted-foreground" size={24} />
+          </div>
+        }
+      >
+        <CommandList>
+          <CommandEmpty>
+            No results found for your query. Please check your query and try again.
+          </CommandEmpty>
+          <SearchNavContent onNavigate={handleNavigate} />
+        </CommandList>
+      </Suspense>
+    </CommandDialog>,
+    document.getElementById("portal-root") || document.body
+  );
+});
+
+export default SearchBar;

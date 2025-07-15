@@ -1,17 +1,21 @@
+/**
+ * lib/retrieveEdgeRouteEnv.ts
+ * ---------------------------
+ *
+ * Retrieves an environment variable from the process environment.
+ *
+ * @license MIT - see LICENSE for more details
+ * @copyright © 2025–present AARUSH MASTER and Zendo - see package.json for more details
+ */
+
 "use server";
 
-import { EdgeRequestEnv } from "@/types";
-
-export async function getEdgeEnvironmentVariables(): Promise<EdgeRequestEnv> {
-  const JWT_SHARED_SECRET = process.env.NEXT_PRIVATE_JWT_SHARED_SECRET;
-  const WORKER_URL = process.env.NEXT_PRIVATE_WORKER_URL;
-
-  return {
-    JWT_SHARED_SECRET: JWT_SHARED_SECRET,
-    WORKER_URL: WORKER_URL,
-  };
-}
-
+/**
+ * Retrieves an environment variable from the process environment.
+ *
+ * @param variableName - The name  of the environment variable to retrieve.
+ * @returns The value of the environment variable, or undefined if the variable is not set.
+ */
 export async function getEnvVariable(variableName: string): Promise<string | undefined> {
   const value = process.env[variableName.toUpperCase()];
   return value;

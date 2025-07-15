@@ -16,7 +16,9 @@ export type HeaderNavLink = { label: string; path: string };
 
 export const getHeaderNavLinks = cache(async (): Promise<HeaderNavLink[] | null> => {
   try {
-    const res = await fetch(`http://${process.env.NEXT_PUBLIC_ORIGIN}/api/quick-links`, {
+    const origin = process.env.NEXT_PUBLIC_ORIGIN;
+    const protocol = origin?.startsWith("localhost") ? "http" : "https";
+    const res = await fetch(`${protocol}://${origin}/api/quick-links`, {
       next: { revalidate: 86400 },
     });
 

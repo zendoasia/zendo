@@ -14,7 +14,9 @@
 import { cache } from "react";
 
 export const getFooterLinks = cache(async () => {
-  const res = await fetch(`http://${process.env.NEXT_PUBLIC_ORIGIN}/api/footer-items`, {
+  const origin = process.env.NEXT_PUBLIC_ORIGIN;
+  const protocol = origin?.startsWith("localhost") ? "http" : "https";
+  const res = await fetch(`${protocol}://${origin}/api/footer-items`, {
     next: { revalidate: 86400 },
   });
   if (!res.ok) return null;
@@ -23,7 +25,9 @@ export const getFooterLinks = cache(async () => {
 });
 
 export const getStatusUptime = cache(async () => {
-  const res = await fetch(`http://${process.env.NEXT_PUBLIC_ORIGIN}/api/status-uptime`, {
+  const origin = process.env.NEXT_PUBLIC_ORIGIN;
+  const protocol = origin?.startsWith("localhost") ? "http" : "https";
+  const res = await fetch(`${protocol}://${origin}/api/status-uptime`, {
     next: { revalidate: 60 },
   });
   if (!res.ok) return null;

@@ -24,6 +24,9 @@
 # misc
 .DS_Store
 *.pem
+.husky
+.vscode
+.cursor/
 
 # debug
 npm-debug.log*
@@ -41,10 +44,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-.vercel
-
 # Todo2 - AI-powered task management directories
 .cursor/rules/todo2-overview.mdc
 .cursor/rules/todo2.mdc
 .cursor/mcp.json
 .todo2/
+
+

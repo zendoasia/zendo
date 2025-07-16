@@ -1,5 +1,0 @@
-npm run lint
-
-wrangler pages secret bulk .env --project-name zendo
-
-prettier . --write

@@ -2,7 +2,7 @@
  * app/page.tsx
  * ------------
  *
- * Implements the home page for the app
+ * Implements the home page (landing page) for the app
  *
  * @license MIT - see LICENSE for more details
  * @copyright © 2025–present AARUSH MASTER and Zendo - see package.json for more details

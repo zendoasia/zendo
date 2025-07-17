@@ -15,7 +15,6 @@ import { SiX, SiDiscord, SiGithub, SiGmail } from "@icons-pack/react-simple-icon
 import { cn } from "@/lib/utils";
 import ConstructStatusBadge from "@/components/modules/constructStatusBadge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Button } from "../ui/button";
 
 const ICON_LINKS = [
   { label: "Back to Top", icon: <ArrowUp size="1.2rem" />, href: "#top" },

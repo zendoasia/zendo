@@ -76,7 +76,7 @@ export default function Footer({ footerSections, uptime }: FooterProps) {
                   <Link
                     href={section.path}
                     className={cn(
-                      "text-lg text-pretty hover:underline font-semibold app-font-inter"
+                      "text-lg text-pretty hover:underline cursor-pointer font-semibold app-font-inter"
                     )}
                   >
                     {section.name}
@@ -87,7 +87,7 @@ export default function Footer({ footerSections, uptime }: FooterProps) {
                     key={link.path}
                     href={link.path}
                     className={cn(
-                      "text-base text-muted-foreground button-scaler cursor-pointer hover:underline app-font"
+                      "text-base text-muted-foreground cursor-pointer hover:underline app-font"
                     )}
                   >
                     {link.title}

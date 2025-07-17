@@ -48,6 +48,7 @@ Below are some you would need to follow while creating a contribution for our co
    by the point above. By this, we are able to understand the changes more deeply, which ultimately, increases
    your pull request acceptance rate. If you feel like lost, below are some examples of what you would typically require
    to add:
+
    - What actually happens with the code change.
    - Information about the environment you are working in and how it is optimized for other environments.
    - Summary of the pull request.

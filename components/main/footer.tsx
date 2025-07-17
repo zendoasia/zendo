@@ -15,6 +15,7 @@ import { SiX, SiDiscord, SiGithub, SiGmail } from "@icons-pack/react-simple-icon
 import { cn } from "@/lib/utils";
 import ConstructStatusBadge from "@/components/modules/constructStatusBadge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Button } from "../ui/button";
 
 const ICON_LINKS = [
   { label: "Back to Top", icon: <ArrowUp size="1.2rem" />, href: "#top" },
@@ -98,7 +99,7 @@ export default function Footer({ footerSections, uptime }: FooterProps) {
           </div>
         )}
 
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-6 border-t pt-6 border-[color:var(--border)]">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-6 border-t pt-6 border-[var(--silver2)] dark:border-[var(--jet)]">
           <div className="flex flex-col gap-2 items-center sm:items-start text-center sm:text-left w-full sm:w-auto">
             <Link
               href="/legal"

@@ -45,7 +45,7 @@ export default function Header({
   githubStars,
 }: {
   links: HeaderNavLink[] | null;
-  githubStars: number;
+  githubStars: string;
 }) {
   const { setOpen, setOpenS, open, openS, strippedOS } = useMenuStore();
   const [imageLoaded, setImageLoaded] = useState(false);

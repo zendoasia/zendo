@@ -306,7 +306,7 @@ export default async function RootLayout({
     getFooterLinks(),
     getStatusUptime(),
     getHeaderNavLinks(),
-    getGitHubStars(),
+    String(getGitHubStars()),
   ]);
 
   return (

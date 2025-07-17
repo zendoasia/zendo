@@ -14,7 +14,9 @@ import { cache } from "react";
 
 const GITHUB_URL = `https://api.github.com/repos/${process.env.NEXT_PUBLIC_GITHUB_REPO_URL}`;
 
-function formatStars(stars: number): string {
+function formatStars(stars: number | string): string {
+  if (typeof stars === "string") stars = Number(stars);
+
   if (!Number.isFinite(stars) || stars < 0) return "0";
 
   if (stars >= 1_000_000) return `${(stars / 1_000_000).toFixed(1)}M`;
@@ -23,7 +25,7 @@ function formatStars(stars: number): string {
   return stars.toString();
 }
 
-export default cache(async function GitHubStars() {
+export default cache(async function GitHubStars(): Promise<string> {
   try {
     const res = await fetch(GITHUB_URL, {
       headers: {
@@ -40,6 +42,6 @@ export default cache(async function GitHubStars() {
 
     return stars;
   } catch {
-    return 0;
+    return "0";
   }
 });

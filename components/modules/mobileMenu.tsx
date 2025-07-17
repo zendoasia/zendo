@@ -140,7 +140,7 @@ function MobileMenuNavLinks({ onNavigate }: { onNavigate: (_path: string) => voi
   );
 }
 
-const MobileMenu = React.memo(function MobileMenu({ githubStars }: { githubStars: number }) {
+const MobileMenu = React.memo(function MobileMenu({ githubStars }: { githubStars: string }) {
   const { open, setOpen, setOpenS, strippedOS } = useMenuStore();
   const router = useRouter();
 

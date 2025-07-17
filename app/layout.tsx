@@ -30,7 +30,6 @@ import Header from "@/components/main/header";
 import LogoBlack from "@/public/assets/LogoBlack.svg";
 import LogoWhite from "@/public/assets/LogoWhite.svg";
 import { cn } from "@/lib/utils";
-import ThemeSanitizer from "@/components/modules/themeSanitizer";
 import CookieConsent from "@/components/scripts/cookieConsent";
 import GAnalyticsConsent from "@/components/scripts/GAnalyticsConsent";
 import type { Viewport } from "next";
@@ -336,7 +335,6 @@ export default async function RootLayout({
         {/* Dedicated portal root for overlays/menus */}
         <div id="portal-root" />
         <Suspense fallback={null}>
-          <ThemeSanitizer />
           <GAnalyticsConsent />
           <CookieConsent />
           <CloudflareAnalytics />

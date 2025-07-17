@@ -159,7 +159,7 @@ export default function Header({ links }: { links: HeaderNavLink[] | null }) {
             <Button size="sm" variant="link" className="text-unimportant" asChild>
               <Link target="_blank" href={GITHUB_URL}>
                 <span className="inline-flex items-center gap-1">
-                  GitHub
+                  Repository
                   <ArrowUpRight
                     className="accessibility-detail-color relative -mt-3"
                     style={{ verticalAlign: "middle" }}

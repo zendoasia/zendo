@@ -11,9 +11,34 @@
 
 import Link from "next/link";
 import { ArrowUp, Copyright } from "lucide-react";
-import { SiX, SiDiscord, SiGithub } from "@icons-pack/react-simple-icons";
+import { SiX, SiDiscord, SiGithub, SiGmail } from "@icons-pack/react-simple-icons";
 import { cn } from "@/lib/utils";
 import ConstructStatusBadge from "@/components/modules/constructStatusBadge";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
+const ICON_LINKS = [
+  { label: "Back to Top", icon: <ArrowUp size="1.2rem" />, href: "#top" },
+  {
+    label: "X Profile",
+    icon: <SiX size="1.2rem" />,
+    href: "https://x.com/aarush01111",
+  },
+  {
+    label: "Email Contact",
+    icon: <SiGmail size="1.2rem" />,
+    href: "mailto:support@zendo.asia",
+  },
+  {
+    label: "Discord Contact",
+    icon: <SiDiscord size="1.2rem" />,
+    href: "https://discord.com/users/906543610269401148",
+  },
+  {
+    label: "GitHub Account",
+    icon: <SiGithub size="1.2rem" />,
+    href: "https://github.com/zendoasia",
+  },
+];
 
 export type FooterSection = {
   name: string;
@@ -26,25 +51,6 @@ export type FooterProps = {
   uptime: string | null;
 };
 export default function Footer({ footerSections, uptime }: FooterProps) {
-  const iconLinks = [
-    { label: "Back to Top", icon: <ArrowUp size="1.2rem" />, href: "#top" },
-    {
-      label: "X (Twitter) Contact",
-      icon: <SiX size="1.2rem" />,
-      href: "https://x.com/aarush01111",
-    },
-    {
-      label: "Urgent Contact",
-      icon: <SiDiscord size="1.2rem" />,
-      href: "https://discord.com/users/906543610269401148",
-    },
-    {
-      label: "GitHub Account",
-      icon: <SiGithub size="1.2rem" />,
-      href: "https://github.com/zendoasia",
-    },
-  ];
-
   const hasValidSections = Array.isArray(footerSections) && footerSections.length > 0;
 
   return (
@@ -141,20 +147,47 @@ export default function Footer({ footerSections, uptime }: FooterProps) {
 
           <div className="w-full sm:w-auto flex justify-center sm:justify-end">
             <div className="flex flex-wrap gap-2">
-              {iconLinks.map(({ label, icon, href }) => (
-                <Link
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className={cn(
-                    "inline-flex justify-center items-center rounded-md border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-10 w-10 transition-colors"
-                  )}
-                >
-                  {icon}
-                </Link>
-              ))}
+              {ICON_LINKS.map(({ label, icon, href }) =>
+                href.startsWith("http") ? (
+                  <TooltipProvider key={label}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link
+                          key={label}
+                          href={href}
+                          target="_blank"
+                          aria-label={label}
+                          className={cn(
+                            "inline-flex justify-center items-center rounded-md border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-10 w-10 transition-colors"
+                          )}
+                        >
+                          {icon}
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent>{label}</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                ) : (
+                  <TooltipProvider key={label}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link
+                          key={label}
+                          href={href}
+                          data-no-prompt
+                          aria-label={label}
+                          className={cn(
+                            "inline-flex justify-center items-center rounded-md border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-10 w-10 transition-colors"
+                          )}
+                        >
+                          {icon}
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent>{label}</TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                )
+              )}
             </div>
           </div>
         </div>

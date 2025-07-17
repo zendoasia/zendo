@@ -14,13 +14,15 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import Cookies from "js-cookie";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Check, X, Info } from "lucide-react";
+import { Check, X } from "lucide-react";
+import { FaInfoCircle } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 
 const COOKIE_CONSENT_COOKIE_NAME = "cookie_status";
+const EXIT_ANIMATION_DURATION = 400;
 
 export default function CookieConsent() {
   const [mounted, setMounted] = useState(false);
@@ -28,7 +30,6 @@ export default function CookieConsent() {
   const [shouldRender, setShouldRender] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
   const bannerRef = useRef<HTMLDivElement>(null);
-  const EXIT_ANIMATION_DURATION = 400;
 
   useEffect(() => {
     setMounted(true);
@@ -385,7 +386,7 @@ export default function CookieConsent() {
                 )}
               >
                 <Link href="/privacy" target="_blank" className="flex items-center gap-2">
-                  <Info size={"1.2rem"} />
+                  <FaInfoCircle size={16} />
                   Privacy Policy
                 </Link>
               </Button>

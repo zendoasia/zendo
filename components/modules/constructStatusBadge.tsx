@@ -137,6 +137,7 @@ export default function ConstructStatusBadge({ uptime }: Props) {
       <Link
         href={process.env.NEXT_PUBLIC_STATUS_PAGE_URL!}
         target="_blank"
+        data-no-prompt
         className={cn(
           "flex items-center gap-2 px-3 py-1.5 rounded-md text-black dark:text-white transition-colors duration-300",
           getStatusColor(safeUptime)

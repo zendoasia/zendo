@@ -252,7 +252,7 @@ const MobileMenu = React.memo(function MobileMenu() {
               <span className="inline-flex items-center gap-1 relative">
                 <SiGithub size="1.2rem" className="accessibility-detail-color" />
                 <span className="relative">
-                  GitHub
+                  Repository
                   <span
                     className="absolute left-0 right-0 -bottom-0.5 h-[1.5px] bg-current rounded"
                     style={{ opacity: 0.6 }}

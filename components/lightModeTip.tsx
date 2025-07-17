@@ -21,6 +21,7 @@ import { useHandleThemeChange } from "@/hooks/useThemeChanger";
 import { cn } from "@/lib/utils";
 
 const LIGHT_MODE_TIP_COOKIE_NAME = "has_seen_light_mode_tip";
+
 export default function LightModeTipAlert() {
   const { handleThemeChange, resolvedTheme, mounted } = useHandleThemeChange();
 

@@ -140,7 +140,7 @@ function MobileMenuNavLinks({ onNavigate }: { onNavigate: (_path: string) => voi
   );
 }
 
-const MobileMenu = React.memo(function MobileMenu() {
+const MobileMenu = React.memo(function MobileMenu({ githubStars }: { githubStars: number }) {
   const { open, setOpen, setOpenS, strippedOS } = useMenuStore();
   const router = useRouter();
 
@@ -192,6 +192,9 @@ const MobileMenu = React.memo(function MobileMenu() {
 
     return { srText, displayText };
   }, [strippedOS]);
+
+  const GITHUB_URL =
+    process.env.NEXT_PUBLIC_GITHUB_SOURCE_CODE || "https://github.com/zendoasia/zendo";
 
   return createPortal(
     <Sheet open={open} onOpenChange={handleOpenChange}>
@@ -248,21 +251,17 @@ const MobileMenu = React.memo(function MobileMenu() {
           </Button>
 
           <Button size="sm" className="hover:cursor-pointer button-scaler overflow-hidden" asChild>
-            <Link target="_blank" href={process.env.NEXT_PUBLIC_GITHUB_SOURCE_CODE as string}>
-              <span className="inline-flex items-center gap-1 relative">
-                <SiGithub size="1.2rem" className="accessibility-detail-color" />
-                <span className="relative">
-                  Repository
-                  <span
-                    className="absolute left-0 right-0 -bottom-0.5 h-[1.5px] bg-current rounded"
-                    style={{ opacity: 0.6 }}
-                  />
-                </span>
-                <ArrowUpRight
-                  className="accessibility-detail-color relative -mt-3"
-                  style={{ verticalAlign: "middle" }}
-                />
-              </span>
+            <Link
+              href={GITHUB_URL}
+              target="_blank"
+              className="inline-flex items-center gap-1 hover:cursor-pointer text-sm"
+            >
+              <SiGithub size={16} />
+              <span>{githubStars}</span>
+              <ArrowUpRight
+                className="accessibility-detail-color relative -mt-3"
+                style={{ verticalAlign: "middle" }}
+              />
             </Link>
           </Button>
 

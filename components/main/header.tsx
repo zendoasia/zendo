@@ -28,6 +28,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import SearchSkeleton from "@/components/skeletons/searchSkeleton";
 import type { HeaderNavLink } from "@/lib/cache/header-cacher";
 import HeaderNavLinks from "@/components/modules/headerNavLinks";
+import { SiGithub } from "@icons-pack/react-simple-icons";
 
 // Lazy load components only when needed
 const MobileMenu = dynamic(() => import("@/components/modules/mobileMenu"), {
@@ -39,7 +40,13 @@ const SearchBar = dynamic(() => import("@/components/modules/search"), {
   loading: () => <SearchSkeleton />,
 });
 
-export default function Header({ links }: { links: HeaderNavLink[] | null }) {
+export default function Header({
+  links,
+  githubStars,
+}: {
+  links: HeaderNavLink[] | null;
+  githubStars: number;
+}) {
   const { setOpen, setOpenS, open, openS, strippedOS } = useMenuStore();
   const [imageLoaded, setImageLoaded] = useState(false);
   const shouldRenderMobileMenu = useComponentLifecycle(open);
@@ -156,15 +163,18 @@ export default function Header({ links }: { links: HeaderNavLink[] | null }) {
 
           <nav aria-label="Primary Navigation" className={cn("hidden br:flex items-center ")}>
             <HeaderNavLinks links={links} />
-            <Button size="sm" variant="link" className="text-unimportant" asChild>
-              <Link target="_blank" href={GITHUB_URL}>
-                <span className="inline-flex items-center gap-1">
-                  Repository
-                  <ArrowUpRight
-                    className="accessibility-detail-color relative -mt-3"
-                    style={{ verticalAlign: "middle" }}
-                  />
-                </span>
+            <Button size="sm" variant="link" asChild>
+              <Link
+                href={GITHUB_URL}
+                target="_blank"
+                className="inline-flex items-center gap-1 hover:cursor-pointer text-sm"
+              >
+                <SiGithub size={16} />
+                <span className="text-muted-foreground">{githubStars}</span>
+                <ArrowUpRight
+                  className="accessibility-detail-color relative -mt-3"
+                  style={{ verticalAlign: "middle" }}
+                />
               </Link>
             </Button>
           </nav>
@@ -247,7 +257,7 @@ export default function Header({ links }: { links: HeaderNavLink[] | null }) {
         </div>
       </header>
 
-      {shouldRenderMobileMenu && <MobileMenu />}
+      {shouldRenderMobileMenu && <MobileMenu githubStars={githubStars} />}
       {shouldRenderSearchBar && <SearchBar />}
     </>
   );

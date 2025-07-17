@@ -41,6 +41,7 @@ import { OSDetectionProvider } from "@/components/providers/osDetectionProvider"
 import { Suspense } from "react";
 import { getFooterLinks, getStatusUptime } from "@/lib/cache/footer-cacher";
 import { getHeaderNavLinks } from "@/lib/cache/header-cacher";
+import getGitHubStars from "@/lib/cache/gh-stars-caher";
 
 export const metadata: Metadata = {
   ...generateMetadata({
@@ -301,10 +302,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [footerSections, uptime, headerNavLinks] = await Promise.all([
+  const [footerSections, uptime, headerNavLinks, githubStars] = await Promise.all([
     getFooterLinks(),
     getStatusUptime(),
     getHeaderNavLinks(),
+    getGitHubStars(),
   ]);
 
   return (
@@ -385,7 +387,7 @@ export default async function RootLayout({
               <OSDetectionProvider>
                 <KeyboardShortcutsProvider>
                   <ExternalLinkInterceptor />
-                  <Header links={headerNavLinks} />
+                  <Header links={headerNavLinks} githubStars={githubStars} />
                   <main
                     tabIndex={-1}
                     id="main"

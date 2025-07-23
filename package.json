@@ -24,7 +24,7 @@
   "author": "Zendo",
   "dependencies": {
     "@icons-pack/react-simple-icons": "^13.5.0",
-    "@next/third-parties": "^15.4.1",
+    "@next/third-parties": "^15.4.3",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-alert-dialog": "^1.1.14",
     "@radix-ui/react-dialog": "^1.1.14",

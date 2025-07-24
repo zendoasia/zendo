@@ -70,7 +70,7 @@
     "@types/web-push": "^3.6.4",
     "autoprefixer": "^10.4.21",
     "cross-env": "^7.0.3",
-    "dotenv": "^17.2.0",
+    "dotenv": "^17.2.1",
     "eslint": "^9.31.0",
     "eslint-config-next": "15.4.1",
     "eslint-config-prettier": "^10.1.5",
